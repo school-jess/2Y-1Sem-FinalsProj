@@ -1,0 +1,11 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace StudentLibraryManagementSystem.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class FacultyController : ControllerBase
+    {
+    }
+}
