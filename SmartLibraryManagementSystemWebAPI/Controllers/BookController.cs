@@ -19,7 +19,7 @@ namespace StudentLibraryManagementSystem.Controllers
         [HttpGet]
         public IActionResult GetBooks()
         {
-            var books = _dbCtx.Book.ToList();
+            var books = (from book in _dbCtx.Book select new BookUpdateDto { Author = book.Author, BookId = book.BookId, BookName = book.BookName, Genre = book.Genre }).ToList();
             return Ok(books);
         }
 

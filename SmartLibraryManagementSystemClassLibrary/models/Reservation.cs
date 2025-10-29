@@ -18,4 +18,6 @@ public class Reservation
     public int CatalogId { get; set; }
     [ForeignKey("CatalogId")]
     public Catalog Catalog { get; set; }
+    public Fine Fine { get; set; }
+    public Loan Loan { get; set; }
 }

@@ -128,50 +128,6 @@ namespace SmartLibraryManagementSystemClassLibrary.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Fine",
-                columns: table => new
-                {
-                    FineId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    FineAmount = table.Column<int>(type: "int", nullable: false),
-                    AmtPayedSinceLastFine = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Fine", x => x.FineId);
-                    table.ForeignKey(
-                        name: "FK_Fine_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Loan",
-                columns: table => new
-                {
-                    LoanId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    LoanAmount = table.Column<int>(type: "int", nullable: false),
-                    AmtLoanedSinceLastLoaned = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Loan", x => x.LoanId);
-                    table.ForeignKey(
-                        name: "FK_Loan_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "Reservation",
                 columns: table => new
                 {
@@ -206,6 +162,64 @@ namespace SmartLibraryManagementSystemClassLibrary.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
+            migrationBuilder.CreateTable(
+                name: "Fine",
+                columns: table => new
+                {
+                    FineId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    FineAmount = table.Column<int>(type: "int", nullable: false),
+                    AmtPayedSinceLastFine = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    ReservatonId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Fine", x => x.FineId);
+                    table.ForeignKey(
+                        name: "FK_Fine_Reservation_ReservatonId",
+                        column: x => x.ReservatonId,
+                        principalTable: "Reservation",
+                        principalColumn: "ReservationId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Fine_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Loan",
+                columns: table => new
+                {
+                    LoanId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    LoanAmount = table.Column<int>(type: "int", nullable: false),
+                    AmtLoanedSinceLastLoaned = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    ReservatonId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Loan", x => x.LoanId);
+                    table.ForeignKey(
+                        name: "FK_Loan_Reservation_ReservatonId",
+                        column: x => x.ReservatonId,
+                        principalTable: "Reservation",
+                        principalColumn: "ReservationId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Loan_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Catalog_BookId",
                 table: "Catalog",
@@ -213,9 +227,21 @@ namespace SmartLibraryManagementSystemClassLibrary.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Fine_ReservatonId",
+                table: "Fine",
+                column: "ReservatonId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Fine_UserId",
                 table: "Fine",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Loan_ReservatonId",
+                table: "Loan",
+                column: "ReservatonId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Loan_UserId",
@@ -225,8 +251,7 @@ namespace SmartLibraryManagementSystemClassLibrary.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Reservation_BookId",
                 table: "Reservation",
-                column: "BookId",
-                unique: true);
+                column: "BookId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservation_CatalogId",

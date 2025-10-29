@@ -19,7 +19,7 @@ namespace StudentLibraryManagementSystem.Controllers
         [HttpGet]
         public IActionResult GetReservations()
         {
-            var reservations = _dbCtx.Reservation.ToList();
+            var reservations = (from reservation in _dbCtx.Reservation select new ReservationUpdateDto { BookId = reservation.BookId, CatalogId = reservation.CatalogId, ReservationId = reservation.ReservationId, ReservationTime = reservation.ReservationTime, UserId = reservation.UserId }).ToList();
             return Ok(reservations);
         }
 

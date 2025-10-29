@@ -13,5 +13,5 @@ public class Book
     [StringLength(15)]
     public string Genre { get; set; }
     public Catalog Catalog { get; set; }
-    public Reservation Reservation { get; set; }
+    public ICollection<Reservation> Reservation { get; set; }
 }

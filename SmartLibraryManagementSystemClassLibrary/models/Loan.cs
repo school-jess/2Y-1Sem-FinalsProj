@@ -12,4 +12,7 @@ public class Loan
     public int UserId { get; set; }
     [ForeignKey("UserId")]
     public User User { get; set; }
+    public int ReservatonId { get; set; }
+    [ForeignKey("ReservatonId")]
+    public Reservation Reservaton { get; set; }
 }

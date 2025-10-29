@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace SmartLibraryManagementSystemClassLibrary.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20251029042532_InitialMigration")]
+    [Migration("20251029142540_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -121,10 +121,16 @@ namespace SmartLibraryManagementSystemClassLibrary.Migrations
                     b.Property<int>("FineAmount")
                         .HasColumnType("int");
 
+                    b.Property<int>("ReservatonId")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("FineId");
+
+                    b.HasIndex("ReservatonId")
+                        .IsUnique();
 
                     b.HasIndex("UserId");
 
@@ -145,10 +151,16 @@ namespace SmartLibraryManagementSystemClassLibrary.Migrations
                     b.Property<int>("LoanAmount")
                         .HasColumnType("int");
 
+                    b.Property<int>("ReservatonId")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("LoanId");
+
+                    b.HasIndex("ReservatonId")
+                        .IsUnique();
 
                     b.HasIndex("UserId");
 
@@ -177,8 +189,7 @@ namespace SmartLibraryManagementSystemClassLibrary.Migrations
 
                     b.HasKey("ReservationId");
 
-                    b.HasIndex("BookId")
-                        .IsUnique();
+                    b.HasIndex("BookId");
 
                     b.HasIndex("CatalogId");
 
@@ -269,22 +280,38 @@ namespace SmartLibraryManagementSystemClassLibrary.Migrations
 
             modelBuilder.Entity("SmartLibraryManagementSystemClassLibrary.Model.Fine", b =>
                 {
+                    b.HasOne("SmartLibraryManagementSystemClassLibrary.Model.Reservation", "Reservaton")
+                        .WithOne("Fine")
+                        .HasForeignKey("SmartLibraryManagementSystemClassLibrary.Model.Fine", "ReservatonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("SmartLibraryManagementSystemClassLibrary.Model.User", "User")
                         .WithMany("PrevFine")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Reservaton");
+
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("SmartLibraryManagementSystemClassLibrary.Model.Loan", b =>
                 {
+                    b.HasOne("SmartLibraryManagementSystemClassLibrary.Model.Reservation", "Reservaton")
+                        .WithOne("Loan")
+                        .HasForeignKey("SmartLibraryManagementSystemClassLibrary.Model.Loan", "ReservatonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("SmartLibraryManagementSystemClassLibrary.Model.User", "User")
                         .WithMany("PrevLoan")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Reservaton");
 
                     b.Navigation("User");
                 });
@@ -292,8 +319,8 @@ namespace SmartLibraryManagementSystemClassLibrary.Migrations
             modelBuilder.Entity("SmartLibraryManagementSystemClassLibrary.Model.Reservation", b =>
                 {
                     b.HasOne("SmartLibraryManagementSystemClassLibrary.Model.Book", "Book")
-                        .WithOne("Reservation")
-                        .HasForeignKey("SmartLibraryManagementSystemClassLibrary.Model.Reservation", "BookId")
+                        .WithMany("Reservation")
+                        .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -340,8 +367,7 @@ namespace SmartLibraryManagementSystemClassLibrary.Migrations
                     b.Navigation("Catalog")
                         .IsRequired();
 
-                    b.Navigation("Reservation")
-                        .IsRequired();
+                    b.Navigation("Reservation");
                 });
 
             modelBuilder.Entity("SmartLibraryManagementSystemClassLibrary.Model.Catalog", b =>
@@ -352,6 +378,15 @@ namespace SmartLibraryManagementSystemClassLibrary.Migrations
             modelBuilder.Entity("SmartLibraryManagementSystemClassLibrary.Model.Faculty", b =>
                 {
                     b.Navigation("User")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartLibraryManagementSystemClassLibrary.Model.Reservation", b =>
+                {
+                    b.Navigation("Fine")
+                        .IsRequired();
+
+                    b.Navigation("Loan")
                         .IsRequired();
                 });
 
