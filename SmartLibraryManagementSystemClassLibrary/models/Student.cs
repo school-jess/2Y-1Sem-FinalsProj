@@ -12,4 +12,5 @@ public class Student
     [StringLength(2)]
     public string Course { get; set; }
     public int Grade { get; set; }
+    public User User { get; set; }
 }

@@ -12,4 +12,6 @@ public class Book
     public string Author { get; set; }
     [StringLength(15)]
     public string Genre { get; set; }
+    public Catalog Catalog { get; set; }
+    public Reservation Reservation { get; set; }
 }

@@ -14,4 +14,5 @@ public class Faculty
     public string Subject { get; set; }
     [StringLength(2)]
     public string Course { get; set; }
+    public User User { get; set; }
 }

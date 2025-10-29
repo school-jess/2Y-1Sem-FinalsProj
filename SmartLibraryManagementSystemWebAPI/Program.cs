@@ -1,4 +1,3 @@
-// using SmartLibraryManagementSystemClassLibrary;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,7 +6,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<DatabaseContext>(options => options.UseMySql(builder.Configuration.GetConnectionString("MYSQL_CONN_STR")));
+builder.Services.AddDbContext<DatabaseContext>(options =>
+{
+    string connStr = builder.Configuration["MYSQL_CONN_STR"] ?? "";
+    var serverVersion = new MySqlServerVersion(new Version(9, 3, 0));
+
+    options.UseMySql(connStr, serverVersion);
+});
 
 var app = builder.Build();
 
