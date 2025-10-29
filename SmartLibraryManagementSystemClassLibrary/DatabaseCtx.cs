@@ -5,6 +5,7 @@ public class DatabaseContext : DbContext
 {
     public DbSet<Book> Book { get; set; }
     public DbSet<Catalog> Catalog { get; set; }
+    public DbSet<Fine> Fine { get; set; }
     public DbSet<Faculty> Faculty { get; set; }
     public DbSet<Loan> Loan { get; set; }
     public DbSet<Reservation> Reservation { get; set; }

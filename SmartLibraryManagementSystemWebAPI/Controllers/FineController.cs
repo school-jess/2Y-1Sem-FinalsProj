@@ -1,4 +1,6 @@
+using SmartLibraryManagementSystemClassLibrary.Model;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace StudentLibraryManagementSystem.Controllers
 {
@@ -6,5 +8,54 @@ namespace StudentLibraryManagementSystem.Controllers
     [ApiController]
     public class FineController : ControllerBase
     {
+        private readonly DatabaseContext _dbCtx;
+
+        public FineController(DatabaseContext dbCtx)
+        {
+            _dbCtx = dbCtx;
+        }
+
+        [HttpGet]
+        public IActionResult GetFines()
+        {
+            var fines = _dbCtx.Fine.ToList();
+            return Ok(fines);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetFine(int id)
+        {
+            var fine = _dbCtx.Fine.Find(id);
+            if (fine == null) return NotFound();
+            return Ok(fine);
+        }
+
+        [HttpPost]
+        public IActionResult NewFine([FromBody] Fine fine)
+        {
+            _dbCtx.Fine.Add(fine);
+            _dbCtx.SaveChanges();
+            var insertedFine = _dbCtx.Fine.Find(fine);
+            return CreatedAtAction("", new { fineId = insertedFine.FineId });
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateFine(int id, [FromBody] Fine fine)
+        {
+            if (id != fine.FineId) return BadRequest();
+            _dbCtx.Entry(fine).State = EntityState.Modified;
+            _dbCtx.SaveChanges();
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteFine(int id)
+        {
+            var fine = _dbCtx.Fine.Find(id);
+            if (fine == null) return NotFound();
+            _dbCtx.Fine.Remove(fine);
+            _dbCtx.SaveChanges();
+            return NoContent();
+        }
     }
 }
