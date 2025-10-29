@@ -7,3 +7,12 @@ public class FacultyCreationDto
     public string Subject { get; set; }
     public string Course { get; set; }
 }
+
+public class FacultyUpdateDto
+{
+    public int FacultyId { get; set; }
+    public string FacultyName { get; set; }
+    public string Department { get; set; }
+    public string Subject { get; set; }
+    public string Course { get; set; }
+}

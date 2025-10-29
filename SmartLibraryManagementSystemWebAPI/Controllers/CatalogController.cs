@@ -41,10 +41,11 @@ namespace StudentLibraryManagementSystem.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateCatalog(int id, [FromBody] Catalog catalog)
+        public IActionResult UpdateCatalog(int id, [FromBody] CatalogUpdateDto catalog)
         {
             if (id != catalog.CatalogId) return BadRequest();
-            _dbCtx.Entry(catalog).State = EntityState.Modified;
+            Catalog updatedCatalog = new Catalog { BookId = catalog.BookId, CatalogId = catalog.CatalogId, Copies = catalog.Copies };
+            _dbCtx.Entry(updatedCatalog).State = EntityState.Modified;
             _dbCtx.SaveChanges();
             return NoContent();
         }

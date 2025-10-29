@@ -41,10 +41,11 @@ namespace StudentLibraryManagementSystem.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(int id, [FromBody] User user)
+        public IActionResult UpdateUser(int id, [FromBody] UserUpdateDto user)
         {
             if (id != user.StudentId) return BadRequest();
-            _dbCtx.Entry(user).State = EntityState.Modified;
+            User updatedUser = new User { FacultyId = user.FacultyId, HasFine = user.HasFine, HasLoan = user.HasLoan, IsFaculty = user.IsFaculty, StudentId = user.StudentId, UserId = user.UserId, UserName = user.UserName };
+            _dbCtx.Entry(updatedUser).State = EntityState.Modified;
             _dbCtx.SaveChanges();
             return NoContent();
         }

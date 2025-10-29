@@ -6,3 +6,11 @@ public class FineCreationDto
     public int AmtPayedSinceLastFine { get; set; }
     public int UserId { get; set; }
 }
+
+public class FineUpdateDto
+{
+    public int FineId { get; set; }
+    public int FineAmount { get; set; }
+    public int AmtPayedSinceLastFine { get; set; }
+    public int UserId { get; set; }
+}

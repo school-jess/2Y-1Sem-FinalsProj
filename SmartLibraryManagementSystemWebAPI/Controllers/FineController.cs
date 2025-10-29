@@ -41,10 +41,11 @@ namespace StudentLibraryManagementSystem.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateFine(int id, [FromBody] Fine fine)
+        public IActionResult UpdateFine(int id, [FromBody] FineUpdateDto fine)
         {
             if (id != fine.FineId) return BadRequest();
-            _dbCtx.Entry(fine).State = EntityState.Modified;
+            Fine updatedFine = new Fine { AmtPayedSinceLastFine = fine.AmtPayedSinceLastFine, FineAmount = fine.FineAmount, FineId = fine.FineId, UserId = fine.UserId };
+            _dbCtx.Entry(updatedFine).State = EntityState.Modified;
             _dbCtx.SaveChanges();
             return NoContent();
         }

@@ -41,10 +41,11 @@ namespace StudentLibraryManagementSystem.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdatLoan(int id, [FromBody] Loan loan)
+        public IActionResult UpdateLoan(int id, [FromBody] LoanUpdateDto loan)
         {
             if (id != loan.LoanId) return BadRequest();
-            _dbCtx.Entry(loan).State = EntityState.Modified;
+            Loan updateLoan = new Loan { AmtLoanedSinceLastLoaned = loan.AmtLoanedSinceLastLoaned, LoanAmount = loan.LoanAmount, LoanId = loan.LoanId, UserId = loan.UserId };
+            _dbCtx.Entry(updateLoan).State = EntityState.Modified;
             _dbCtx.SaveChanges();
             return NoContent();
         }
