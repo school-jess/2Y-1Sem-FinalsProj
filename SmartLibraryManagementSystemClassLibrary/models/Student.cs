@@ -4,6 +4,7 @@ namespace SmartLibraryManagementSystemClassLibrary.Model;
 
 public class Student
 {
+    [Key]
     public int StudentId { get; set; }
     [StringLength(50)]
     public string StudentName { get; set; }

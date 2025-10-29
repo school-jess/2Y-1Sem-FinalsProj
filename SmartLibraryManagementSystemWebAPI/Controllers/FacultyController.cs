@@ -1,4 +1,5 @@
 using SmartLibraryManagementSystemClassLibrary.Model;
+using SmartLibraryManagementSystemClassLibrary.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,9 +32,9 @@ namespace StudentLibraryManagementSystem.Controllers
         }
 
         [HttpPost]
-        public IActionResult NewFaculty([FromBody] Faculty faculty)
+        public IActionResult NewFaculty([FromBody] FacultyCreationDto faculty)
         {
-            _dbCtx.Faculty.Add(faculty);
+            _dbCtx.Faculty.Add(new Faculty { Course = faculty.Course, Department = faculty.Department, FacultyName = faculty.FacultyName, Subject = faculty.Subject });
             _dbCtx.SaveChanges();
             var insertedFaculty = _dbCtx.Faculty.Find(faculty);
             return CreatedAtAction("", new { facultyId = insertedFaculty.FacultyId });

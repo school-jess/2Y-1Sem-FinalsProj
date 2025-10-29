@@ -1,4 +1,5 @@
 using SmartLibraryManagementSystemClassLibrary.Model;
+using SmartLibraryManagementSystemClassLibrary.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,7 +24,7 @@ namespace StudentLibraryManagementSystem.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetReservation(int id)
+        public IActionResult GetStudent(int id)
         {
             var reservation = _dbCtx.Reservation.Find(id);
             if (reservation == null) return NotFound();
@@ -31,9 +32,9 @@ namespace StudentLibraryManagementSystem.Controllers
         }
 
         [HttpPost]
-        public IActionResult NewStudent([FromBody] Student student)
+        public IActionResult NewStudent([FromBody] StudentCreationDto student)
         {
-            _dbCtx.Student.Add(student);
+            _dbCtx.Student.Add(new Student { Course = student.Course, Department = student.Department, Grade = student.Grade, StudentName = student.StudentName });
             _dbCtx.SaveChanges();
             var insertedStudent = _dbCtx.Student.Find(student);
             return CreatedAtAction("", new { studentId = insertedStudent.StudentId });

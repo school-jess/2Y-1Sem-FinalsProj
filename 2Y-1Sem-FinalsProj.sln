@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartLibraryManagementSyste
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartLibraryManagementSystemWebAPI", "SmartLibraryManagementSystemWebAPI\SmartLibraryManagementSystemWebAPI.csproj", "{EFAE0837-13DF-4F47-A4DE-6FD88CA99358}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartLibraryManagementSystemWebApp", "SmartLibraryManagementSystemWebApp\SmartLibraryManagementSystemWebApp.csproj", "{20A8393D-FA64-46F5-B79E-D483F657A89B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{EFAE0837-13DF-4F47-A4DE-6FD88CA99358}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFAE0837-13DF-4F47-A4DE-6FD88CA99358}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFAE0837-13DF-4F47-A4DE-6FD88CA99358}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20A8393D-FA64-46F5-B79E-D483F657A89B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20A8393D-FA64-46F5-B79E-D483F657A89B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20A8393D-FA64-46F5-B79E-D483F657A89B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20A8393D-FA64-46F5-B79E-D483F657A89B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,4 +1,5 @@
 using SmartLibraryManagementSystemClassLibrary.Model;
+using SmartLibraryManagementSystemClassLibrary.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,9 +32,9 @@ namespace StudentLibraryManagementSystem.Controllers
         }
 
         [HttpPost]
-        public IActionResult NewCatalog([FromBody] Catalog catalog)
+        public IActionResult NewCatalog([FromBody] CatalogCreationDto catalog)
         {
-            _dbCtx.Catalog.Add(catalog);
+            _dbCtx.Catalog.Add(new Catalog { BookId = catalog.BookId, Copies = catalog.Copies });
             _dbCtx.SaveChanges();
             var insertedCatalog = _dbCtx.Catalog.Find(catalog);
             return CreatedAtAction("", new { catalogId = insertedCatalog.CatalogId });

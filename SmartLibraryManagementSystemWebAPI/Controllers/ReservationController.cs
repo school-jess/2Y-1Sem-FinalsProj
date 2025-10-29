@@ -1,4 +1,5 @@
 using SmartLibraryManagementSystemClassLibrary.Model;
+using SmartLibraryManagementSystemClassLibrary.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,9 +32,9 @@ namespace StudentLibraryManagementSystem.Controllers
         }
 
         [HttpPost]
-        public IActionResult NewReservation([FromBody] Reservation reservation)
+        public IActionResult NewReservation([FromBody] ReservationCreationDto reservation)
         {
-            _dbCtx.Reservation.Add(reservation);
+            _dbCtx.Reservation.Add(new Reservation { BookId = reservation.BookId, CatalogId = reservation.CatalogId, ReservationTime = reservation.ReservationTime, UserId = reservation.UserId });
             _dbCtx.SaveChanges();
             var insertedReservation = _dbCtx.Reservation.Find(reservation);
             return CreatedAtAction("", new { reservationId = insertedReservation.ReservationId });

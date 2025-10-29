@@ -1,4 +1,5 @@
 using SmartLibraryManagementSystemClassLibrary.Model;
+using SmartLibraryManagementSystemClassLibrary.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,9 +32,9 @@ namespace StudentLibraryManagementSystem.Controllers
         }
 
         [HttpPost]
-        public IActionResult NewBook([FromBody] Book book)
+        public IActionResult NewBook([FromBody] BookCreationDto book)
         {
-            _dbCtx.Book.Add(book);
+            _dbCtx.Book.Add(new Book { Author = book.Author, BookName = book.BookName, Genre = book.Genre });
             _dbCtx.SaveChanges();
             var insertedBook = _dbCtx.Book.Find(book);
             return CreatedAtAction("", new { bookId = insertedBook.BookId });

@@ -1,4 +1,5 @@
 using SmartLibraryManagementSystemClassLibrary.Model;
+using SmartLibraryManagementSystemClassLibrary.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,9 +32,9 @@ namespace StudentLibraryManagementSystem.Controllers
         }
 
         [HttpPost]
-        public IActionResult NewLoan([FromBody] Loan loan)
+        public IActionResult NewLoan([FromBody] LoanCreationDto loan)
         {
-            _dbCtx.Loan.Add(loan);
+            _dbCtx.Loan.Add(new Loan { AmtLoanedSinceLastLoaned = loan.AmtLoanedSinceLastLoaned, LoanAmount = loan.LoanAmount, UserId = loan.UserId });
             _dbCtx.SaveChanges();
             var insertedLoan = _dbCtx.Loan.Find(loan);
             return CreatedAtAction("", new { loanId = insertedLoan.LoanId });

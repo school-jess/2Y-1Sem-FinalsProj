@@ -1,4 +1,5 @@
 using SmartLibraryManagementSystemClassLibrary.Model;
+using SmartLibraryManagementSystemClassLibrary.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,9 +32,9 @@ namespace StudentLibraryManagementSystem.Controllers
         }
 
         [HttpPost]
-        public IActionResult NewFine([FromBody] Fine fine)
+        public IActionResult NewFine([FromBody] FineCreationDto fine)
         {
-            _dbCtx.Fine.Add(fine);
+            _dbCtx.Fine.Add(new Fine { AmtPayedSinceLastFine = fine.AmtPayedSinceLastFine, FineAmount = fine.FineAmount, FineId = fine.UserId });
             _dbCtx.SaveChanges();
             var insertedFine = _dbCtx.Fine.Find(fine);
             return CreatedAtAction("", new { fineId = insertedFine.FineId });
