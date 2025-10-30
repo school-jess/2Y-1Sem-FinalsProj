@@ -19,7 +19,15 @@ namespace StudentLibraryManagementSystem.Controllers
         [HttpGet]
         public IActionResult GetBooks()
         {
-            var books = (from book in _dbCtx.Book select new BookUpdateDto { Author = book.Author, BookId = book.BookId, BookName = book.BookName, Genre = book.Genre }).ToList();
+            var books = (
+                from book in _dbCtx.Book
+                select new BookUpdateDto
+                {
+                    Author = book.Author,
+                    BookId = book.BookId,
+                    BookName = book.BookName,
+                    Genre = book.Genre
+                }).ToList();
             return Ok(books);
         }
 
@@ -28,13 +36,39 @@ namespace StudentLibraryManagementSystem.Controllers
         {
             var book = _dbCtx.Book.Find(id);
             if (book == null) return NotFound();
-            return Ok(book);
+            return Ok(new BookGet1Dto
+            {
+                Author = book.Author,
+                BookId = book.BookId,
+                BookName = book.BookName,
+                Genre = book.Genre,
+                Catalog = new CatalogUpdateDto
+                {
+                    BookId = book.Catalog.BookId,
+                    CatalogId = book.Catalog.CatalogId,
+                    Copies = book.Catalog.Copies,
+                },
+                Reservations = book.Reservation.Select(r => new ReservationUpdateDto
+                {
+                    BookId = r.ReservationId,
+                    CatalogId = r.CatalogId,
+                    ReservationId = r.ReservationId,
+                    ReservationTime = r.ReservationTime,
+                    UserId = r.UserId
+                }
+            ).ToList()
+            });
         }
 
         [HttpPost]
         public IActionResult NewBook([FromBody] BookCreationDto book)
         {
-            _dbCtx.Book.Add(new Book { Author = book.Author, BookName = book.BookName, Genre = book.Genre });
+            _dbCtx.Book.Add(new Book
+            {
+                Author = book.Author,
+                BookName = book.BookName,
+                Genre = book.Genre
+            });
             _dbCtx.SaveChanges();
             var insertedBook = _dbCtx.Book.Find(book);
             return CreatedAtAction("", new { bookId = insertedBook.BookId });
@@ -44,7 +78,13 @@ namespace StudentLibraryManagementSystem.Controllers
         public IActionResult UpdateBook(int id, [FromBody] BookUpdateDto book)
         {
             if (id != book.BookId) return BadRequest();
-            Book updatedBook = new Book { Author = book.Author, BookId = book.BookId, BookName = book.BookName, Genre = book.Genre };
+            Book updatedBook = new Book
+            {
+                Author = book.Author,
+                BookId = book.BookId,
+                BookName = book.BookName,
+                Genre = book.Genre
+            };
             _dbCtx.Entry(updatedBook).State = EntityState.Modified;
             _dbCtx.SaveChanges();
             return NoContent();

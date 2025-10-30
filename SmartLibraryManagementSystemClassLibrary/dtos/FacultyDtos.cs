@@ -16,3 +16,13 @@ public class FacultyUpdateDto
     public string Subject { get; set; }
     public string Course { get; set; }
 }
+
+public class FacultyGet1Dto
+{
+    public int FacultyId { get; set; }
+    public string FacultyName { get; set; }
+    public string Department { get; set; }
+    public string Subject { get; set; }
+    public string Course { get; set; }
+    public UserUpdateDto User { get; set; }
+}

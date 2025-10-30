@@ -21,5 +21,6 @@ public class BookGet1Dto
     public string BookName { get; set; }
     public string Author { get; set; }
     public string Genre { get; set; }
+    public CatalogUpdateDto Catalog { get; set; }
     public List<ReservationUpdateDto> Reservations { get; set; }
 }

@@ -12,3 +12,11 @@ public class CatalogUpdateDto
     public int BookId { get; set; }
     public int Copies { get; set; }
 }
+
+public class CatalogGet1Dto
+{
+    public int CatalogId { get; set; }
+    public BookUpdateDto Book { get; set; }
+    public int Copies { get; set; }
+    public ICollection<ReservationUpdateDto> Reservations { get; set; }
+}

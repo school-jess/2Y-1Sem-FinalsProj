@@ -10,7 +10,8 @@ public class UserCreationDto
     public bool IsFaculty { get; set; }
 }
 
-public class UserUpdateDto {
+public class UserUpdateDto
+{
     public int UserId { get; set; }
     public int UserName { get; set; }
     public int StudentId { get; set; }
@@ -18,4 +19,16 @@ public class UserUpdateDto {
     public bool HasFine { get; set; }
     public bool HasLoan { get; set; }
     public bool IsFaculty { get; set; }
+}
+
+public class UserGet1Dto
+{
+    public int UserId { get; set; }
+    public int UserName { get; set; }
+    public StudentUpdateDto Student { get; set; }
+    public FacultyUpdateDto Faculty { get; set; }
+    public bool HasFine { get; set; }
+    public bool HasLoan { get; set; }
+    public bool IsFaculty { get; set; }
+    public List<ReservationUpdateDto> Reservations { get; set; }
 }

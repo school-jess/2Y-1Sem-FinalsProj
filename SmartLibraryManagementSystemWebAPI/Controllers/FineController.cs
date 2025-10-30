@@ -19,7 +19,13 @@ namespace StudentLibraryManagementSystem.Controllers
         [HttpGet]
         public IActionResult GetFines()
         {
-            var fines = _dbCtx.Fine.ToList();
+            var fines = _dbCtx.Fine.Select(f => new FineUpdateDto
+            {
+                AmtPayedSinceLastFine = f.AmtPayedSinceLastFine,
+                FineAmount = f.FineAmount,
+                FineId = f.FineId,
+                UserId = f.UserId
+            }).ToList();
             return Ok(fines);
         }
 
@@ -28,13 +34,41 @@ namespace StudentLibraryManagementSystem.Controllers
         {
             var fine = _dbCtx.Fine.Find(id);
             if (fine == null) return NotFound();
-            return Ok(fine);
+            return Ok(new FineGet1Dto
+            {
+                AmtPayedSinceLastFine = fine.AmtPayedSinceLastFine,
+                FineAmount = fine.FineAmount,
+                FineId = fine.FineId,
+                User = new UserUpdateDto
+                {
+                    FacultyId = fine.User.FacultyId,
+                    HasFine = fine.User.HasFine,
+                    HasLoan = fine.User.HasLoan,
+                    IsFaculty = fine.User.IsFaculty,
+                    StudentId = fine.User.StudentId,
+                    UserId = fine.User.UserId,
+                    UserName = fine.User.UserName
+                },
+                Reservation = new ReservationUpdateDto
+                {
+                    BookId = fine.Reservaton.BookId,
+                    CatalogId = fine.Reservaton.CatalogId,
+                    ReservationId = fine.Reservaton.ReservationId,
+                    ReservationTime = fine.Reservaton.ReservationTime,
+                    UserId = fine.Reservaton.UserId
+                }
+            });
         }
 
         [HttpPost]
         public IActionResult NewFine([FromBody] FineCreationDto fine)
         {
-            _dbCtx.Fine.Add(new Fine { AmtPayedSinceLastFine = fine.AmtPayedSinceLastFine, FineAmount = fine.FineAmount, FineId = fine.UserId });
+            _dbCtx.Fine.Add(new Fine
+            {
+                AmtPayedSinceLastFine = fine.AmtPayedSinceLastFine,
+                FineAmount = fine.FineAmount,
+                FineId = fine.UserId
+            });
             _dbCtx.SaveChanges();
             var insertedFine = _dbCtx.Fine.Find(fine);
             return CreatedAtAction("", new { fineId = insertedFine.FineId });
@@ -44,7 +78,13 @@ namespace StudentLibraryManagementSystem.Controllers
         public IActionResult UpdateFine(int id, [FromBody] FineUpdateDto fine)
         {
             if (id != fine.FineId) return BadRequest();
-            Fine updatedFine = new Fine { AmtPayedSinceLastFine = fine.AmtPayedSinceLastFine, FineAmount = fine.FineAmount, FineId = fine.FineId, UserId = fine.UserId };
+            Fine updatedFine = new Fine
+            {
+                AmtPayedSinceLastFine = fine.AmtPayedSinceLastFine,
+                FineAmount = fine.FineAmount,
+                FineId = fine.FineId,
+                UserId = fine.UserId
+            };
             _dbCtx.Entry(updatedFine).State = EntityState.Modified;
             _dbCtx.SaveChanges();
             return NoContent();

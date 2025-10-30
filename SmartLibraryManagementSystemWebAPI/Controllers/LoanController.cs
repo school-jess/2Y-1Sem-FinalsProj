@@ -19,8 +19,14 @@ namespace StudentLibraryManagementSystem.Controllers
         [HttpGet]
         public IActionResult GetLoans()
         {
-            var loanes = _dbCtx.Loan.ToList();
-            return Ok(loanes);
+            var loans = _dbCtx.Loan.Select(l => new LoanUpdateDto
+            {
+                AmtLoanedSinceLastLoaned = l.AmtLoanedSinceLastLoaned,
+                LoanAmount = l.LoanAmount,
+                LoanId = l.LoanId,
+                UserId = l.UserId
+            }).ToList();
+            return Ok(loans);
         }
 
         [HttpGet("{id}")]
@@ -28,13 +34,31 @@ namespace StudentLibraryManagementSystem.Controllers
         {
             var loan = _dbCtx.Loan.Find(id);
             if (loan == null) return NotFound();
-            return Ok(loan);
+            return Ok(new LoanGet1Dto
+            {
+                AmtLoanedSinceLastLoaned = loan.AmtLoanedSinceLastLoaned,
+                LoanAmount = loan.LoanAmount,
+                LoanId = loan.LoanId,
+                Reservation = new ReservationUpdateDto
+                {
+                    BookId = loan.Reservaton.BookId,
+                    CatalogId = loan.Reservaton.CatalogId,
+                    ReservationId = loan.Reservaton.ReservationId,
+                    ReservationTime = loan.Reservaton.ReservationTime,
+                    UserId = loan.Reservaton.UserId
+                }
+            });
         }
 
         [HttpPost]
         public IActionResult NewLoan([FromBody] LoanCreationDto loan)
         {
-            _dbCtx.Loan.Add(new Loan { AmtLoanedSinceLastLoaned = loan.AmtLoanedSinceLastLoaned, LoanAmount = loan.LoanAmount, UserId = loan.UserId });
+            _dbCtx.Loan.Add(new Loan
+            {
+                AmtLoanedSinceLastLoaned = loan.AmtLoanedSinceLastLoaned,
+                LoanAmount = loan.LoanAmount,
+                UserId = loan.UserId
+            });
             _dbCtx.SaveChanges();
             var insertedLoan = _dbCtx.Loan.Find(loan);
             return CreatedAtAction("", new { loanId = insertedLoan.LoanId });
@@ -44,7 +68,13 @@ namespace StudentLibraryManagementSystem.Controllers
         public IActionResult UpdateLoan(int id, [FromBody] LoanUpdateDto loan)
         {
             if (id != loan.LoanId) return BadRequest();
-            Loan updateLoan = new Loan { AmtLoanedSinceLastLoaned = loan.AmtLoanedSinceLastLoaned, LoanAmount = loan.LoanAmount, LoanId = loan.LoanId, UserId = loan.UserId };
+            Loan updateLoan = new Loan
+            {
+                AmtLoanedSinceLastLoaned = loan.AmtLoanedSinceLastLoaned,
+                LoanAmount = loan.LoanAmount,
+                LoanId = loan.LoanId,
+                UserId = loan.UserId
+            };
             _dbCtx.Entry(updateLoan).State = EntityState.Modified;
             _dbCtx.SaveChanges();
             return NoContent();

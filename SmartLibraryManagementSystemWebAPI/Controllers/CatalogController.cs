@@ -19,7 +19,12 @@ namespace StudentLibraryManagementSystem.Controllers
         [HttpGet]
         public IActionResult GetCatalogs()
         {
-            var catalogs = _dbCtx.Catalog.ToList();
+            var catalogs = _dbCtx.Catalog.Select(c => new CatalogUpdateDto
+            {
+                BookId = c.BookId,
+                CatalogId = c.CatalogId,
+                Copies = c.Copies
+            }).ToList();
             return Ok(catalogs);
         }
 
@@ -28,7 +33,26 @@ namespace StudentLibraryManagementSystem.Controllers
         {
             var catalog = _dbCtx.Catalog.Find(id);
             if (catalog == null) return NotFound();
-            return Ok(catalog);
+            return Ok(new CatalogGet1Dto
+            {
+                Book = new BookUpdateDto
+                {
+                    Author = catalog.Book.Author,
+                    BookId = catalog.Book.BookId,
+                    BookName = catalog.Book.BookName,
+                    Genre = catalog.Book.Genre
+                },
+                CatalogId = catalog.CatalogId,
+                Copies = catalog.Copies,
+                Reservations = catalog.Reservations.Select(r => new ReservationUpdateDto
+                {
+                    BookId = r.BookId,
+                    CatalogId = r.CatalogId,
+                    ReservationId = r.ReservationId,
+                    ReservationTime = r.ReservationTime,
+                    UserId = r.UserId
+                }).ToList()
+            });
         }
 
         [HttpPost]

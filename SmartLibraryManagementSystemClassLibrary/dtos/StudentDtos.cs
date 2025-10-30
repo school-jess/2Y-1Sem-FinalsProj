@@ -16,3 +16,13 @@ public class StudentUpdateDto
     public string Course { get; set; }
     public int Grade { get; set; }
 }
+
+public class StudentGet1Dto
+{
+    public int StudentId { get; set; }
+    public string StudentName { get; set; }
+    public string Department { get; set; }
+    public string Course { get; set; }
+    public int Grade { get; set; }
+    public UserUpdateDto User { get; set; }
+}
