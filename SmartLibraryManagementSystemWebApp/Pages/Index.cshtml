@@ -6,5 +6,12 @@
 
 <a asp-page="/NewBook">New Book</a>
 <ol>
-    @Model.Books
+    @foreach (var book in Model.Books)
+    {
+        <li>
+            <span>@book.BookName - @book.Author - @book.Genre</span>
+            <button id="edit-book@book.BookId"><img src="~/pen.png" /></button>
+            <button><img id="delete-book@book.BookId" src="~/recycle-bin.png" /></button>
+        </li>
+    }
 </ol>

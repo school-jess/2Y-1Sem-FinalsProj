@@ -1,12 +1,13 @@
-using SmartLibraryManagementSystemClassLibrary.Model;
+using SmartLibraryManagementSystemClassLibrary.Dtos;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Net.Http;
+// using System.Net.Http;
+using System.Text.Json;
 
 namespace SmartLibraryManagementSystemWebApp.Pages;
 
 public class IndexModel : PageModel
 {
-    public List<Book> Books { get; set; }
+    public List<BookUpdateDto> Books { get; set; }
     private readonly ILogger<IndexModel> _logger;
 
     public IndexModel(ILogger<IndexModel> logger)
@@ -22,6 +23,7 @@ public class IndexModel : PageModel
             if (resp.IsSuccessStatusCode)
             {
                 var respContent = await resp.Content.ReadAsStringAsync();
+                Books = JsonSerializer.Deserialize<List<BookUpdateDto>>(respContent);
             }
         }
     }
