@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace MyApp.Namespace
 {
-    public class NewBookModel : PageModel
+    public class BookModel : PageModel
     {
-        public void OnGet()
+        public void OnGet(int id)
         {
         }
     }

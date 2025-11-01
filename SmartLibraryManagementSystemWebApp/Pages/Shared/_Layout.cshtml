@@ -1,12 +1,25 @@
-﻿<!DOCTYPE html>
+﻿@inject HttpContext HttpContext
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
 </head>
+
 <body>
+    @if (HttpContext.Session.GetString("IsLoggedIn") == "true")
+    {
+        <a>Name</a>
+        <a>Log Out</a>
+    }
+    else
+    {
+        <a asp-page="/LogIn">Log In</a>
+    }
     @RenderBody()
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>
