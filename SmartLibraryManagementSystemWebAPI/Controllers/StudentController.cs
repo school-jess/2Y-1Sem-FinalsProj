@@ -59,6 +59,35 @@ namespace StudentLibraryManagementSystem.Controllers
             });
         }
 
+        [HttpGet("{email}")]
+        public IActionResult GetStudent(string email)
+        {
+            var student = _dbCtx.Student.First(s => s.Email == email);
+            if (student == null) return NotFound();
+            return Ok(new StudentGet1Dto
+            {
+                Course = student.Course,
+                Department = student.Department,
+                Grade = student.Grade,
+                StudentId = student.StudentId,
+                StudentName = student.StudentName,
+                Email = student.Email,
+                IsLoggedIn = student.IsLoggedIn,
+                Password = student.Password,
+                User = new UserUpdateDto
+                {
+                    FacultyId = student.User.FacultyId,
+                    HasFine = student.User.HasFine,
+                    HasLoan = student.User.HasLoan,
+                    IsFaculty = student.User.IsFaculty,
+                    StudentId = student.User.StudentId,
+                    UserId = student.User.UserId,
+                    UserName = student.User.UserName,
+                    IsAdmin = student.User.IsAdmin,
+                }
+            });
+        }
+
         [HttpPost]
         public IActionResult NewStudent([FromBody] StudentCreationDto student)
         {

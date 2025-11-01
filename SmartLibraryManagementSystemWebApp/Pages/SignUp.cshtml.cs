@@ -8,5 +8,11 @@ namespace MyApp.Namespace
         public void OnGet()
         {
         }
+
+        public IActionResult OnPostAsync()
+        {
+            // todo post new user
+            return Redirect("/Login");
+        }
     }
 }

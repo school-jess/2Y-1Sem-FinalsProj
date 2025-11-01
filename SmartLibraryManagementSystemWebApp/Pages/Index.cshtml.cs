@@ -1,12 +1,12 @@
 using SmartLibraryManagementSystemClassLibrary.Dtos;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-// using System.Net.Http;
 using System.Text.Json;
 
 namespace SmartLibraryManagementSystemWebApp.Pages;
 
 public class IndexModel : PageModel
 {
+    public bool IsAdmin { get; set; } = false;
     public List<BookUpdateDto> Books { get; set; }
     private readonly ILogger<IndexModel> _logger;
 
@@ -19,11 +19,15 @@ public class IndexModel : PageModel
     {
         using (var httpClient = new HttpClient())
         {
-            var resp = await httpClient.GetAsync("http://localhost:5138/api/Book");
-            if (resp.IsSuccessStatusCode)
+            var getBooks = await httpClient.GetAsync("http://localhost:5138/api/Book");
+            if (getBooks.IsSuccessStatusCode)
             {
-                var respContent = await resp.Content.ReadAsStringAsync();
-                Books = JsonSerializer.Deserialize<List<BookUpdateDto>>(respContent);
+                var getBooksContent = await getBooks.Content.ReadAsStringAsync();
+                Books = JsonSerializer.Deserialize<List<BookUpdateDto>>(getBooksContent);
+            }
+            if (HttpContext.Session.GetString("IsLoggedIn") == "true")
+            {
+
             }
         }
     }

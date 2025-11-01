@@ -4,6 +4,9 @@
     ViewData["Title"] = "Home page";
 }
 
+@if (IsAdmin) {
+    <a asp-page="/NewBook">New Book</a>
+}
 <ol>
     @foreach (var book in Model.Books)
     {

@@ -60,6 +60,34 @@ namespace StudentLibraryManagementSystem.Controllers
             });
         }
 
+        [HttpGet("{email}")]
+        public IActionResult GetFaculty(string email)
+        {
+            var faculty = _dbCtx.Faculty.First(f => f.Email == email);
+            if (faculty == null) return NotFound();
+            return Ok(new FacultyGet1Dto
+            {
+                Course = faculty.Course,
+                Department = faculty.Department,
+                FacultyId = faculty.FacultyId,
+                FacultyName = faculty.FacultyName,
+                Subject = faculty.Subject,
+                Email = faculty.Email,
+                Password = faculty.Password,
+                User = new UserUpdateDto
+                {
+                    FacultyId = faculty.User.FacultyId,
+                    HasFine = faculty.User.HasFine,
+                    HasLoan = faculty.User.HasLoan,
+                    IsFaculty = faculty.User.IsFaculty,
+                    StudentId = faculty.User.StudentId,
+                    UserId = faculty.User.UserId,
+                    UserName = faculty.User.UserName,
+                    IsAdmin = faculty.User.IsAdmin
+                }
+            });
+        }
+
         [HttpPost]
         public IActionResult NewFaculty([FromBody] FacultyCreationDto faculty)
         {
