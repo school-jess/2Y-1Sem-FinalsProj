@@ -1,16 +1,25 @@
 ﻿@page
-@model MyApp.Namespace.LogInModel
+@model MyApp.Namespace.SignUpModel
+
 @{
-    ViewData["Title"] = "Log In Page";
+    ViewData["Title"] = "Sign Up Page";
 }
 
 <form>
+    <div>
+        <label for="name">Name: </label>
+        <input type="text" id="name" />
+    </div>
     <div>
         <label for="email">Email: </label>
         <input type="text" id="email" />
     </div>
     <div>
         <label for="password">Password: </label>
+        <input type="password" id="password" />
+    </div>
+    <div>
+        <label for="password">Confirm Password: </label>
         <input type="password" id="password" />
     </div>
     <div>

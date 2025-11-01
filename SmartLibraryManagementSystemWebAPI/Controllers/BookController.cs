@@ -26,7 +26,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     Author = book.Author,
                     BookId = book.BookId,
                     BookName = book.BookName,
-                    Genre = book.Genre
+                    Synopsis = book.Synopsis,
+                    ReleaseDate = book.ReleaseDate,
                 }).ToList();
             return Ok(books);
         }
@@ -41,12 +42,15 @@ namespace StudentLibraryManagementSystem.Controllers
                 Author = book.Author,
                 BookId = book.BookId,
                 BookName = book.BookName,
-                Genre = book.Genre,
+                Synopsis = book.Synopsis,
+                ReleaseDate = book.ReleaseDate,
                 Catalog = new CatalogUpdateDto
                 {
                     BookId = book.Catalog.BookId,
                     CatalogId = book.Catalog.CatalogId,
                     Copies = book.Catalog.Copies,
+                    ClassificationId = book.Catalog.ClassificationId,
+                    Genre = book.Catalog.Genre
                 },
                 Reservations = book.Reservation.Select(r => new ReservationUpdateDto
                 {
@@ -56,7 +60,7 @@ namespace StudentLibraryManagementSystem.Controllers
                     ReservationTime = r.ReservationTime,
                     UserId = r.UserId
                 }
-            ).ToList()
+                ).ToList()
             });
         }
 
@@ -67,7 +71,8 @@ namespace StudentLibraryManagementSystem.Controllers
             {
                 Author = book.Author,
                 BookName = book.BookName,
-                Genre = book.Genre
+                Synopsis = book.Synopsis,
+                ReleaseDate = book.ReleaseDate,
             });
             _dbCtx.SaveChanges();
             var insertedBook = _dbCtx.Book.Find(book);
@@ -83,7 +88,6 @@ namespace StudentLibraryManagementSystem.Controllers
                 Author = book.Author,
                 BookId = book.BookId,
                 BookName = book.BookName,
-                Genre = book.Genre
             };
             _dbCtx.Entry(updatedBook).State = EntityState.Modified;
             _dbCtx.SaveChanges();

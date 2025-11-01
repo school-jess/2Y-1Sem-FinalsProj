@@ -21,4 +21,5 @@ public class User
     public bool HasLoan { get; set; }
     public bool IsFaculty { get; set; }
     public ICollection<Reservation> Reservations { get; set; }
+    public bool IsAdmin { get; set; }
 }

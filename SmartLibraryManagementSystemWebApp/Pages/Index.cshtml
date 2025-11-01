@@ -8,7 +8,7 @@
     @foreach (var book in Model.Books)
     {
         <li>
-            <span>@book.BookName - @book.Author - @book.Genre</span>
+            <span>@book.BookName - @book.Author</span>
             <button id="edit-book@book.BookId"><img src="~/pen.png" /></button>
             <button><img id="delete-book@book.BookId" src="~/recycle-bin.png" /></button>
         </li>

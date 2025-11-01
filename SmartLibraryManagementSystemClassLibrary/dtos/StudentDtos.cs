@@ -6,6 +6,9 @@ public class StudentCreationDto
     public string Department { get; set; }
     public string Course { get; set; }
     public int Grade { get; set; }
+    public string Email { get; set; }
+    public string Password { get; set; }
+    public bool IsLoggedIn { get; set; }
 }
 
 public class StudentUpdateDto
@@ -15,6 +18,9 @@ public class StudentUpdateDto
     public string Department { get; set; }
     public string Course { get; set; }
     public int Grade { get; set; }
+    public string Email { get; set; }
+    public string Password { get; set; }
+    public bool IsLoggedIn { get; set; }
 }
 
 public class StudentGet1Dto
@@ -25,4 +31,7 @@ public class StudentGet1Dto
     public string Course { get; set; }
     public int Grade { get; set; }
     public UserUpdateDto User { get; set; }
+    public string Email { get; set; }
+    public string Password { get; set; }
+    public bool IsLoggedIn { get; set; }
 }

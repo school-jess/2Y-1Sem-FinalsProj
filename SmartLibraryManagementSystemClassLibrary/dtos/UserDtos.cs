@@ -8,6 +8,7 @@ public class UserCreationDto
     public bool HasFine { get; set; }
     public bool HasLoan { get; set; }
     public bool IsFaculty { get; set; }
+    public bool IsAdmin { get; set; }
 }
 
 public class UserUpdateDto
@@ -19,6 +20,7 @@ public class UserUpdateDto
     public bool HasFine { get; set; }
     public bool HasLoan { get; set; }
     public bool IsFaculty { get; set; }
+    public bool IsAdmin { get; set; }
 }
 
 public class UserGet1Dto
@@ -31,4 +33,5 @@ public class UserGet1Dto
     public bool HasLoan { get; set; }
     public bool IsFaculty { get; set; }
     public List<ReservationUpdateDto> Reservations { get; set; }
+    public bool IsAdmin { get; set; }
 }

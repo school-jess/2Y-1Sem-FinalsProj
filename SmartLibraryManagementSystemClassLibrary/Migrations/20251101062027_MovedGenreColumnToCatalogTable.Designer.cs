@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace SmartLibraryManagementSystemClassLibrary.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20251101062027_MovedGenreColumnToCatalogTable")]
+    partial class MovedGenreColumnToCatalogTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,8 +75,7 @@ namespace SmartLibraryManagementSystemClassLibrary.Migrations
 
                     b.Property<string>("Genre")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("varchar(10)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("CatalogId");
 
@@ -278,9 +280,6 @@ namespace SmartLibraryManagementSystemClassLibrary.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("HasLoan")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("IsAdmin")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsFaculty")

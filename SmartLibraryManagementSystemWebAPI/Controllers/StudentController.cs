@@ -42,6 +42,9 @@ namespace StudentLibraryManagementSystem.Controllers
                 Grade = student.Grade,
                 StudentId = student.StudentId,
                 StudentName = student.StudentName,
+                Email = student.Email,
+                IsLoggedIn = student.IsLoggedIn,
+                Password = student.Password,
                 User = new UserUpdateDto
                 {
                     FacultyId = student.User.FacultyId,
@@ -50,7 +53,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     IsFaculty = student.User.IsFaculty,
                     StudentId = student.User.StudentId,
                     UserId = student.User.UserId,
-                    UserName = student.User.UserName
+                    UserName = student.User.UserName,
+                    IsAdmin = student.User.IsAdmin,
                 }
             });
         }
@@ -63,7 +67,10 @@ namespace StudentLibraryManagementSystem.Controllers
                 Course = student.Course,
                 Department = student.Department,
                 Grade = student.Grade,
-                StudentName = student.StudentName
+                StudentName = student.StudentName,
+                Email = student.Email,
+                IsLoggedIn = student.IsLoggedIn,
+                Password = student.Password
             });
             _dbCtx.SaveChanges();
             var insertedStudent = _dbCtx.Student.Find(student);
@@ -80,7 +87,10 @@ namespace StudentLibraryManagementSystem.Controllers
                 Department = student.Department,
                 Grade = student.Grade,
                 StudentId = student.StudentId,
-                StudentName = student.StudentName
+                StudentName = student.StudentName,
+                Email = student.Email,
+                IsLoggedIn = student.IsLoggedIn,
+                Password = student.Password,
             };
             _dbCtx.Entry(updatedStudent).State = EntityState.Modified;
             _dbCtx.SaveChanges();

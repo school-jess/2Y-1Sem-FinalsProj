@@ -25,7 +25,9 @@ namespace StudentLibraryManagementSystem.Controllers
                 Department = f.Department,
                 FacultyId = f.FacultyId,
                 FacultyName = f.FacultyName,
-                Subject = f.Subject
+                Subject = f.Subject,
+                Email = f.Email,
+                Password = f.Password
             }).ToList();
             return Ok(faculties);
         }
@@ -42,6 +44,8 @@ namespace StudentLibraryManagementSystem.Controllers
                 FacultyId = faculty.FacultyId,
                 FacultyName = faculty.FacultyName,
                 Subject = faculty.Subject,
+                Email = faculty.Email,
+                Password = faculty.Password,
                 User = new UserUpdateDto
                 {
                     FacultyId = faculty.User.FacultyId,
@@ -50,7 +54,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     IsFaculty = faculty.User.IsFaculty,
                     StudentId = faculty.User.StudentId,
                     UserId = faculty.User.UserId,
-                    UserName = faculty.User.UserName
+                    UserName = faculty.User.UserName,
+                    IsAdmin = faculty.User.IsAdmin
                 }
             });
         }
@@ -63,7 +68,10 @@ namespace StudentLibraryManagementSystem.Controllers
                 Course = faculty.Course,
                 Department = faculty.Department,
                 FacultyName = faculty.FacultyName,
-                Subject = faculty.Subject
+                Subject = faculty.Subject,
+                Email = faculty.Email,
+                IsLoggedIn = faculty.IsLoggedIn,
+                Password = faculty.Password
             });
             _dbCtx.SaveChanges();
             var insertedFaculty = _dbCtx.Faculty.Find(faculty);
@@ -80,7 +88,10 @@ namespace StudentLibraryManagementSystem.Controllers
                 Department = faculty.Department,
                 FacultyId = faculty.FacultyId,
                 FacultyName = faculty.FacultyName,
-                Subject = faculty.Subject
+                Subject = faculty.Subject,
+                Email = faculty.Email,
+                IsLoggedIn = faculty.IsLoggedIn,
+                Password = faculty.Password
             };
             _dbCtx.Entry(updatedFaculty).State = EntityState.Modified;
             _dbCtx.SaveChanges();

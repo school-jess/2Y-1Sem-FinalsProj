@@ -27,7 +27,8 @@ namespace StudentLibraryManagementSystem.Controllers
                 IsFaculty = u.IsFaculty,
                 StudentId = u.StudentId,
                 UserId = u.UserId,
-                UserName = u.UserName
+                UserName = u.UserName,
+                IsAdmin = u.IsAdmin,
             }).ToList();
             return Ok(users);
         }
@@ -46,6 +47,9 @@ namespace StudentLibraryManagementSystem.Controllers
                     FacultyId = user.Faculty.FacultyId,
                     FacultyName = user.Faculty.FacultyName,
                     Subject = user.Faculty.Subject,
+                    Email = user.Faculty.Email,
+                    IsLoggedIn = user.Faculty.IsLoggedIn,
+                    Password = user.Faculty.Password
                 },
                 HasFine = user.HasFine,
                 HasLoan = user.HasLoan,
@@ -64,10 +68,14 @@ namespace StudentLibraryManagementSystem.Controllers
                     Department = user.Student.Department,
                     Grade = user.Student.Grade,
                     StudentId = user.Student.StudentId,
-                    StudentName = user.Student.StudentName
+                    StudentName = user.Student.StudentName,
+                    Email = user.Student.Email,
+                    IsLoggedIn = user.Student.IsLoggedIn,
+                    Password = user.Student.Password
                 },
                 UserId = user.UserId,
-                UserName = user.UserName
+                UserName = user.UserName,
+                IsAdmin = user.IsAdmin
             });
         }
 
@@ -81,7 +89,8 @@ namespace StudentLibraryManagementSystem.Controllers
                 HasLoan = user.HasLoan,
                 IsFaculty = user.IsFaculty,
                 StudentId = user.StudentId,
-                UserName = user.UserName
+                UserName = user.UserName,
+                IsAdmin = user.IsAdmin,
             });
             _dbCtx.SaveChanges();
             var insertedUser = _dbCtx.User.Find(user);
@@ -100,7 +109,8 @@ namespace StudentLibraryManagementSystem.Controllers
                 IsFaculty = user.IsFaculty,
                 StudentId = user.StudentId,
                 UserId = user.UserId,
-                UserName = user.UserName
+                UserName = user.UserName,
+                IsAdmin = user.IsAdmin
             };
             _dbCtx.Entry(updatedUser).State = EntityState.Modified;
             _dbCtx.SaveChanges();

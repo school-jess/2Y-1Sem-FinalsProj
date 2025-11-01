@@ -27,7 +27,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     CatalogId = reservation.CatalogId,
                     ReservationId = reservation.ReservationId,
                     ReservationTime = reservation.ReservationTime,
-                    UserId = reservation.UserId
+                    UserId = reservation.UserId,
+                    ReservationDate = reservation.ReservationDate,
                 }).ToList();
             return Ok(reservations);
         }
@@ -44,13 +45,14 @@ namespace StudentLibraryManagementSystem.Controllers
                     Author = reservation.Book.Author,
                     BookId = reservation.Book.BookId,
                     BookName = reservation.Book.BookName,
-                    Genre = reservation.Book.Genre
                 },
                 Catalog = new CatalogUpdateDto
                 {
                     BookId = reservation.Catalog.BookId,
                     CatalogId = reservation.Catalog.CatalogId,
-                    Copies = reservation.Catalog.Copies
+                    Copies = reservation.Catalog.Copies,
+                    ClassificationId = reservation.Catalog.ClassificationId,
+                    Genre = reservation.Catalog.Genre,
                 },
                 Fine = new FineUpdateDto
                 {

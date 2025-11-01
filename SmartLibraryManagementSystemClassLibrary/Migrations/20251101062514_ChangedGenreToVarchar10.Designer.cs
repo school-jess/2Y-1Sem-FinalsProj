@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace SmartLibraryManagementSystemClassLibrary.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20251101062514_ChangedGenreToVarchar10")]
+    partial class ChangedGenreToVarchar10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -278,9 +281,6 @@ namespace SmartLibraryManagementSystemClassLibrary.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("HasLoan")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("IsAdmin")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsFaculty")

@@ -40,7 +40,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     Author = catalog.Book.Author,
                     BookId = catalog.Book.BookId,
                     BookName = catalog.Book.BookName,
-                    Genre = catalog.Book.Genre
+                    ReleaseDate = catalog.Book.ReleaseDate,
+                    Synopsis = catalog.Book.Synopsis
                 },
                 CatalogId = catalog.CatalogId,
                 Copies = catalog.Copies,
@@ -58,7 +59,13 @@ namespace StudentLibraryManagementSystem.Controllers
         [HttpPost]
         public IActionResult NewCatalog([FromBody] CatalogCreationDto catalog)
         {
-            _dbCtx.Catalog.Add(new Catalog { BookId = catalog.BookId, Copies = catalog.Copies });
+            _dbCtx.Catalog.Add(new Catalog
+            {
+                BookId = catalog.BookId,
+                Copies = catalog.Copies,
+                ClassificationId = catalog.ClassificationId,
+                Genre = catalog.Genre
+            });
             _dbCtx.SaveChanges();
             var insertedCatalog = _dbCtx.Catalog.Find(catalog);
             return CreatedAtAction("", new { catalogId = insertedCatalog.CatalogId });
@@ -68,7 +75,14 @@ namespace StudentLibraryManagementSystem.Controllers
         public IActionResult UpdateCatalog(int id, [FromBody] CatalogUpdateDto catalog)
         {
             if (id != catalog.CatalogId) return BadRequest();
-            Catalog updatedCatalog = new Catalog { BookId = catalog.BookId, CatalogId = catalog.CatalogId, Copies = catalog.Copies };
+            Catalog updatedCatalog = new Catalog
+            {
+                BookId = catalog.BookId,
+                CatalogId = catalog.CatalogId,
+                Copies = catalog.Copies,
+                ClassificationId = catalog.ClassificationId,
+                Genre = catalog.Genre
+            };
             _dbCtx.Entry(updatedCatalog).State = EntityState.Modified;
             _dbCtx.SaveChanges();
             return NoContent();

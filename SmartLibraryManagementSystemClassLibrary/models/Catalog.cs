@@ -12,4 +12,8 @@ public class Catalog
     public Book Book { get; set; }
     public int Copies { get; set; }
     public ICollection<Reservation> Reservations { get; set; }
+    [StringLength(10)]
+    public string Genre { get; set; }
+    [StringLength(10)]
+    public string ClassificationId { get; set; }
 }

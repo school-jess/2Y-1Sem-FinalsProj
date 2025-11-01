@@ -6,6 +6,9 @@ public class FacultyCreationDto
     public string Department { get; set; }
     public string Subject { get; set; }
     public string Course { get; set; }
+    public string Email { get; set; }
+    public string Password { get; set; }
+    public bool IsLoggedIn { get; set; }
 }
 
 public class FacultyUpdateDto
@@ -15,6 +18,9 @@ public class FacultyUpdateDto
     public string Department { get; set; }
     public string Subject { get; set; }
     public string Course { get; set; }
+    public string Email { get; set; }
+    public string Password { get; set; }
+    public bool IsLoggedIn { get; set; }
 }
 
 public class FacultyGet1Dto
@@ -25,4 +31,7 @@ public class FacultyGet1Dto
     public string Subject { get; set; }
     public string Course { get; set; }
     public UserUpdateDto User { get; set; }
+    public string Email { get; set; }
+    public string Password { get; set; }
+    public bool IsLoggedIn { get; set; }
 }

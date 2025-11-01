@@ -6,6 +6,7 @@ public class ReservationCreationDto
     public int BookId { get; set; }
     public DateTime ReservationTime { get; set; }
     public int CatalogId { get; set; }
+    public DateTime ReservationDate { get; set; }
 }
 
 public class ReservationUpdateDto
@@ -16,6 +17,7 @@ public class ReservationUpdateDto
     public int BookId { get; set; }
     public DateTime ReservationTime { get; set; }
     public int CatalogId { get; set; }
+    public DateTime ReservationDate { get; set; }
 }
 
 public class ReservationGet1Dto
@@ -28,4 +30,5 @@ public class ReservationGet1Dto
     public CatalogUpdateDto Catalog { get; set; }
     public FineUpdateDto Fine { get; set; }
     public LoanUpdateDto Loan { get; set; }
+    public DateTime ReservationDate { get; set; }
 }
