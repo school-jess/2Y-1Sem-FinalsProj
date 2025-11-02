@@ -9,6 +9,7 @@
 </head>
 
 <body>
+    <input placeholder="Search a book..."/>
     @if (HttpContext.Session.GetString("IsLoggedIn") == "true")
     {
         <a>@HttpContext.Session.GetString("LogInName")</a>

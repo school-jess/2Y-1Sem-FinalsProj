@@ -4,7 +4,7 @@
     ViewData["Title"] = "Home page";
 }
 
-@if (IsAdmin) {
+@if (Model.IsAdmin) {
     <a asp-page="/NewBook">New Book</a>
 }
 <ol>
@@ -12,7 +12,7 @@
     {
         <li>
             <span>@book.BookName - @book.Author</span>
-            @if (IsAdmin) {
+            @if (Model.IsAdmin) {
                 <button id="edit-book@book.BookId"><img src="~/pen.png" /></button>
                 <button><img id="delete-book@book.BookId" src="~/recycle-bin.png" /></button>
             }

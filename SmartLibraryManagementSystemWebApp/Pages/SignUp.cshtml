@@ -12,6 +12,16 @@
         <span asp-validation-for="Input.Name"></span>
     </div>
     <div>
+        <label asp-for="Input.Department">Department: </label>
+        <input asp-for="Input.Department" />
+        <span asp-validation-for="Input.Department"></span>
+    </div>
+    <div>
+        <label asp-for="Input.Course">Course: </label>
+        <input asp-for="Input.Course" />
+        <span asp-validation-for="Input.Course"></span>
+    </div>
+    <div>
         <label asp-for="Input.Email">Email: </label>
         <input asp-for="Input.Email" />
         <span asp-validation-for="Input.Email"></span>
@@ -26,6 +36,22 @@
         <input type="password" asp-for="Input.ConfirmPassword" />
         <span asp-validation-for="Input.ConfirmPassword"></span>
     </div>
+    @if (Model.Input.IsEducator)
+    {
+        <div>
+            <label asp-for="FacultyInput.Subject">Is educator</label>
+            <input asp-for="FacultyInput.Subject" />
+             <span asp-validation-for="FacultyInput.Subject"></span>
+        </div>
+    }
+    else
+    {
+        <div>
+            <label asp-for="StudentInput.Grade">Grade: </label>
+            <input asp-for="StudentInput.Grade" />
+             <span asp-validation-for="StudentInput.Grade"></span>
+        </div>
+    }
     <div>
         <input type="checkbox" asp-for="Input.IsEducator" />
         <label asp-for="Input.IsEducator">Is educator</label>
