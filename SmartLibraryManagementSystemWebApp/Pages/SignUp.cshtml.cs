@@ -43,9 +43,6 @@ namespace MyApp.Namespace
 
         public void OnGet()
         {
-            Input = new InputModel();
-            FacultyInput = new EducatorInputModel();
-            StudentInput = new StudentInputModel();
         }
 
         public async Task<IActionResult> OnPostAsync()

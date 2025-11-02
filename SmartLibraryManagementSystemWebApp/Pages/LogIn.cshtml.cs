@@ -45,6 +45,7 @@ namespace MyApp.Namespace
                         {
                             HttpContext.Session.SetString("IsLoggedIn", "true");
                             HttpContext.Session.SetString("LogInName", faculty.FacultyName);
+                            HttpContext.Session.SetString("IsEducator", "true");
                             faculty.IsLoggedIn = true;
                             string facultySerialized = JsonSerializer.Serialize(faculty);
                             var facultyHttpCont = new StringContent(facultySerialized, Encoding.UTF8, "application/json");
@@ -60,6 +61,7 @@ namespace MyApp.Namespace
                         {
                             HttpContext.Session.SetString("IsLoggedIn", "true");
                             HttpContext.Session.SetString("LogInName", student.StudentName);
+                            HttpContext.Session.SetString("IsEducator", "false");
                             student.IsLoggedIn = true;
                             string studentSerialized = JsonSerializer.Serialize(student);
                             var studentHttpCont = new StringContent(studentSerialized, Encoding.UTF8, "application/json");
