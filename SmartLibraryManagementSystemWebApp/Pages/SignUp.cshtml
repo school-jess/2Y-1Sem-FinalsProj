@@ -7,24 +7,29 @@
 
 <form method="post">
     <div>
-        <label for="name">Name: </label>
-        <input type="text" id="name" />
+        <label asp-for="Input.Name">Name: </label>
+        <input asp-for="Input.Name" />
+        <span asp-validation-for="Input.Name"></span>
     </div>
     <div>
-        <label for="email">Email: </label>
-        <input type="text" id="email" />
+        <label asp-for="Input.Email">Email: </label>
+        <input asp-for="Input.Email" />
+        <span asp-validation-for="Input.Email"></span>
     </div>
     <div>
-        <label for="password">Password: </label>
-        <input type="password" id="password" />
+        <label asp-for="Input.Password">Password: </label>
+        <input asp-for="Input.Password" />
+        <span asp-validation-for="Input.Password"></span>
     </div>
     <div>
-        <label for="password">Confirm Password: </label>
-        <input type="password" id="password" />
+        <label asp-for="Input.ConfirmPassword">Confirm Password: </label>
+        <input type="password" asp-for="Input.ConfirmPassword" />
+        <span asp-validation-for="Input.ConfirmPassword"></span>
     </div>
     <div>
-        <input type="checkbox" id="educatorCheck" />
-        <label for="educatorCheck">Is educator</label>
+        <input type="checkbox" asp-for="Input.IsEducator" />
+        <label asp-for="Input.IsEducator">Is educator</label>
+         <span asp-validation-for="Input.IsEducator"></span>
     </div>
     <button>Submit</button>
 </form>

@@ -1,5 +1,10 @@
 ﻿@page "{id}"
 @model MyApp.Namespace.BookModel
 @{
-    ViewData["Title"] = "";
+    ViewData["Title"] = @Book.BookName;
 }
+
+<h1>@Book.BookName</h1>
+<h2>@Book.Author</h2>
+<h3>Released - @Book.ReleaseDate</h3>
+<p>@Book.Synopsis</p>

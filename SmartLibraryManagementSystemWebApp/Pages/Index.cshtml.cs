@@ -25,10 +25,6 @@ public class IndexModel : PageModel
                 var getBooksContent = await getBooks.Content.ReadAsStringAsync();
                 Books = JsonSerializer.Deserialize<List<BookUpdateDto>>(getBooksContent);
             }
-            if (HttpContext.Session.GetString("IsLoggedIn") == "true")
-            {
-
-            }
         }
     }
 }

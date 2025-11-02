@@ -30,7 +30,7 @@ namespace MyApp.Namespace
             if (!ModelState.IsValid) return Page();
             using (var httpClient = new HttpClient())
             {
-                // todo handle log in inside the web api instead of here 
+                // todo handle authentication in the web api instead of here 
                 string apiLink = "http://localhost:5138/api/";
                 if (Input.IsEducator) apiLink += $"Faculty/{Input.Email}";
                 else apiLink += $"Student/{Input.Email}";
@@ -48,7 +48,7 @@ namespace MyApp.Namespace
                             faculty.IsLoggedIn = true;
                             string facultySerialized = JsonSerializer.Serialize(faculty);
                             var facultyHttpCont = new StringContent(facultySerialized, Encoding.UTF8, "application/json");
-                            var setLoginStat = await httpClient.PutAsync("http://localhost:5138/api/Faculty", facultyHttpCont);
+                            var setLoginStat = await httpClient.PutAsync($"http://localhost:5138/api/Faculty/{faculty.FacultyId}", facultyHttpCont);
                             if (!setLoginStat.IsSuccessStatusCode) return Page(); // todo tell user something went wrong on our end
                         }
                         else return Page(); // todo return login failed
@@ -56,7 +56,15 @@ namespace MyApp.Namespace
                     else
                     {
                         StudentGet1Dto student = JsonSerializer.Deserialize<StudentGet1Dto>(respContent);
-                        if (student.Password == Input.Password) HttpContext.Session.SetString("IsLoggedIn", "true");
+                        if (student.Password == Input.Password)
+                        {
+                            HttpContext.Session.SetString("IsLoggedIn", "true");
+                            HttpContext.Session.SetString("LogInName", student.StudentName);
+                            student.IsLoggedIn = true;
+                            string studentSerialized = JsonSerializer.Serialize(student);
+                            var studentHttpCont = new StringContent(studentSerialized, Encoding.UTF8, "application/json");
+                            var setLoginStat = await httpClient.PutAsync($"http://localhost:5138/api/Student/{student.StudentId}", studentHttpCont);
+                        }
                         else return Page(); // todo return login failed
                     }
                 }
