@@ -28,7 +28,7 @@ namespace MyApp.Namespace
             public string Password { get; set; }
             [DataType(DataType.Password)]
             public string ConfirmPassword { get; set; }
-            public bool IsEducator { get; set; } = true;
+            public bool IsEducator { get; set; }
         }
 
         public class EducatorInputModel
