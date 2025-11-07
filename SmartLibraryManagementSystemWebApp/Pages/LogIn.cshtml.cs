@@ -45,12 +45,12 @@ namespace MyApp.Namespace
                         {
                             HttpContext.Session.SetString("IsLoggedIn", "true");
                             HttpContext.Session.SetString("LogInName", faculty.FacultyName);
-                            HttpContext.Session.SetString("UserId", $"{faculty.FacultyId}");
+                            HttpContext.Session.SetString("UserId", $"{faculty.User.StudentId}");
                             faculty.IsLoggedIn = true;
                             string facultySerialized = JsonSerializer.Serialize(faculty);
                             var facultyHttpCont = new StringContent(facultySerialized, Encoding.UTF8, "application/json");
                             var setLoginStat = await httpClient.PutAsync($"http://localhost:5138/api/Faculty/{faculty.FacultyId}", facultyHttpCont);
-                            if (!setLoginStat.IsSuccessStatusCode) return Page(); // todo tell user something went wrong on our end
+                            if (!setLoginStat.IsSuccessStatusCode) return new StatusCodeResult(500); // todo tell user something went wrong on our end
                         }
                         else return Page(); // todo return login failed
                     }
@@ -61,17 +61,17 @@ namespace MyApp.Namespace
                         {
                             HttpContext.Session.SetString("IsLoggedIn", "true");
                             HttpContext.Session.SetString("LogInName", student.StudentName);
-                            HttpContext.Session.SetString("UserId", $"{student.StudentId}");
+                            HttpContext.Session.SetString("UserId", $"{student.User.UserId}");
                             student.IsLoggedIn = true;
                             string studentSerialized = JsonSerializer.Serialize(student);
                             var studentHttpCont = new StringContent(studentSerialized, Encoding.UTF8, "application/json");
                             var setLoginStat = await httpClient.PutAsync($"http://localhost:5138/api/Student/{student.StudentId}", studentHttpCont);
-                            if (!setLoginStat.IsSuccessStatusCode) return Page();
+                            if (!setLoginStat.IsSuccessStatusCode) return new StatusCodeResult(500);
                         }
                         else return Page(); // todo return login failed
                     }
                 }
-                else return Page();
+                else new StatusCodeResult(500);
             }
             return Redirect("/Index");
         }

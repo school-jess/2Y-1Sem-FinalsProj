@@ -18,7 +18,7 @@ namespace MyApp.Namespace
                     var respCont = await resp.Content.ReadAsStringAsync();
                     Book = JsonSerializer.Deserialize<BookGet1Dto>(respCont);
                 }
-                else return NotFound();
+                else return new StatusCodeResult(500);
                 // todo get catalog
             }
             return Page();

@@ -17,6 +17,9 @@ namespace MyApp.Namespace
             public string Author { get; set; }
             public DateTime ReleaseDate { get; set; }
             public string Synopsis { get; set; }
+            public string ClassificationId { get; set; }
+            public int Copies { get; set; }
+            public string Genre { get; set; }
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -25,7 +28,11 @@ namespace MyApp.Namespace
             string userName = HttpContext.Session.GetString("LogInName");
             using (var httpClient = new HttpClient())
             {
-                var resp = httpClient.GetAsync($"http://localhost:5138/api/User/{userName}");
+                var getUser = await httpClient.GetAsync($"http://localhost:5138/api/User/{userName}"); // todo should not be faculty or student name to use
+                if (!getUser.IsSuccessStatusCode) return new StatusCodeResult(500);
+                var getUserCont = await getUser.Content.ReadAsStringAsync();
+                var user = JsonSerializer.Deserialize<UserGet1Dto>(getUserCont);
+                if (!user.IsAdmin) return NotFound();
             }
             return Page();
         }
@@ -44,8 +51,22 @@ namespace MyApp.Namespace
                 };
                 string bookSerialized = JsonSerializer.Serialize(book);
                 var bookHttpCont = new StringContent(bookSerialized, Encoding.UTF8, "application/json");
-                var resp = await httpClient.PostAsync("http://localhost:5138/api", bookHttpCont);
-                if (!resp.IsSuccessStatusCode) return Page();
+                var newBook = await httpClient.PostAsync("http://localhost:5138/api", bookHttpCont);
+                var getBook = await httpClient.GetAsync($"http://localhost:5138/api/Book/{Input.Name}");
+                if (!getBook.IsSuccessStatusCode) return new StatusCodeResult(500);
+                var getBookContent = await getBook.Content.ReadAsStringAsync();
+                var insertedBook = JsonSerializer.Deserialize<BookGet1Dto>(getBookContent);
+                CatalogCreationDto catalog = new CatalogCreationDto
+                {
+                    BookId = insertedBook.BookId,
+                    ClassificationId = Input.ClassificationId,
+                    Copies = Input.Copies,
+                    Genre = Input.Genre,
+                };
+                string catalogSerialized = JsonSerializer.Serialize(catalog);
+                var catalogHttpContent = new StringContent(catalogSerialized, Encoding.UTF8, "application/json");
+                var createCatalog = await httpClient.PostAsync("http://localhost:5138/api/Catalog/", catalogHttpContent);
+                if (!newBook.IsSuccessStatusCode) return new StatusCodeResult(500);
             }
             return Redirect("/Index");
         }

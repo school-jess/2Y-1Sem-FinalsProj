@@ -74,10 +74,13 @@ namespace MyApp.Namespace
                     string facultySerialized = JsonSerializer.Serialize(faculty);
                     var facultyHttpCont = new StringContent(facultySerialized, Encoding.UTF8, "application/json");
                     createFacultyStudent = await httpClient.PostAsync(apiLink, facultyHttpCont);
-                    // todo get the newly created faculty
+                    var getFaculty = await httpClient.GetAsync($"http://localhost:5138/api/Faculty/{Input.Name}");
+                    if (!getFaculty.IsSuccessStatusCode) return Page();
+                    var getFacultyContent = await getFaculty.Content.ReadAsStringAsync();
+                    var insertedFaculty = JsonSerializer.Deserialize<FacultyGet1Dto>(getFacultyContent);
                     user = new UserCreationDto
                     {
-                        // FacultyId = ,
+                        FacultyId = insertedFaculty.FacultyId,
                         HasFine = false,
                         HasLoan = false,
                         IsAdmin = false,
@@ -104,7 +107,10 @@ namespace MyApp.Namespace
                     string studentSerialized = JsonSerializer.Serialize(student);
                     var studentHttpCont = new StringContent(studentSerialized, Encoding.UTF8, "application/json");
                     createFacultyStudent = await httpClient.PostAsync(apiLink, studentHttpCont);
-                    // todo get the newly created faculty
+                    var getStudent = await httpClient.GetAsync($"http://localhost:5138/api/Student/{Input.Name}");
+                    if (!getStudent.IsSuccessStatusCode) return Page();
+                    var getStudentContent = await getStudent.Content.ReadAsStringAsync();
+                    var insertedStudent = JsonSerializer.Deserialize<StudentGet1Dto>(getStudentContent);
                     user = new UserCreationDto
                     {
                         FacultyId = 0,
@@ -112,14 +118,14 @@ namespace MyApp.Namespace
                         HasLoan = false,
                         IsAdmin = false,
                         IsFaculty = false,
-                        // StudentId = ,
+                        StudentId = insertedStudent.StudentId,
                         UserName = student.StudentName,
                     };
                     string userSerialized = JsonSerializer.Serialize(user);
                     var userHttpCont = new StringContent(userSerialized, Encoding.UTF8, "application/json");
                     createUser = await httpClient.PostAsync("http://localhost:5138/api/User/", userHttpCont);
                 }
-                if (!(createFacultyStudent.IsSuccessStatusCode && createUser.IsSuccessStatusCode)) return Page();
+                if (!(createFacultyStudent.IsSuccessStatusCode && createUser.IsSuccessStatusCode)) return new StatusCodeResult(500);
             }
             return Redirect("/LogIn");
         }
