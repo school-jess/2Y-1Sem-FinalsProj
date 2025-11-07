@@ -1,4 +1,4 @@
-﻿@inject HttpContext HttpContext
+﻿@using Microsoft.AspNetCore.Http
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,15 +9,21 @@
 </head>
 
 <body>
+    @{
+        string isLoggedIn = Context.Session.GetString("IsLoggedIn");
+        string logInName = Context.Session.GetString("LogInName");
+        string userId = Context.Session.GetString("UserId");
+    }
     <input placeholder="Search a book..."/>
-    @if (HttpContext.Session.GetString("IsLoggedIn") == "true")
+    @if (isLoggedIn == "true")
     {
-        <a asp-page='/User/@HttpContext.Session.GetString("UserId")'>@HttpContext.Session.GetString("LogInName")</a>
+        <a asp-page="/User/@userId">@logInName</a>
         <a>Log Out(todo)</a>
     }
     else
     {
         <a asp-page="/LogIn">Log In</a>
+        <a asp-page="/SignUp">Sign In</a>
     }
     @RenderBody()
     @await RenderSectionAsync("Scripts", required: false)
