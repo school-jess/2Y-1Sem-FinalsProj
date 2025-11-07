@@ -26,12 +26,6 @@ namespace MyApp.Namespace
             using (var httpClient = new HttpClient())
             {
                 var resp = httpClient.GetAsync($"http://localhost:5138/api/User/{userName}");
-                if (HttpContext.Session.GetString("IsEducator") != "true")
-                {
-                }
-                else
-                {
-                }
             }
             return Page();
         }

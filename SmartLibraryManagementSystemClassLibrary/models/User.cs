@@ -8,7 +8,7 @@ public class User
     [Key]
     public int UserId { get; set; }
     [StringLength(50)]
-    public int UserName { get; set; }
+    public string UserName { get; set; }
     public int StudentId { get; set; }
     [ForeignKey("StudentId")]
     public Student Student { get; set; }

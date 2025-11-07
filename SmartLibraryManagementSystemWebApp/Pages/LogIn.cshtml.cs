@@ -45,7 +45,7 @@ namespace MyApp.Namespace
                         {
                             HttpContext.Session.SetString("IsLoggedIn", "true");
                             HttpContext.Session.SetString("LogInName", faculty.FacultyName);
-                            HttpContext.Session.SetString("IsEducator", "true");
+                            HttpContext.Session.SetString("UserId", $"{faculty.FacultyId}");
                             faculty.IsLoggedIn = true;
                             string facultySerialized = JsonSerializer.Serialize(faculty);
                             var facultyHttpCont = new StringContent(facultySerialized, Encoding.UTF8, "application/json");
@@ -61,11 +61,12 @@ namespace MyApp.Namespace
                         {
                             HttpContext.Session.SetString("IsLoggedIn", "true");
                             HttpContext.Session.SetString("LogInName", student.StudentName);
-                            HttpContext.Session.SetString("IsEducator", "false");
+                            HttpContext.Session.SetString("UserId", $"{student.StudentId}");
                             student.IsLoggedIn = true;
                             string studentSerialized = JsonSerializer.Serialize(student);
                             var studentHttpCont = new StringContent(studentSerialized, Encoding.UTF8, "application/json");
                             var setLoginStat = await httpClient.PutAsync($"http://localhost:5138/api/Student/{student.StudentId}", studentHttpCont);
+                            if (!setLoginStat.IsSuccessStatusCode) return Page();
                         }
                         else return Page(); // todo return login failed
                     }

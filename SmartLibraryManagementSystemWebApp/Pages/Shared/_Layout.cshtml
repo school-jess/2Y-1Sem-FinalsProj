@@ -12,8 +12,8 @@
     <input placeholder="Search a book..."/>
     @if (HttpContext.Session.GetString("IsLoggedIn") == "true")
     {
-        <a asp-page="">@HttpContext.Session.GetString("LogInName")</a>
-        <a>Log Out</a>
+        <a asp-page='/User/@HttpContext.Session.GetString("UserId")'>@HttpContext.Session.GetString("LogInName")</a>
+        <a>Log Out(todo)</a>
     }
     else
     {

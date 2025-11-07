@@ -2,7 +2,7 @@
 
 public class UserCreationDto
 {
-    public int UserName { get; set; }
+    public string UserName { get; set; }
     public int StudentId { get; set; }
     public int FacultyId { get; set; }
     public bool HasFine { get; set; }
@@ -14,7 +14,7 @@ public class UserCreationDto
 public class UserUpdateDto
 {
     public int UserId { get; set; }
-    public int UserName { get; set; }
+    public string UserName { get; set; }
     public int StudentId { get; set; }
     public int FacultyId { get; set; }
     public bool HasFine { get; set; }
@@ -26,7 +26,7 @@ public class UserUpdateDto
 public class UserGet1Dto
 {
     public int UserId { get; set; }
-    public int UserName { get; set; }
+    public string UserName { get; set; }
     public StudentUpdateDto Student { get; set; }
     public FacultyUpdateDto Faculty { get; set; }
     public bool HasFine { get; set; }

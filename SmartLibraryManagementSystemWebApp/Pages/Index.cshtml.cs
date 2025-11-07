@@ -25,6 +25,14 @@ public class IndexModel : PageModel
                 var getBooksContent = await getBooks.Content.ReadAsStringAsync();
                 Books = JsonSerializer.Deserialize<List<BookUpdateDto>>(getBooksContent);
             }
+            if (HttpContext.Session.GetString("IsLoggedIn") == "true")
+            {
+                var getUser = await httpClient.GetAsync($"http://localhost:5138/api/User/{HttpContext.Session.GetString("LogInName")}");
+                if (!getUser.IsSuccessStatusCode) return; // todo
+                var getUserContext = await getUser.Content.ReadAsStringAsync();
+                UserGet1Dto user = JsonSerializer.Deserialize<UserGet1Dto>(getUserContext);
+                IsAdmin = user.IsAdmin;
+            }
         }
     }
 }

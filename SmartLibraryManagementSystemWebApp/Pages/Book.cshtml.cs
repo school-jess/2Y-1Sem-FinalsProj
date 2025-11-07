@@ -1,5 +1,6 @@
 using SmartLibraryManagementSystemClassLibrary.Dtos;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
 namespace MyApp.Namespace
@@ -7,7 +8,7 @@ namespace MyApp.Namespace
     public class BookModel : PageModel
     {
         public BookGet1Dto Book { get; set; }
-        public async Task OnGetAsync(int id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
             using (var httpClient = new HttpClient())
             {
@@ -16,8 +17,11 @@ namespace MyApp.Namespace
                 {
                     var respCont = await resp.Content.ReadAsStringAsync();
                     Book = JsonSerializer.Deserialize<BookGet1Dto>(respCont);
-                } // todo return not found page
+                }
+                else return NotFound();
+                // todo get catalog
             }
+            return Page();
         }
     }
 }
