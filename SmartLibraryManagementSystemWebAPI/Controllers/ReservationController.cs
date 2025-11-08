@@ -94,7 +94,9 @@ namespace StudentLibraryManagementSystem.Controllers
                 UserId = reservation.UserId
             });
             _dbCtx.SaveChanges();
-            var insertedReservation = _dbCtx.Reservation.Find(reservation);
+            var insertedReservation = (from r in _dbCtx.Reservation
+                                      where r.BookId == reservation.BookId
+                                      select r).First();
             return CreatedAtAction("", new { reservationId = insertedReservation.ReservationId });
         }
 

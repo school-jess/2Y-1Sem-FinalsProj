@@ -19,7 +19,7 @@
     @if (isLoggedIn == "true")
     {
         <a asp-page="/User/@userId">@logInName</a>
-        <a>Log Out(todo)</a>
+        <a asp-page="/LogOut">Log Out</a>
     }
     else
     {

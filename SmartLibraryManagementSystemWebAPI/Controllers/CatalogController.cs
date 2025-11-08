@@ -67,7 +67,9 @@ namespace StudentLibraryManagementSystem.Controllers
                 Genre = catalog.Genre
             });
             _dbCtx.SaveChanges();
-            var insertedCatalog = _dbCtx.Catalog.Find(catalog);
+            var insertedCatalog = (from c in _dbCtx.Catalog
+                                  where c.BookId == catalog.BookId
+                                  select c).First();
             return CreatedAtAction("", new { catalogId = insertedCatalog.CatalogId });
         }
 

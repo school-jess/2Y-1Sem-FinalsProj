@@ -36,21 +36,12 @@ namespace StudentLibraryManagementSystem.Controllers
         [HttpGet("{id}")]
         public IActionResult GetUser(int id)
         {
-            var user = _dbCtx.User.Find(id);
+            var user = (from u in _dbCtx.User.Include(u => u.Reservations).Include(u => u.Student).Include(u => u.Faculty)
+                       where u.UserId == id
+                       select u).First();
             if (user == null) return NotFound();
-            return Ok(new UserGet1Dto
+            UserGet1Dto userToRet = new UserGet1Dto
             {
-                Faculty = new FacultyUpdateDto
-                {
-                    Course = user.Faculty.Course,
-                    Department = user.Faculty.Department,
-                    FacultyId = user.Faculty.FacultyId,
-                    FacultyName = user.Faculty.FacultyName,
-                    Subject = user.Faculty.Subject,
-                    Email = user.Faculty.Email,
-                    IsLoggedIn = user.Faculty.IsLoggedIn,
-                    Password = user.Faculty.Password
-                },
                 HasFine = user.HasFine,
                 HasLoan = user.HasLoan,
                 IsFaculty = user.IsFaculty,
@@ -62,7 +53,13 @@ namespace StudentLibraryManagementSystem.Controllers
                     ReservationTime = r.ReservationTime,
                     UserId = r.UserId,
                 }).ToList(),
-                Student = new StudentUpdateDto
+                UserId = user.UserId,
+                UserName = user.UserName,
+                IsAdmin = user.IsAdmin
+            };
+            if (user.Faculty == null)
+            {
+                userToRet.Student = new StudentUpdateDto
                 {
                     Course = user.Student.Course,
                     Department = user.Student.Department,
@@ -72,11 +69,22 @@ namespace StudentLibraryManagementSystem.Controllers
                     Email = user.Student.Email,
                     IsLoggedIn = user.Student.IsLoggedIn,
                     Password = user.Student.Password
-                },
-                UserId = user.UserId,
-                UserName = user.UserName,
-                IsAdmin = user.IsAdmin
-            });
+                };
+            } else
+            {
+                userToRet.Faculty = new FacultyUpdateDto
+                {
+                    Course = user.Faculty.Course,
+                    Department = user.Faculty.Department,
+                    FacultyId = user.Faculty.FacultyId,
+                    FacultyName = user.Faculty.FacultyName,
+                    Subject = user.Faculty.Subject,
+                    Email = user.Faculty.Email,
+                    IsLoggedIn = user.Faculty.IsLoggedIn,
+                    Password = user.Faculty.Password
+                };
+            }
+            return Ok(userToRet);
         }
 
         [HttpPost]
@@ -93,7 +101,9 @@ namespace StudentLibraryManagementSystem.Controllers
                 IsAdmin = user.IsAdmin,
             });
             _dbCtx.SaveChanges();
-            var insertedUser = _dbCtx.User.Find(user);
+            var insertedUser = (from u in _dbCtx.User
+                               where u.UserName == user.UserName
+                               select u).First();
             return CreatedAtAction("", new { userId = insertedUser.UserId });
         }
 

@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace SmartLibraryManagementSystemClassLibrary.Model;
 
+[Index(nameof(Email), IsUnique = true)]
 public class Faculty
 {
     [Key]

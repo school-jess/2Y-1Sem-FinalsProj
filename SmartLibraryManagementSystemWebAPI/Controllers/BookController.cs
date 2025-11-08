@@ -75,7 +75,9 @@ namespace StudentLibraryManagementSystem.Controllers
                 ReleaseDate = book.ReleaseDate,
             });
             _dbCtx.SaveChanges();
-            var insertedBook = _dbCtx.Book.Find(book);
+            var insertedBook = (from b in _dbCtx.Book
+                               where b.BookName == book.BookName
+                               select b).First();
             return CreatedAtAction("", new { bookId = insertedBook.BookId });
         }
 

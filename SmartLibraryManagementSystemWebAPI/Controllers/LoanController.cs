@@ -60,7 +60,9 @@ namespace StudentLibraryManagementSystem.Controllers
                 UserId = loan.UserId
             });
             _dbCtx.SaveChanges();
-            var insertedLoan = _dbCtx.Loan.Find(loan);
+            var insertedLoan = (from l in _dbCtx.Loan
+                               where l.UserId == loan.UserId
+                               select l).First();
             return CreatedAtAction("", new { loanId = insertedLoan.LoanId });
         }
 

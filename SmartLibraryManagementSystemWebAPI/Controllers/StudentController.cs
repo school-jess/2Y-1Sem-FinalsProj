@@ -59,10 +59,10 @@ namespace StudentLibraryManagementSystem.Controllers
             });
         }
 
-        [HttpGet("{email}")]
+        [HttpGet("{email:regex(.*@.*)}")]
         public IActionResult GetStudent(string email)
         {
-            var student = _dbCtx.Student.First(s => s.Email == email);
+            var student = _dbCtx.Student.Include(s => s.User).First(s => s.Email == email);
             if (student == null) return NotFound();
             return Ok(new StudentGet1Dto
             {
@@ -102,7 +102,9 @@ namespace StudentLibraryManagementSystem.Controllers
                 Password = student.Password
             });
             _dbCtx.SaveChanges();
-            var insertedStudent = _dbCtx.Student.Find(student);
+            var insertedStudent = (from s in _dbCtx.Student
+                                  where s.StudentName == student.StudentName
+                                  select s).First();
             return CreatedAtAction("", new { studentId = insertedStudent.StudentId });
         }
 

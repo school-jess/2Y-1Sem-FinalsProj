@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace SmartLibraryManagementSystemClassLibrary.Model;
 
+[Index(nameof(ClassificationId), IsUnique = true)]
 public class Catalog
 {
     [Key]

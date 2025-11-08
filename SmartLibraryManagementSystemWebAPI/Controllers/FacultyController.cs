@@ -27,15 +27,18 @@ namespace StudentLibraryManagementSystem.Controllers
                 FacultyName = f.FacultyName,
                 Subject = f.Subject,
                 Email = f.Email,
-                Password = f.Password
+                Password = f.Password,
+                IsLoggedIn = f.IsLoggedIn
             }).ToList();
             return Ok(faculties);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public IActionResult GetFaculty(int id)
         {
-            var faculty = _dbCtx.Faculty.Find(id);
+            var faculty = (from f in _dbCtx.Faculty.Include(f => f.User)
+                          where f.FacultyId == id
+                          select f).First();
             if (faculty == null) return NotFound();
             return Ok(new FacultyGet1Dto
             {
@@ -56,14 +59,15 @@ namespace StudentLibraryManagementSystem.Controllers
                     UserId = faculty.User.UserId,
                     UserName = faculty.User.UserName,
                     IsAdmin = faculty.User.IsAdmin
-                }
+                },
+                IsLoggedIn = faculty.IsLoggedIn
             });
         }
 
-        [HttpGet("{email}")]
-        public IActionResult GetFaculty(string email)
+        [HttpGet("{email:regex(.*@.*)}")]
+        public IActionResult GetFacultyEmail(string email)
         {
-            var faculty = _dbCtx.Faculty.First(f => f.Email == email);
+            var faculty = _dbCtx.Faculty.Include(f => f.User).First(f => f.Email == email);
             if (faculty == null) return NotFound();
             return Ok(new FacultyGet1Dto
             {
@@ -102,7 +106,9 @@ namespace StudentLibraryManagementSystem.Controllers
                 Password = faculty.Password
             });
             _dbCtx.SaveChanges();
-            var insertedFaculty = _dbCtx.Faculty.Find(faculty);
+            var insertedFaculty = (from f in _dbCtx.Faculty
+                where f.FacultyName == faculty.FacultyName
+                select f).First();
             return CreatedAtAction("", new { facultyId = insertedFaculty.FacultyId });
         }
 
@@ -110,18 +116,14 @@ namespace StudentLibraryManagementSystem.Controllers
         public IActionResult UpdateFaculty(int id, [FromBody] FacultyUpdateDto faculty)
         {
             if (id != faculty.FacultyId) return BadRequest();
-            Faculty updatedFaculty = new Faculty
-            {
-                Course = faculty.Course,
-                Department = faculty.Department,
-                FacultyId = faculty.FacultyId,
-                FacultyName = faculty.FacultyName,
-                Subject = faculty.Subject,
-                Email = faculty.Email,
-                IsLoggedIn = faculty.IsLoggedIn,
-                Password = faculty.Password
-            };
-            _dbCtx.Entry(updatedFaculty).State = EntityState.Modified;
+            Faculty facultyToUpdate = _dbCtx.Faculty.Find(id);
+            facultyToUpdate.Course = faculty.Course;
+            facultyToUpdate.Department = faculty.Department;
+            facultyToUpdate.FacultyId = faculty.FacultyId;
+            facultyToUpdate.Subject = faculty.Subject;
+            facultyToUpdate.Email = faculty.Email;
+            facultyToUpdate.IsLoggedIn = faculty.IsLoggedIn;
+            facultyToUpdate.Password = faculty.Password;
             _dbCtx.SaveChanges();
             return NoContent();
         }

@@ -67,10 +67,12 @@ namespace StudentLibraryManagementSystem.Controllers
             {
                 AmtPayedSinceLastFine = fine.AmtPayedSinceLastFine,
                 FineAmount = fine.FineAmount,
-                FineId = fine.UserId
+                UserId = fine.UserId
             });
             _dbCtx.SaveChanges();
-            var insertedFine = _dbCtx.Fine.Find(fine);
+            var insertedFine = (from f in _dbCtx.Fine
+                               where f.UserId == fine.UserId
+                               select f).First();
             return CreatedAtAction("", new { fineId = insertedFine.FineId });
         }
 
