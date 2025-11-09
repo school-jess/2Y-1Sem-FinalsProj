@@ -30,10 +30,12 @@ namespace StudentLibraryManagementSystem.Controllers
             return Ok(students);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public IActionResult GetStudent(int id)
         {
-            var student = _dbCtx.Student.Find(id);
+            var student = (from s in _dbCtx.Student.Include(s => s.User)
+                where s.StudentId == id
+                select s).First();
             if (student == null) return NotFound();
             return Ok(new StudentGet1Dto
             {
@@ -60,9 +62,11 @@ namespace StudentLibraryManagementSystem.Controllers
         }
 
         [HttpGet("{email:regex(.*@.*)}")]
-        public IActionResult GetStudent(string email)
+        public IActionResult GetStudentEmail(string email)
         {
-            var student = _dbCtx.Student.Include(s => s.User).First(s => s.Email == email);
+            var student = (from s in _dbCtx.Student.Include(s => s.User)
+                where s.Email == email
+                select s).First();
             if (student == null) return NotFound();
             return Ok(new StudentGet1Dto
             {
@@ -103,12 +107,12 @@ namespace StudentLibraryManagementSystem.Controllers
             });
             _dbCtx.SaveChanges();
             var insertedStudent = (from s in _dbCtx.Student
-                                  where s.StudentName == student.StudentName
-                                  select s).First();
-            return CreatedAtAction("", new { studentId = insertedStudent.StudentId });
+                where s.StudentName == student.StudentName
+                select s).First();
+            return CreatedAtAction(nameof(GetStudent), new { id = insertedStudent.StudentId }, insertedStudent);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public IActionResult UpdateStudent(int id, [FromBody] StudentUpdateDto student)
         {
             if (id != student.StudentId) return BadRequest();
@@ -128,7 +132,7 @@ namespace StudentLibraryManagementSystem.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public IActionResult DeleteStudent(int id)
         {
             var student = _dbCtx.Student.Find(id);

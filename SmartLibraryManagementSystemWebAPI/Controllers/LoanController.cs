@@ -29,7 +29,7 @@ namespace StudentLibraryManagementSystem.Controllers
             return Ok(loans);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public IActionResult GetLoan(int id)
         {
             var loan = _dbCtx.Loan.Find(id);
@@ -63,10 +63,10 @@ namespace StudentLibraryManagementSystem.Controllers
             var insertedLoan = (from l in _dbCtx.Loan
                                where l.UserId == loan.UserId
                                select l).First();
-            return CreatedAtAction("", new { loanId = insertedLoan.LoanId });
+            return CreatedAtAction(nameof(GetLoan), new { id = insertedLoan.LoanId }, insertedLoan);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public IActionResult UpdateLoan(int id, [FromBody] LoanUpdateDto loan)
         {
             if (id != loan.LoanId) return BadRequest();
@@ -82,7 +82,7 @@ namespace StudentLibraryManagementSystem.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public IActionResult DeletLoan(int id)
         {
             var loan = _dbCtx.Loan.Find(id);

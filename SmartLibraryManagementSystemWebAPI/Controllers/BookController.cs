@@ -32,7 +32,7 @@ namespace StudentLibraryManagementSystem.Controllers
             return Ok(books);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public IActionResult GetBook(int id)
         {
             var book = _dbCtx.Book.Find(id);
@@ -78,10 +78,10 @@ namespace StudentLibraryManagementSystem.Controllers
             var insertedBook = (from b in _dbCtx.Book
                                where b.BookName == book.BookName
                                select b).First();
-            return CreatedAtAction("", new { bookId = insertedBook.BookId });
+            return CreatedAtAction(nameof(GetBook), new { id = insertedBook.BookId }, insertedBook);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public IActionResult UpdateBook(int id, [FromBody] BookUpdateDto book)
         {
             if (id != book.BookId) return BadRequest();
@@ -96,7 +96,7 @@ namespace StudentLibraryManagementSystem.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public IActionResult DeleteBook(int id)
         {
             var book = _dbCtx.Book.Find(id);

@@ -15,6 +15,7 @@
         string logInName = Context.Session.GetString("LogInName");
         string userId = Context.Session.GetString("UserId");
     }
+    <a asp-page="/Index">Home</a>
     <input placeholder="Search a book..." />
     @if (isLoggedIn == "true")
     {
@@ -24,7 +25,7 @@
     else
     {
         <a asp-page="/LogIn">Log In</a>
-        <a asp-page="/SignUp">Sign In</a>
+        <a asp-page="/SignUp">Sign Up</a>
     }
     @RenderBody()
     @await RenderSectionAsync("Scripts", required: false)

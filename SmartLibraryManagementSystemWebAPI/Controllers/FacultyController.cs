@@ -109,10 +109,10 @@ namespace StudentLibraryManagementSystem.Controllers
             var insertedFaculty = (from f in _dbCtx.Faculty
                 where f.FacultyName == faculty.FacultyName
                 select f).First();
-            return CreatedAtAction("", new { facultyId = insertedFaculty.FacultyId });
+            return CreatedAtAction(nameof(GetFaculty), new { id = insertedFaculty.FacultyId }, insertedFaculty);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public IActionResult UpdateFaculty(int id, [FromBody] FacultyUpdateDto faculty)
         {
             if (id != faculty.FacultyId) return BadRequest();
@@ -128,7 +128,7 @@ namespace StudentLibraryManagementSystem.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public IActionResult DeleteFaculty(int id)
         {
             var faculty = _dbCtx.Faculty.Find(id);

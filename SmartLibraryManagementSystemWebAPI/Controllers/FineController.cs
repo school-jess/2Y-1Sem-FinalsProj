@@ -29,7 +29,7 @@ namespace StudentLibraryManagementSystem.Controllers
             return Ok(fines);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public IActionResult GetFine(int id)
         {
             var fine = _dbCtx.Fine.Find(id);
@@ -73,10 +73,10 @@ namespace StudentLibraryManagementSystem.Controllers
             var insertedFine = (from f in _dbCtx.Fine
                                where f.UserId == fine.UserId
                                select f).First();
-            return CreatedAtAction("", new { fineId = insertedFine.FineId });
+            return CreatedAtAction(nameof(GetFine), new { id = insertedFine.FineId }, insertedFine);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public IActionResult UpdateFine(int id, [FromBody] FineUpdateDto fine)
         {
             if (id != fine.FineId) return BadRequest();
@@ -92,7 +92,7 @@ namespace StudentLibraryManagementSystem.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public IActionResult DeleteFine(int id)
         {
             var fine = _dbCtx.Fine.Find(id);

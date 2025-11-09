@@ -28,7 +28,7 @@ namespace StudentLibraryManagementSystem.Controllers
             return Ok(catalogs);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public IActionResult GetCatalog(int id)
         {
             var catalog = _dbCtx.Catalog.Find(id);
@@ -70,10 +70,10 @@ namespace StudentLibraryManagementSystem.Controllers
             var insertedCatalog = (from c in _dbCtx.Catalog
                                   where c.BookId == catalog.BookId
                                   select c).First();
-            return CreatedAtAction("", new { catalogId = insertedCatalog.CatalogId });
+            return CreatedAtAction(nameof(GetCatalog), new { id = insertedCatalog.CatalogId });
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public IActionResult UpdateCatalog(int id, [FromBody] CatalogUpdateDto catalog)
         {
             if (id != catalog.CatalogId) return BadRequest();
@@ -90,7 +90,7 @@ namespace StudentLibraryManagementSystem.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public IActionResult DeleteCatalog(int id)
         {
             var catalog = _dbCtx.Catalog.Find(id);

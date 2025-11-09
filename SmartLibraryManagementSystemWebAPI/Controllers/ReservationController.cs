@@ -33,7 +33,7 @@ namespace StudentLibraryManagementSystem.Controllers
             return Ok(reservations);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public IActionResult GetReservation(int id)
         {
             var reservation = _dbCtx.Reservation.Find(id);
@@ -97,10 +97,10 @@ namespace StudentLibraryManagementSystem.Controllers
             var insertedReservation = (from r in _dbCtx.Reservation
                                       where r.BookId == reservation.BookId
                                       select r).First();
-            return CreatedAtAction("", new { reservationId = insertedReservation.ReservationId });
+            return CreatedAtAction(nameof(GetReservation), new { id = insertedReservation.ReservationId }, insertedReservation);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public IActionResult UpdateReservation(int id, [FromBody] ReservationUpdateDto reservation)
         {
             if (id != reservation.ReservationId) return BadRequest();
@@ -117,7 +117,7 @@ namespace StudentLibraryManagementSystem.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public IActionResult DeleteReservation(int id)
         {
             var reservation = _dbCtx.Reservation.Find(id);

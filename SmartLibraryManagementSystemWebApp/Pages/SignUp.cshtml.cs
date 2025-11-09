@@ -11,16 +11,14 @@ namespace MyApp.Namespace
     {
         [BindProperty]
         public InputModel Input { get; set; }
-        [BindProperty]
-        public EducatorInputModel FacultyInput { get; set; }
-        [BindProperty]
-        public StudentInputModel StudentInput { get; set; }
 
         public class InputModel
         {
             [StringLength(50)]
             public string Name { get; set; }
+            [StringLength(10)]
             public string Department { get; set; }
+            [StringLength(2)]
             public string Course { get; set; }
             [EmailAddress]
             public string Email { get; set; }
@@ -29,16 +27,9 @@ namespace MyApp.Namespace
             [DataType(DataType.Password)]
             public string ConfirmPassword { get; set; }
             public bool IsEducator { get; set; }
-        }
-
-        public class EducatorInputModel
-        {
-            public string Subject { get; set; }
-        }
-
-        public class StudentInputModel
-        {
-            public int Grade { get; set; }
+            [StringLength(20)]
+            public string? Subject { get; set; }
+            public int? Grade { get; set; }
         }
 
         public void OnGet()
@@ -55,13 +46,11 @@ namespace MyApp.Namespace
                 if (Input.IsEducator) apiLink += "Faculty";
                 else apiLink += $"Student";
                 HttpResponseMessage createFacultyStudent;
-                FacultyCreationDto faculty;
-                StudentCreationDto student;
                 HttpResponseMessage createUser;
                 UserCreationDto user;
                 if (Input.IsEducator)
                 {
-                    faculty = new FacultyCreationDto
+                    FacultyCreationDto faculty = new FacultyCreationDto
                     {
                         Course = Input.Course,
                         Department = Input.Department,
@@ -69,12 +58,12 @@ namespace MyApp.Namespace
                         FacultyName = Input.Name,
                         IsLoggedIn = false,
                         Password = Input.Password,
-                        Subject = FacultyInput.Subject,
+                        Subject = Input.Subject,
                     };
                     string facultySerialized = JsonSerializer.Serialize(faculty);
                     var facultyHttpCont = new StringContent(facultySerialized, Encoding.UTF8, "application/json");
                     createFacultyStudent = await httpClient.PostAsync(apiLink, facultyHttpCont);
-                    var getFaculty = await httpClient.GetAsync($"http://localhost:5138/api/Faculty/{Input.Name}");
+                    var getFaculty = await httpClient.GetAsync($"http://localhost:5138/api/Faculty/{Input.Email}");
                     if (!getFaculty.IsSuccessStatusCode) return Page();
                     var getFacultyContent = await getFaculty.Content.ReadAsStringAsync();
                     var insertedFaculty = JsonSerializer.Deserialize<FacultyGet1Dto>(getFacultyContent);
@@ -94,7 +83,7 @@ namespace MyApp.Namespace
                 }
                 else
                 {
-                    student = new StudentCreationDto
+                    StudentCreationDto student = new StudentCreationDto
                     {
                         Course = Input.Course,
                         Department = Input.Department,
@@ -102,13 +91,14 @@ namespace MyApp.Namespace
                         StudentName = Input.Name,
                         IsLoggedIn = false,
                         Password = Input.Password,
-                        Grade = StudentInput.Grade,
+                        Grade = Input.Grade ?? 0,
                     };
                     string studentSerialized = JsonSerializer.Serialize(student);
                     var studentHttpCont = new StringContent(studentSerialized, Encoding.UTF8, "application/json");
                     createFacultyStudent = await httpClient.PostAsync(apiLink, studentHttpCont);
-                    var getStudent = await httpClient.GetAsync($"http://localhost:5138/api/Student/{Input.Name}");
-                    if (!getStudent.IsSuccessStatusCode) return Page();
+                    if (!createFacultyStudent.IsSuccessStatusCode) return new StatusCodeResult(500);
+                    var getStudent = await httpClient.GetAsync($"http://localhost:5138/api/Student/{Input.Email}");
+                    if (!getStudent.IsSuccessStatusCode) return new StatusCodeResult(500);
                     var getStudentContent = await getStudent.Content.ReadAsStringAsync();
                     var insertedStudent = JsonSerializer.Deserialize<StudentGet1Dto>(getStudentContent);
                     user = new UserCreationDto
@@ -124,8 +114,8 @@ namespace MyApp.Namespace
                     string userSerialized = JsonSerializer.Serialize(user);
                     var userHttpCont = new StringContent(userSerialized, Encoding.UTF8, "application/json");
                     createUser = await httpClient.PostAsync("http://localhost:5138/api/User/", userHttpCont);
+                    if (!createUser.IsSuccessStatusCode) return new StatusCodeResult(500);
                 }
-                if (!(createFacultyStudent.IsSuccessStatusCode && createUser.IsSuccessStatusCode)) return new StatusCodeResult(500);
             }
             return Redirect("/LogIn");
         }

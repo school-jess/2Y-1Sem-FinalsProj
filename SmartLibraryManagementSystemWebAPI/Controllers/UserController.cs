@@ -33,7 +33,7 @@ namespace StudentLibraryManagementSystem.Controllers
             return Ok(users);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public IActionResult GetUser(int id)
         {
             var user = (from u in _dbCtx.User.Include(u => u.Reservations).Include(u => u.Student).Include(u => u.Faculty)
@@ -104,10 +104,10 @@ namespace StudentLibraryManagementSystem.Controllers
             var insertedUser = (from u in _dbCtx.User
                                where u.UserName == user.UserName
                                select u).First();
-            return CreatedAtAction("", new { userId = insertedUser.UserId });
+            return CreatedAtAction(nameof(GetUser), new { id = insertedUser.UserId }, insertedUser);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public IActionResult UpdateUser(int id, [FromBody] UserUpdateDto user)
         {
             if (id != user.StudentId) return BadRequest();
@@ -127,7 +127,7 @@ namespace StudentLibraryManagementSystem.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public IActionResult DeleteUser(int id)
         {
             var user = _dbCtx.User.Find(id);
