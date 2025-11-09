@@ -10,7 +10,6 @@ public class Book
     public string BookName { get; set; }
     [StringLength(50)]
     public string Author { get; set; }
-    [StringLength(15)]
     public Catalog Catalog { get; set; }
     public ICollection<Reservation> Reservation { get; set; }
     public string Synopsis { get; set; }

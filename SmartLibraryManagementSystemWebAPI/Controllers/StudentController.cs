@@ -49,11 +49,8 @@ namespace StudentLibraryManagementSystem.Controllers
                 Password = student.Password,
                 User = new UserUpdateDto
                 {
-                    FacultyId = student.User.FacultyId,
                     HasFine = student.User.HasFine,
                     HasLoan = student.User.HasLoan,
-                    IsFaculty = student.User.IsFaculty,
-                    StudentId = student.User.StudentId,
                     UserId = student.User.UserId,
                     UserName = student.User.UserName,
                     IsAdmin = student.User.IsAdmin,
@@ -68,7 +65,7 @@ namespace StudentLibraryManagementSystem.Controllers
                 where s.Email == email
                 select s).First();
             if (student == null) return NotFound();
-            return Ok(new StudentGet1Dto
+            return Ok(new StudentUpdateDto
             {
                 Course = student.Course,
                 Department = student.Department,
@@ -78,17 +75,7 @@ namespace StudentLibraryManagementSystem.Controllers
                 Email = student.Email,
                 IsLoggedIn = student.IsLoggedIn,
                 Password = student.Password,
-                User = new UserUpdateDto
-                {
-                    FacultyId = student.User.FacultyId,
-                    HasFine = student.User.HasFine,
-                    HasLoan = student.User.HasLoan,
-                    IsFaculty = student.User.IsFaculty,
-                    StudentId = student.User.StudentId,
-                    UserId = student.User.UserId,
-                    UserName = student.User.UserName,
-                    IsAdmin = student.User.IsAdmin,
-                }
+                UserId = student.UserId
             });
         }
 

@@ -70,7 +70,7 @@ namespace StudentLibraryManagementSystem.Controllers
             var insertedCatalog = (from c in _dbCtx.Catalog
                                   where c.BookId == catalog.BookId
                                   select c).First();
-            return CreatedAtAction(nameof(GetCatalog), new { id = insertedCatalog.CatalogId });
+            return CreatedAtAction(nameof(GetCatalog), new { id = insertedCatalog.CatalogId }, insertedCatalog);
         }
 
         [HttpPut("{id:int}")]

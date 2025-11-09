@@ -1,6 +1,7 @@
 using SmartLibraryManagementSystemClassLibrary.Dtos;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SmartLibraryManagementSystemWebApp.Pages;
 
@@ -27,10 +28,14 @@ public class IndexModel : PageModel
             }
             if (HttpContext.Session.GetString("IsLoggedIn") == "true")
             {
-                var getUser = await httpClient.GetAsync($"http://localhost:5138/api/User/{HttpContext.Session.GetString("LogInName")}");
-                if (!getUser.IsSuccessStatusCode) return; // todo
+                var getUser = await httpClient.GetAsync($"http://localhost:5138/api/User/{HttpContext.Session.GetString("UserId")}");
+                if (!getUser.IsSuccessStatusCode) return;
                 var getUserContext = await getUser.Content.ReadAsStringAsync();
-                UserGet1Dto user = JsonSerializer.Deserialize<UserGet1Dto>(getUserContext);
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+                UserGet1Dto user = JsonSerializer.Deserialize<UserGet1Dto>(getUserContext, options);
                 IsAdmin = user.IsAdmin;
             }
         }

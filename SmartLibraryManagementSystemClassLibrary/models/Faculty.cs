@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace SmartLibraryManagementSystemClassLibrary.Model;
@@ -16,10 +17,12 @@ public class Faculty
     public string Subject { get; set; }
     [StringLength(2)]
     public string Course { get; set; }
-    public User User { get; set; }
     [DataType(DataType.EmailAddress)]
     public string Email { get; set; }
     public bool IsLoggedIn { get; set; }
     [DataType(DataType.Password)]
     public string Password { get; set; }
+    public int UserId { get; set; }
+    [ForeignKey("UserId")]
+    public User User { get; set; }
 }

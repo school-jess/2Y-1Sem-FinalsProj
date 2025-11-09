@@ -9,26 +9,18 @@ namespace MyApp.Namespace
 {
     public class SignUpModel : PageModel
     {
-        [BindProperty]
-        public InputModel Input { get; set; }
+        [BindProperty] public InputModel Input { get; set; }
 
         public class InputModel
         {
-            [StringLength(50)]
-            public string Name { get; set; }
-            [StringLength(10)]
-            public string Department { get; set; }
-            [StringLength(2)]
-            public string Course { get; set; }
-            [EmailAddress]
-            public string Email { get; set; }
-            [DataType(DataType.Password)]
-            public string Password { get; set; }
-            [DataType(DataType.Password)]
-            public string ConfirmPassword { get; set; }
+            [StringLength(50)] public string Name { get; set; }
+            [StringLength(10)] public string Department { get; set; }
+            [StringLength(2)] public string Course { get; set; }
+            [EmailAddress] public string Email { get; set; }
+            [DataType(DataType.Password)] public string Password { get; set; }
+            [DataType(DataType.Password)] public string ConfirmPassword { get; set; }
             public bool IsEducator { get; set; }
-            [StringLength(20)]
-            public string? Subject { get; set; }
+            [StringLength(20)] public string? Subject { get; set; }
             public int? Grade { get; set; }
         }
 
@@ -63,8 +55,9 @@ namespace MyApp.Namespace
                     string facultySerialized = JsonSerializer.Serialize(faculty);
                     var facultyHttpCont = new StringContent(facultySerialized, Encoding.UTF8, "application/json");
                     createFacultyStudent = await httpClient.PostAsync(apiLink, facultyHttpCont);
+                    if (!createFacultyStudent.IsSuccessStatusCode) throw new InvalidOperationException("error when creating new faculty");
                     var getFaculty = await httpClient.GetAsync($"http://localhost:5138/api/Faculty/{Input.Email}");
-                    if (!getFaculty.IsSuccessStatusCode) return Page();
+                    if (!getFaculty.IsSuccessStatusCode) throw new InvalidOperationException("error when getting new faculty");
                     var getFacultyContent = await getFaculty.Content.ReadAsStringAsync();
                     var insertedFaculty = JsonSerializer.Deserialize<FacultyGet1Dto>(getFacultyContent);
                     user = new UserCreationDto
@@ -74,7 +67,6 @@ namespace MyApp.Namespace
                         HasLoan = false,
                         IsAdmin = false,
                         IsFaculty = true,
-                        StudentId = 0,
                         UserName = faculty.FacultyName,
                     };
                     string userSerialized = JsonSerializer.Serialize(user);
@@ -96,14 +88,13 @@ namespace MyApp.Namespace
                     string studentSerialized = JsonSerializer.Serialize(student);
                     var studentHttpCont = new StringContent(studentSerialized, Encoding.UTF8, "application/json");
                     createFacultyStudent = await httpClient.PostAsync(apiLink, studentHttpCont);
-                    if (!createFacultyStudent.IsSuccessStatusCode) return new StatusCodeResult(500);
+                    if (!createFacultyStudent.IsSuccessStatusCode) throw new InvalidOperationException("error when creating new student");
                     var getStudent = await httpClient.GetAsync($"http://localhost:5138/api/Student/{Input.Email}");
-                    if (!getStudent.IsSuccessStatusCode) return new StatusCodeResult(500);
+                    if (!getStudent.IsSuccessStatusCode) throw new InvalidOperationException("error when getting new student");
                     var getStudentContent = await getStudent.Content.ReadAsStringAsync();
                     var insertedStudent = JsonSerializer.Deserialize<StudentGet1Dto>(getStudentContent);
                     user = new UserCreationDto
                     {
-                        FacultyId = 0,
                         HasFine = false,
                         HasLoan = false,
                         IsAdmin = false,
@@ -114,9 +105,11 @@ namespace MyApp.Namespace
                     string userSerialized = JsonSerializer.Serialize(user);
                     var userHttpCont = new StringContent(userSerialized, Encoding.UTF8, "application/json");
                     createUser = await httpClient.PostAsync("http://localhost:5138/api/User/", userHttpCont);
-                    if (!createUser.IsSuccessStatusCode) return new StatusCodeResult(500);
                 }
+
+                if (!createUser.IsSuccessStatusCode) throw new InvalidOperationException("error when creating new user");
             }
+
             return Redirect("/LogIn");
         }
     }

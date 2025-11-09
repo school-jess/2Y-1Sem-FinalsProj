@@ -9,6 +9,7 @@ public class StudentCreationDto
     public string Email { get; set; }
     public string Password { get; set; }
     public bool IsLoggedIn { get; set; }
+    public int UserId { get; set; }
 }
 
 public class StudentUpdateDto
@@ -21,6 +22,7 @@ public class StudentUpdateDto
     public string Email { get; set; }
     public string Password { get; set; }
     public bool IsLoggedIn { get; set; }
+    public int UserId { get; set; }
 }
 
 public class StudentGet1Dto
@@ -34,4 +36,5 @@ public class StudentGet1Dto
     public string Email { get; set; }
     public string Password { get; set; }
     public bool IsLoggedIn { get; set; }
+    public int UserId { get; set; }
 }

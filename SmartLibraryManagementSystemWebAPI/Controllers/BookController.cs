@@ -35,7 +35,9 @@ namespace StudentLibraryManagementSystem.Controllers
         [HttpGet("{id:int}")]
         public IActionResult GetBook(int id)
         {
-            var book = _dbCtx.Book.Find(id);
+            var book = (from b in _dbCtx.Book.Include(b => b.Catalog).Include(b => b.Reservation)
+                where b.BookId == id
+                select b).First();
             if (book == null) return NotFound();
             return Ok(new BookGet1Dto
             {
@@ -53,14 +55,31 @@ namespace StudentLibraryManagementSystem.Controllers
                     Genre = book.Catalog.Genre
                 },
                 Reservations = book.Reservation.Select(r => new ReservationUpdateDto
-                {
-                    BookId = r.ReservationId,
-                    CatalogId = r.CatalogId,
-                    ReservationId = r.ReservationId,
-                    ReservationTime = r.ReservationTime,
-                    UserId = r.UserId
-                }
+                    {
+                        BookId = r.ReservationId,
+                        CatalogId = r.CatalogId,
+                        ReservationId = r.ReservationId,
+                        ReservationTime = r.ReservationTime,
+                        UserId = r.UserId
+                    }
                 ).ToList()
+            });
+        }
+
+        [HttpGet("{name}")]
+        public IActionResult GetBookName(string name)
+        {
+            var book = (from b in _dbCtx.Book.Include(b => b.Catalog).Include(b => b.Reservation)
+                where b.BookName == name
+                select b).First();
+            if (book == null) return NotFound();
+            return Ok(new BookUpdateDto
+            {
+                Author = book.Author,
+                BookId = book.BookId,
+                BookName = book.BookName,
+                Synopsis = book.Synopsis,
+                ReleaseDate = book.ReleaseDate,
             });
         }
 
@@ -76,8 +95,8 @@ namespace StudentLibraryManagementSystem.Controllers
             });
             _dbCtx.SaveChanges();
             var insertedBook = (from b in _dbCtx.Book
-                               where b.BookName == book.BookName
-                               select b).First();
+                where b.BookName == book.BookName
+                select b).First();
             return CreatedAtAction(nameof(GetBook), new { id = insertedBook.BookId }, insertedBook);
         }
 
