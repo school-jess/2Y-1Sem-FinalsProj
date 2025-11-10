@@ -17,14 +17,15 @@ public class UserModel : PageModel
         IsFaculty = HttpContext.Session.GetString("IsFaculty") == "true";
         using (var httpClient = new HttpClient())
         {
-            var resp = await httpClient.GetAsync($"http://localhost:5138/api/User/{id}");
-            if (!resp.IsSuccessStatusCode) throw new InvalidOperationException("error getting user");
+            var getUser = await httpClient.GetAsync($"http://localhost:5138/api/User/{id}");
+            if (!getUser.IsSuccessStatusCode) throw new InvalidOperationException("error getting user");
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             };
-            var respContent = await resp.Content.ReadAsStringAsync();
-            User = JsonSerializer.Deserialize<UserGet1Dto>(respContent, options);
+            var getUserContent = await getUser.Content.ReadAsStringAsync();
+            User = JsonSerializer.Deserialize<UserGet1Dto>(getUserContent, options);
+            var getUserReservations
         }
         return Page();
     }

@@ -63,22 +63,6 @@ namespace StudentLibraryManagementSystem.Controllers
             });
         }
 
-        [HttpGet("{name}")]
-        public IActionResult GetBookName(string name)
-        {
-            var book = _dbCtx.Book.Include(b => b.Catalog).Include(b => b.Reservation)
-                .FirstOrDefault(b => b.BookName == name);
-            if (book == null) return NotFound();
-            return Ok(new BookUpdateDto
-            {
-                Author = book.Author,
-                BookId = book.BookId,
-                BookName = book.BookName,
-                Synopsis = book.Synopsis,
-                ReleaseDate = book.ReleaseDate,
-            });
-        }
-
         [HttpPost]
         public IActionResult NewBook([FromBody] BookCreationDto book)
         {

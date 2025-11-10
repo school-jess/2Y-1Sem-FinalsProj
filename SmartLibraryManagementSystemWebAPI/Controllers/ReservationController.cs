@@ -86,6 +86,62 @@ namespace StudentLibraryManagementSystem.Controllers
             });
         }
 
+        [HttpGet("{userId:int}")]
+        public IActionResult GetUserReservations(int userId)
+        {
+            var reservation = _dbCtx.Reservation
+                .Include(r => r.Book)
+                .Include(r => r.Catalog)
+                .Include(r => r.Fine)
+                .Include(r => r.Loan)
+                .Include(r => r.User)
+                .Where(r => r.UserId == userId)
+                .Select(r => new {})
+                .ToList();
+//                .FirstOrDefault(r => r.UserId == userId);
+//            if (reservation == null) return NotFound();
+//            return Ok(new ReservationGet1Dto
+//            {
+//                Book = new BookUpdateDto
+//                {
+//                    Author = reservation.Book.Author,
+//                    BookId = reservation.Book.BookId,
+//                    BookName = reservation.Book.BookName,
+//                },
+//                Catalog = new CatalogUpdateDto
+//                {
+//                    BookId = reservation.Catalog.BookId,
+//                    CatalogId = reservation.Catalog.CatalogId,
+//                    Copies = reservation.Catalog.Copies,
+//                    ClassificationId = reservation.Catalog.ClassificationId,
+//                    Genre = reservation.Catalog.Genre,
+//                },
+//                Fine = new FineUpdateDto
+//                {
+//                    AmtPayedSinceLastFine = reservation.Fine.AmtPayedSinceLastFine,
+//                    FineAmount = reservation.Fine.AmtPayedSinceLastFine,
+//                    FineId = reservation.Fine.FineId,
+//                    UserId = reservation.Fine.UserId
+//                },
+//                Loan = new LoanUpdateDto
+//                {
+//                    AmtLoanedSinceLastLoaned = reservation.Loan.AmtLoanedSinceLastLoaned,
+//                    LoanAmount = reservation.Loan.LoanAmount,
+//                    LoanId = reservation.Loan.LoanId,
+//                    UserId = reservation.Loan.UserId
+//                },
+//                ReservationId = reservation.ReservationId,
+//                ReservationTime = reservation.ReservationTime,
+//                User = new UserUpdateDto
+//                {
+//                    HasFine = reservation.User.HasFine,
+//                    HasLoan = reservation.User.HasLoan,
+//                    UserId = reservation.User.UserId,
+//                    UserName = reservation.User.UserName
+//                }
+//            });
+        }
+
         [HttpPost]
         public IActionResult NewReservation([FromBody] ReservationCreationDto reservation)
         {
