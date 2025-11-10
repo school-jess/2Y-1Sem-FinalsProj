@@ -4,17 +4,23 @@
     ViewData["Title"] = "Home page";
 }
 
-@if (Model.IsAdmin) {
+@if (Model.IsAdmin)
+{
     <a asp-page="/NewBook">New Book</a>
 }
 <ol>
     @foreach (var book in Model.Books)
     {
         <li>
-            <a asp-page="/Book/@book.BookId">@book.BookName - @book.Author</a>
-            @if (Model.IsAdmin) {
-                <button id="edit-book@book.BookId"><img src="~/pen.png" /></button>
-                <button><img id="delete-book@book.BookId" src="~/recycle-bin.png" /></button>
+            <a asp-page="/Book" asp-route-id="@book.BookId">@book.BookName - @book.Author</a>
+            @if (Model.IsAdmin)
+            {
+                <button id="edit-book@book.BookId">
+                    <img src="~/pen.png"/>
+                </button>
+                <button>
+                    <img id="delete-book@book.BookId" src="~/recycle-bin.png"/>
+                </button>
             }
         </li>
     }

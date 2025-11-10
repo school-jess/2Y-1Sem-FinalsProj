@@ -19,25 +19,22 @@ namespace StudentLibraryManagementSystem.Controllers
         [HttpGet]
         public IActionResult GetBooks()
         {
-            var books = (
-                from book in _dbCtx.Book
-                select new BookUpdateDto
-                {
-                    Author = book.Author,
-                    BookId = book.BookId,
-                    BookName = book.BookName,
-                    Synopsis = book.Synopsis,
-                    ReleaseDate = book.ReleaseDate,
-                }).ToList();
+            var books = _dbCtx.Book.Select(b => new BookUpdateDto
+            {
+                Author = b.Author,
+                BookId = b.BookId,
+                BookName = b.BookName,
+                Synopsis = b.Synopsis,
+                ReleaseDate = b.ReleaseDate,
+            }).ToList();
             return Ok(books);
         }
 
         [HttpGet("{id:int}")]
         public IActionResult GetBook(int id)
         {
-            var book = (from b in _dbCtx.Book.Include(b => b.Catalog).Include(b => b.Reservation)
-                where b.BookId == id
-                select b).First();
+            var book = _dbCtx.Book.Include(b => b.Catalog).Include(b => b.Reservation)
+                .FirstOrDefault(b => b.BookId == id);
             if (book == null) return NotFound();
             return Ok(new BookGet1Dto
             {
@@ -69,9 +66,8 @@ namespace StudentLibraryManagementSystem.Controllers
         [HttpGet("{name}")]
         public IActionResult GetBookName(string name)
         {
-            var book = (from b in _dbCtx.Book.Include(b => b.Catalog).Include(b => b.Reservation)
-                where b.BookName == name
-                select b).First();
+            var book = _dbCtx.Book.Include(b => b.Catalog).Include(b => b.Reservation)
+                .FirstOrDefault(b => b.BookName == name);
             if (book == null) return NotFound();
             return Ok(new BookUpdateDto
             {
@@ -94,10 +90,15 @@ namespace StudentLibraryManagementSystem.Controllers
                 ReleaseDate = book.ReleaseDate,
             });
             _dbCtx.SaveChanges();
-            var insertedBook = (from b in _dbCtx.Book
-                where b.BookName == book.BookName
-                select b).First();
-            return CreatedAtAction(nameof(GetBook), new { id = insertedBook.BookId }, insertedBook);
+            var insertedBook = _dbCtx.Book.First(b => b.BookName == book.BookName);
+            return CreatedAtAction(nameof(GetBook), new { id = insertedBook.BookId }, new BookUpdateDto
+            {
+                Author = insertedBook.Author,
+                BookId = insertedBook.BookId,
+                BookName = insertedBook.BookName,
+                ReleaseDate = insertedBook.ReleaseDate,
+                Synopsis = insertedBook.Synopsis
+            });
         }
 
         [HttpPut("{id:int}")]

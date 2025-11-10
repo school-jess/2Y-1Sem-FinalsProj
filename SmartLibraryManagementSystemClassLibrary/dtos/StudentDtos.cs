@@ -36,5 +36,4 @@ public class StudentGet1Dto
     public string Email { get; set; }
     public string Password { get; set; }
     public bool IsLoggedIn { get; set; }
-    public int UserId { get; set; }
 }

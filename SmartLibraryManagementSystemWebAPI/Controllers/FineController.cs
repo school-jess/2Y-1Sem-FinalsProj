@@ -32,7 +32,7 @@ namespace StudentLibraryManagementSystem.Controllers
         [HttpGet("{id:int}")]
         public IActionResult GetFine(int id)
         {
-            var fine = _dbCtx.Fine.Find(id);
+            var fine = _dbCtx.Fine.Include(f => f.User).Include(f => f.Reservaton).FirstOrDefault(f => f.FineId == id);
             if (fine == null) return NotFound();
             return Ok(new FineGet1Dto
             {
@@ -41,11 +41,8 @@ namespace StudentLibraryManagementSystem.Controllers
                 FineId = fine.FineId,
                 User = new UserUpdateDto
                 {
-                    FacultyId = fine.User.FacultyId,
                     HasFine = fine.User.HasFine,
                     HasLoan = fine.User.HasLoan,
-                    IsFaculty = fine.User.IsFaculty,
-                    StudentId = fine.User.StudentId,
                     UserId = fine.User.UserId,
                     UserName = fine.User.UserName
                 },
@@ -70,10 +67,14 @@ namespace StudentLibraryManagementSystem.Controllers
                 UserId = fine.UserId
             });
             _dbCtx.SaveChanges();
-            var insertedFine = (from f in _dbCtx.Fine
-                               where f.UserId == fine.UserId
-                               select f).First();
-            return CreatedAtAction(nameof(GetFine), new { id = insertedFine.FineId }, insertedFine);
+            var insertedFine = _dbCtx.Fine.First(f => f.UserId == fine.UserId);
+            return CreatedAtAction(nameof(GetFine), new { id = insertedFine.FineId }, new FineUpdateDto
+            {
+                AmtPayedSinceLastFine = insertedFine.AmtPayedSinceLastFine,
+                FineAmount = insertedFine.FineAmount,
+                FineId = insertedFine.FineId,
+                UserId = insertedFine.UserId
+            });
         }
 
         [HttpPut("{id:int}")]

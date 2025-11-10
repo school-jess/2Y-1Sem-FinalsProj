@@ -3,25 +3,30 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
-namespace MyApp.Namespace
+namespace SmartLibraryManagementSystemWebApp.Pages;
+
+public class BookModel : PageModel
 {
-    public class BookModel : PageModel
+    public BookGet1Dto Book { get; set; }
+
+    public async Task<IActionResult> OnGetAsync(int id)
     {
-        public BookGet1Dto Book { get; set; }
-        public async Task<IActionResult> OnGetAsync(int id)
+        using (var httpClient = new HttpClient())
         {
-            using (var httpClient = new HttpClient())
+            var resp = await httpClient.GetAsync($"http://localhost:5138/api/Book/{id}");
+            if (resp.IsSuccessStatusCode)
             {
-                var resp = await httpClient.GetAsync($"http://localhost:5138/api/Book/{id}");
-                if (resp.IsSuccessStatusCode)
+                var respCont = await resp.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions
                 {
-                    var respCont = await resp.Content.ReadAsStringAsync();
-                    Book = JsonSerializer.Deserialize<BookGet1Dto>(respCont);
-                }
-                else return new StatusCodeResult(500);
-                // todo get catalog
+                    PropertyNameCaseInsensitive = true
+                };
+                Book = JsonSerializer.Deserialize<BookGet1Dto>(respCont, options);
             }
-            return Page();
+            else return NotFound();
         }
+
+        return Page();
     }
 }
+

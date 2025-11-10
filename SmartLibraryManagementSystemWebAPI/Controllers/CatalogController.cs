@@ -67,10 +67,15 @@ namespace StudentLibraryManagementSystem.Controllers
                 Genre = catalog.Genre
             });
             _dbCtx.SaveChanges();
-            var insertedCatalog = (from c in _dbCtx.Catalog
-                                  where c.BookId == catalog.BookId
-                                  select c).First();
-            return CreatedAtAction(nameof(GetCatalog), new { id = insertedCatalog.CatalogId }, insertedCatalog);
+            var insertedCatalog = _dbCtx.Catalog.First(c => c.BookId == catalog.BookId);
+            return CreatedAtAction(nameof(GetCatalog), new { id = insertedCatalog.CatalogId }, new CatalogUpdateDto
+            {
+                BookId = insertedCatalog.BookId,
+                CatalogId = insertedCatalog.CatalogId,
+                ClassificationId = insertedCatalog.ClassificationId,
+                Copies = insertedCatalog.Copies,
+                Genre = insertedCatalog.Genre,
+            });
         }
 
         [HttpPut("{id:int}")]

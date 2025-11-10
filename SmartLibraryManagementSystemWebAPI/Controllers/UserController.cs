@@ -21,11 +21,8 @@ namespace StudentLibraryManagementSystem.Controllers
         {
             var users = _dbCtx.User.Select(u => new UserUpdateDto
             {
-                FacultyId = u.FacultyId,
                 HasFine = u.HasFine,
                 HasLoan = u.HasLoan,
-                IsFaculty = u.IsFaculty,
-                StudentId = u.StudentId,
                 UserId = u.UserId,
                 UserName = u.UserName,
                 IsAdmin = u.IsAdmin,
@@ -36,15 +33,18 @@ namespace StudentLibraryManagementSystem.Controllers
         [HttpGet("{id:int}")]
         public IActionResult GetUser(int id)
         {
-            var user = (from u in _dbCtx.User.Include(u => u.Reservations).Include(u => u.Student).Include(u => u.Faculty)
-                       where u.UserId == id
-                       select u).First();
+            var user = _dbCtx.User
+                .Include(u => u.Reservations)
+                .Include(u => u.Student)
+                .Include(u => u.Faculty)
+                .Include(u => u.PrevFine)
+                .Include(u => u.PrevLoan)
+                .FirstOrDefault(u => u.UserId == id);
             if (user == null) return NotFound();
             UserGet1Dto userToRet = new UserGet1Dto
             {
                 HasFine = user.HasFine,
                 HasLoan = user.HasLoan,
-                IsFaculty = user.IsFaculty,
                 Reservations = user.Reservations.Select(r => new ReservationUpdateDto
                 {
                     BookId = r.BookId,
@@ -55,7 +55,21 @@ namespace StudentLibraryManagementSystem.Controllers
                 }).ToList(),
                 UserId = user.UserId,
                 UserName = user.UserName,
-                IsAdmin = user.IsAdmin
+                IsAdmin = user.IsAdmin,
+                Fines = user.PrevFine.Select(f => new FineUpdateDto
+                {
+                    AmtPayedSinceLastFine = f.AmtPayedSinceLastFine,
+                    FineAmount = f.FineAmount,
+                    FineId = f.FineId,
+                    UserId = f.UserId
+                }).ToList(),
+                Loans = user.PrevLoan.Select(l => new LoanUpdateDto
+                {
+                    AmtLoanedSinceLastLoaned = l.AmtLoanedSinceLastLoaned,
+                    LoanAmount = l.LoanAmount,
+                    LoanId = l.LoanId,
+                    UserId = l.UserId
+                }).ToList()
             };
             if (user.Faculty == null)
             {
@@ -70,7 +84,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     IsLoggedIn = user.Student.IsLoggedIn,
                     Password = user.Student.Password
                 };
-            } else
+            }
+            else
             {
                 userToRet.Faculty = new FacultyUpdateDto
                 {
@@ -84,6 +99,7 @@ namespace StudentLibraryManagementSystem.Controllers
                     Password = user.Faculty.Password
                 };
             }
+
             return Ok(userToRet);
         }
 
@@ -92,32 +108,32 @@ namespace StudentLibraryManagementSystem.Controllers
         {
             _dbCtx.User.Add(new User
             {
-                FacultyId = user.FacultyId,
                 HasFine = user.HasFine,
                 HasLoan = user.HasLoan,
-                IsFaculty = user.IsFaculty,
-                StudentId = user.StudentId,
                 UserName = user.UserName,
                 IsAdmin = user.IsAdmin,
             });
             _dbCtx.SaveChanges();
-            var insertedUser = (from u in _dbCtx.User
-                               where u.UserName == user.UserName
-                               select u).First();
-            return CreatedAtAction(nameof(GetUser), new { id = insertedUser.UserId }, insertedUser);
+            var insertedUser = _dbCtx.User.First(u => u.UserName == user.UserName);
+            return CreatedAtAction(nameof(GetUser), new { id = insertedUser.UserId },
+                new UserUpdateDto
+                {
+                    UserId = insertedUser.UserId,
+                    HasFine = insertedUser.HasFine,
+                    HasLoan = insertedUser.HasLoan,
+                    IsAdmin = insertedUser.IsAdmin,
+                    UserName = insertedUser.UserName
+                });
         }
 
         [HttpPut("{id:int}")]
         public IActionResult UpdateUser(int id, [FromBody] UserUpdateDto user)
         {
-            if (id != user.StudentId) return BadRequest();
+            if (id != user.UserId) return BadRequest();
             User updatedUser = new User
             {
-                FacultyId = user.FacultyId,
                 HasFine = user.HasFine,
                 HasLoan = user.HasLoan,
-                IsFaculty = user.IsFaculty,
-                StudentId = user.StudentId,
                 UserId = user.UserId,
                 UserName = user.UserName,
                 IsAdmin = user.IsAdmin

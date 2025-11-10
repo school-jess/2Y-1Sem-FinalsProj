@@ -32,7 +32,7 @@ namespace StudentLibraryManagementSystem.Controllers
         [HttpGet("{id:int}")]
         public IActionResult GetLoan(int id)
         {
-            var loan = _dbCtx.Loan.Find(id);
+            var loan = _dbCtx.Loan.Include(l => l.Reservaton).FirstOrDefault(l => l.LoanId == id);
             if (loan == null) return NotFound();
             return Ok(new LoanGet1Dto
             {
@@ -60,10 +60,14 @@ namespace StudentLibraryManagementSystem.Controllers
                 UserId = loan.UserId
             });
             _dbCtx.SaveChanges();
-            var insertedLoan = (from l in _dbCtx.Loan
-                               where l.UserId == loan.UserId
-                               select l).First();
-            return CreatedAtAction(nameof(GetLoan), new { id = insertedLoan.LoanId }, insertedLoan);
+            var insertedLoan = _dbCtx.Loan.First(l => l.UserId == loan.UserId);
+            return CreatedAtAction(nameof(GetLoan), new { id = insertedLoan.LoanId }, new LoanUpdateDto
+            {
+                AmtLoanedSinceLastLoaned = insertedLoan.AmtLoanedSinceLastLoaned,
+                LoanAmount = insertedLoan.LoanAmount,
+                LoanId = insertedLoan.LoanId,
+                UserId = insertedLoan.UserId
+            });
         }
 
         [HttpPut("{id:int}")]

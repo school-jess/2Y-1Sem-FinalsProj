@@ -19,7 +19,7 @@
     <input placeholder="Search a book..." />
     @if (isLoggedIn == "true")
     {
-        <a asp-page="/User/@userId">@logInName</a>
+        <a asp-page="/User" asp-route-id="@userId">@logInName</a>
         <a asp-page="/LogOut">Log Out</a>
     }
     else

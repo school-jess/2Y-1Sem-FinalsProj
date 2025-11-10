@@ -1,12 +1,31 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
+using SmartLibraryManagementSystemClassLibrary.Dtos;
 
-namespace MyApp.Namespace
+namespace SmartLibraryManagementSystemWebApp.Pages;
+
+public class UserModel : PageModel
 {
-    public class UserModel : PageModel
+    public UserGet1Dto User { get; set; }
+    public bool IsFaculty { get; set; }
+
+    public async Task<IActionResult> OnGetAsync(int id)
     {
-        public void OnGet(int id)
+        if (HttpContext.Session.GetString("IsLoggedIn") != "true") return NotFound();
+        if (HttpContext.Session.GetString("UserId") != $"{id}") return NotFound();
+        IsFaculty = HttpContext.Session.GetString("IsFaculty") == "true";
+        using (var httpClient = new HttpClient())
         {
+            var resp = await httpClient.GetAsync($"http://localhost:5138/api/User/{id}");
+            if (!resp.IsSuccessStatusCode) throw new InvalidOperationException("error getting user");
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            var respContent = await resp.Content.ReadAsStringAsync();
+            User = JsonSerializer.Deserialize<UserGet1Dto>(respContent, options);
         }
+        return Page();
     }
 }

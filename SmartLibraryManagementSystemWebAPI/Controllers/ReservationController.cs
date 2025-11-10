@@ -36,7 +36,13 @@ namespace StudentLibraryManagementSystem.Controllers
         [HttpGet("{id:int}")]
         public IActionResult GetReservation(int id)
         {
-            var reservation = _dbCtx.Reservation.Find(id);
+            var reservation = _dbCtx.Reservation
+                .Include(r => r.Book)
+                .Include(r => r.Catalog)
+                .Include(r => r.Fine)
+                .Include(r => r.Loan)
+                .Include(r => r.User)
+                .FirstOrDefault(r => r.ReservationId == id);
             if (reservation == null) return NotFound();
             return Ok(new ReservationGet1Dto
             {
@@ -72,11 +78,8 @@ namespace StudentLibraryManagementSystem.Controllers
                 ReservationTime = reservation.ReservationTime,
                 User = new UserUpdateDto
                 {
-                    FacultyId = reservation.User.FacultyId,
                     HasFine = reservation.User.HasFine,
                     HasLoan = reservation.User.HasLoan,
-                    IsFaculty = reservation.User.IsFaculty,
-                    StudentId = reservation.User.StudentId,
                     UserId = reservation.User.UserId,
                     UserName = reservation.User.UserName
                 }
@@ -94,10 +97,17 @@ namespace StudentLibraryManagementSystem.Controllers
                 UserId = reservation.UserId
             });
             _dbCtx.SaveChanges();
-            var insertedReservation = (from r in _dbCtx.Reservation
-                                      where r.BookId == reservation.BookId
-                                      select r).First();
-            return CreatedAtAction(nameof(GetReservation), new { id = insertedReservation.ReservationId }, insertedReservation);
+            var insertedReservation = _dbCtx.Reservation.First(r => r.BookId == reservation.BookId);
+            return CreatedAtAction(nameof(GetReservation), new { id = insertedReservation.ReservationId },
+                new ReservationUpdateDto
+                {
+                    BookId = insertedReservation.BookId,
+                    CatalogId = insertedReservation.CatalogId,
+                    ReservationDate = insertedReservation.ReservationDate,
+                    ReservationId = insertedReservation.ReservationId,
+                    ReservationTime = insertedReservation.ReservationTime,
+                    UserId = insertedReservation.UserId
+                });
         }
 
         [HttpPut("{id:int}")]

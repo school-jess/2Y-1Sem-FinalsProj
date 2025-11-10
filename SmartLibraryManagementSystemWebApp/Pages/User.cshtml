@@ -1,5 +1,42 @@
 ﻿@page "{id}"
-@model MyApp.Namespace.UserModel
+@model UserModel
 @{
+    if (Model.IsFaculty)
+    {
+        ViewData["Title"] = Model.User.Faculty.FacultyName;
+    }
+    else
+    {
+        ViewData["Title"] = Model.User.Student.StudentName;
+    }
 }
 
+<h1>Fines</h1>
+<ul>
+    @foreach (var fine in Model.User.Fines)
+    {
+        <li>
+            @fine.AmtPayedSinceLastFine -
+            <p style="font-weight: bold;">@fine.FineAmount</p>
+        </li>
+    }
+</ul>
+<h1>Loans</h1>
+<ul>
+    @foreach (var loan in Model.User.Loans)
+    {
+        <li>
+            @loan.AmtLoanedSinceLastLoaned -
+            <p style="font-weight: bold;">@loan.LoanAmount</p>
+        </li>
+    }
+</ul>
+<h1>Reservations</h1>
+<ul>
+    @foreach (var reservation in Model.User.Reservations)
+    {
+        <li>
+
+        </li>
+    }
+</ul>

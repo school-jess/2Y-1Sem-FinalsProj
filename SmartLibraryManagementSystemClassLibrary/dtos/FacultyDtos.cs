@@ -9,6 +9,7 @@ public class FacultyCreationDto
     public string Email { get; set; }
     public string Password { get; set; }
     public bool IsLoggedIn { get; set; }
+    public int UserId { get; set; }
 }
 
 public class FacultyUpdateDto
@@ -21,6 +22,7 @@ public class FacultyUpdateDto
     public string Email { get; set; }
     public string Password { get; set; }
     public bool IsLoggedIn { get; set; }
+    public int UserId { get; set; }
 }
 
 public class FacultyGet1Dto
