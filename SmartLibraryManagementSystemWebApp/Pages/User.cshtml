@@ -36,7 +36,10 @@
     @foreach (var reservation in Model.User.Reservations)
     {
         <li>
-
+            @reservation.Book.BookName @reservation.Catalog.ClassificationId @reservation.Catalog.Genre
+            @reservation.Fine.AmtPayedSinceLastFine @reservation.Fine.FineAmount
+            @reservation.Loan.AmtLoanedSinceLastLoaned @reservation.Loan.LoanAmount
+            @reservation.ReservationDateTime
         </li>
     }
 </ul>

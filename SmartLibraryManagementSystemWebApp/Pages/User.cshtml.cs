@@ -7,7 +7,8 @@ namespace SmartLibraryManagementSystemWebApp.Pages;
 
 public class UserModel : PageModel
 {
-    public UserGet1Dto User { get; set; }
+    public UserWithReservationsDto User { get; set; }
+//    public List<ReservationGet1Dto> Reservations { get; set; } = new List<ReservationGet1Dto>();
     public bool IsFaculty { get; set; }
 
     public async Task<IActionResult> OnGetAsync(int id)
@@ -17,15 +18,14 @@ public class UserModel : PageModel
         IsFaculty = HttpContext.Session.GetString("IsFaculty") == "true";
         using (var httpClient = new HttpClient())
         {
-            var getUser = await httpClient.GetAsync($"http://localhost:5138/api/User/{id}");
+            var getUser = await httpClient.GetAsync($"http://localhost:5138/api/User/{id}?withReservation=true");
             if (!getUser.IsSuccessStatusCode) throw new InvalidOperationException("error getting user");
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             };
             var getUserContent = await getUser.Content.ReadAsStringAsync();
-            User = JsonSerializer.Deserialize<UserGet1Dto>(getUserContent, options);
-            var getUserReservations
+            User = JsonSerializer.Deserialize<UserWithReservationsDto>(getUserContent, options);
         }
         return Page();
     }

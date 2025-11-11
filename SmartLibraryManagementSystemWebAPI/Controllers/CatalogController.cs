@@ -23,7 +23,10 @@ namespace StudentLibraryManagementSystem.Controllers
             {
                 BookId = c.BookId,
                 CatalogId = c.CatalogId,
-                Copies = c.Copies
+                Copies = c.Copies,
+                Genre = c.Genre,
+                ClassificationId = c.ClassificationId,
+                CopiesBorrowed = c.CopiesBorrowed
             }).ToList();
             return Ok(catalogs);
         }
@@ -45,12 +48,15 @@ namespace StudentLibraryManagementSystem.Controllers
                 },
                 CatalogId = catalog.CatalogId,
                 Copies = catalog.Copies,
+                Genre = catalog.Genre,
+                ClassificationId = catalog.ClassificationId,
+                CopiesBorrowed = catalog.CopiesBorrowed,
                 Reservations = catalog.Reservations.Select(r => new ReservationUpdateDto
                 {
                     BookId = r.BookId,
                     CatalogId = r.CatalogId,
                     ReservationId = r.ReservationId,
-                    ReservationTime = r.ReservationTime,
+                    ReservationDateTime = r.ReservationDateTime,
                     UserId = r.UserId
                 }).ToList()
             });
@@ -64,7 +70,8 @@ namespace StudentLibraryManagementSystem.Controllers
                 BookId = catalog.BookId,
                 Copies = catalog.Copies,
                 ClassificationId = catalog.ClassificationId,
-                Genre = catalog.Genre
+                Genre = catalog.Genre,
+                CopiesBorrowed = catalog.CopiesBorrowed
             });
             _dbCtx.SaveChanges();
             var insertedCatalog = _dbCtx.Catalog.First(c => c.BookId == catalog.BookId);
@@ -88,7 +95,8 @@ namespace StudentLibraryManagementSystem.Controllers
                 CatalogId = catalog.CatalogId,
                 Copies = catalog.Copies,
                 ClassificationId = catalog.ClassificationId,
-                Genre = catalog.Genre
+                Genre = catalog.Genre,
+                CopiesBorrowed = catalog.CopiesBorrowed
             };
             _dbCtx.Entry(updatedCatalog).State = EntityState.Modified;
             _dbCtx.SaveChanges();

@@ -56,7 +56,7 @@ namespace StudentLibraryManagementSystem.Controllers
                         BookId = r.ReservationId,
                         CatalogId = r.CatalogId,
                         ReservationId = r.ReservationId,
-                        ReservationTime = r.ReservationTime,
+                        ReservationDateTime = r.ReservationDateTime,
                         UserId = r.UserId
                     }
                 ).ToList()

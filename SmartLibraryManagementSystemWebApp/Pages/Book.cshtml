@@ -6,5 +6,13 @@
 
 <h1>@Model.Book.BookName</h1>
 <h2>@Model.Book.Author</h2>
-<h3>Model.Book.Released - @Model.Book.ReleaseDate</h3>
+<h3>@Model.Book.ReleaseDate</h3>
 <p>@Model.Book.Synopsis</p>
+@Model.Book.Catalog.ClassificationId
+@Model.Book.Catalog.Copies
+@Model.Book.Catalog.Genre
+<button id="borrow">Borrow</button>
+
+@section Scripts {
+    <script src="~/js/Book.js"></script>
+}

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace SmartLibraryManagementSystemClassLibrary.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20251111082006_JoinedReservationTimeAndDateTogether")]
+    partial class JoinedReservationTimeAndDateTogether
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,9 +71,6 @@ namespace SmartLibraryManagementSystemClassLibrary.Migrations
                         .HasColumnType("varchar(10)");
 
                     b.Property<int>("Copies")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CopiesBorrowed")
                         .HasColumnType("int");
 
                     b.Property<string>("Genre")

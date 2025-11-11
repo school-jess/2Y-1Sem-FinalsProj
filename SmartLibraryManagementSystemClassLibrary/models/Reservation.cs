@@ -13,13 +13,10 @@ public class Reservation
     public int BookId { get; set; }
     [ForeignKey("BookId")]
     public Book Book { get; set; }
-    [DataType(DataType.Time)]
-    public DateTime ReservationTime { get; set; }
+    public DateTime ReservationDateTime { get; set; }
     public int CatalogId { get; set; }
     [ForeignKey("CatalogId")]
     public Catalog Catalog { get; set; }
     public Fine Fine { get; set; }
     public Loan Loan { get; set; }
-    [DataType(DataType.Date)]
-    public DateTime ReservationDate { get; set; }
 }

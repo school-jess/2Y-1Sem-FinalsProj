@@ -51,7 +51,7 @@ namespace StudentLibraryManagementSystem.Controllers
                     BookId = fine.Reservaton.BookId,
                     CatalogId = fine.Reservaton.CatalogId,
                     ReservationId = fine.Reservaton.ReservationId,
-                    ReservationTime = fine.Reservaton.ReservationTime,
+                    ReservationDateTime = fine.Reservaton.ReservationDateTime,
                     UserId = fine.Reservaton.UserId
                 }
             });

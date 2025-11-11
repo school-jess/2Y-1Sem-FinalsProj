@@ -18,4 +18,5 @@ public class Catalog
     public string Genre { get; set; }
     [StringLength(10)]
     public string ClassificationId { get; set; }
+    public int CopiesBorrowed { get; set; }
 }

@@ -44,7 +44,7 @@ namespace StudentLibraryManagementSystem.Controllers
                     BookId = loan.Reservaton.BookId,
                     CatalogId = loan.Reservaton.CatalogId,
                     ReservationId = loan.Reservaton.ReservationId,
-                    ReservationTime = loan.Reservaton.ReservationTime,
+                    ReservationDateTime = loan.Reservaton.ReservationDateTime,
                     UserId = loan.Reservaton.UserId
                 }
             });
