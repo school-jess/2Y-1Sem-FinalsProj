@@ -34,7 +34,10 @@ namespace StudentLibraryManagementSystem.Controllers
         [HttpGet("{id:int}")]
         public IActionResult GetCatalog(int id)
         {
-            var catalog = _dbCtx.Catalog.Find(id);
+            var catalog = _dbCtx.Catalog
+                .Include(c => c.Book)
+                .Include(c => c.Reservations)
+                .FirstOrDefault(c => c.CatalogId == id);
             if (catalog == null) return NotFound();
             return Ok(new CatalogGet1Dto
             {
@@ -57,7 +60,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     CatalogId = r.CatalogId,
                     ReservationId = r.ReservationId,
                     ReservationDateTime = r.ReservationDateTime,
-                    UserId = r.UserId
+                    UserId = r.UserId,
+                    ReservationReturnDateTime = r.ReservationReturnDateTime
                 }).ToList()
             });
         }

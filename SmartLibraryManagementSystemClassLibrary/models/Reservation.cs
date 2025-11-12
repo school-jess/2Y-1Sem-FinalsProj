@@ -19,4 +19,5 @@ public class Reservation
     public Catalog Catalog { get; set; }
     public Fine Fine { get; set; }
     public Loan Loan { get; set; }
+    public DateTime ReservationReturnDateTime { get; set; }
 }

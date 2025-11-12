@@ -82,6 +82,7 @@ namespace StudentLibraryManagementSystem.Controllers
                         ReservationId = r.ReservationId,
                         ReservationDateTime = r.ReservationDateTime,
                         UserId = r.UserId,
+                        ReservationReturnDateTime = r.ReservationReturnDateTime
                     }).ToList(),
                     UserId = user.UserId,
                     UserName = user.UserName,
@@ -145,6 +146,7 @@ namespace StudentLibraryManagementSystem.Controllers
                         ReservationId = r.ReservationId,
                         ReservationDateTime = r.ReservationDateTime,
                         UserId = r.UserId,
+                        ReservationReturnDateTime = r.ReservationReturnDateTime
                     }).ToList(),
                     UserId = user.UserId,
                     UserName = user.UserName,

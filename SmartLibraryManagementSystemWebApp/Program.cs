@@ -23,4 +23,13 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
+app.Use(async (context, next) =>
+{
+    if (context.Session.GetString("IsLoggedIn") == "true")
+    {
+        
+    }
+    await next(context);
+});
+
 app.Run();

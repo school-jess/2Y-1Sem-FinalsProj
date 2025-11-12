@@ -3,32 +3,36 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"]</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 
 <body>
-    @{
-        string isLoggedIn = Context.Session.GetString("IsLoggedIn");
-        string logInName = Context.Session.GetString("LogInName");
-        string userId = Context.Session.GetString("UserId");
+@{
+    string isLoggedIn = Context.Session.GetString("IsLoggedIn");
+    string logInName = Context.Session.GetString("LogInName");
+    string userId = Context.Session.GetString("UserId");
+    string isAdmin = Context.Session.GetString("IsAdmin");
+}
+<a asp-page="/Index">Home</a>
+<input placeholder="Search a book..."/>
+@if (isLoggedIn == "true")
+{
+    <a asp-page="/User" asp-route-id="@userId">@logInName</a>
+    <a asp-page="/LogOut">Log Out</a>
+    if (isAdmin == "true") {
+        <a asp-page="/Admin">Admin</a>
     }
-    <a asp-page="/Index">Home</a>
-    <input placeholder="Search a book..." />
-    @if (isLoggedIn == "true")
-    {
-        <a asp-page="/User" asp-route-id="@userId">@logInName</a>
-        <a asp-page="/LogOut">Log Out</a>
-    }
-    else
-    {
-        <a asp-page="/LogIn">Log In</a>
-        <a asp-page="/SignUp">Sign Up</a>
-    }
-    @RenderBody()
-    @await RenderSectionAsync("Scripts", required: false)
+}
+else
+{
+    <a asp-page="/LogIn">Log In</a>
+    <a asp-page="/SignUp">Sign Up</a>
+}
+@RenderBody()
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 
 </html>

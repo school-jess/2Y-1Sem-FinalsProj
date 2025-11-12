@@ -27,7 +27,6 @@ public class LogInModel : PageModel
         if (!ModelState.IsValid) return Page();
         using (var httpClient = new HttpClient())
         {
-            // todo handle authentication in the web api instead of here
             string apiLink = "http://localhost:5138/api/";
             if (Input.IsEducator) apiLink += $"Faculty/{Input.Email}";
             else apiLink += $"Student/{Input.Email}";
@@ -49,6 +48,8 @@ public class LogInModel : PageModel
                         HttpContext.Session.SetString("LogInName", faculty.FacultyName);
                         HttpContext.Session.SetString("UserId", $"{faculty.User.UserId}");
                         HttpContext.Session.SetString("IsEducator", "true");
+                        if (faculty.User.IsAdmin) HttpContext.Session.SetString("IsAdmin", "true");
+                        else HttpContext.Session.SetString("IsAdmin", "false");
                         faculty.IsLoggedIn = true;
                         string facultySerialized = JsonSerializer.Serialize(faculty);
                         var facultyHttpCont =
@@ -71,6 +72,8 @@ public class LogInModel : PageModel
                         HttpContext.Session.SetString("LogInName", student.StudentName);
                         HttpContext.Session.SetString("UserId", $"{student.User.UserId}");
                         HttpContext.Session.SetString("IsEducator", "false");
+                        if (student.User.IsAdmin) HttpContext.Session.SetString("IsAdmin", "true");
+                        else HttpContext.Session.SetString("IsAdmin", "false");
                         student.IsLoggedIn = true;
                         string studentSerialized = JsonSerializer.Serialize(student);
                         var studentHttpCont =
@@ -81,7 +84,7 @@ public class LogInModel : PageModel
                         if (!setLoginStat.IsSuccessStatusCode)
                             throw new InvalidOperationException("error setting login status");
                     }
-                    else throw new InvalidOperationException("password dont match"); // todo handle with more care
+                    else return Page(); // todo handle with more care
                 }
             }
             else throw new InvalidOperationException("couldn't find user");

@@ -28,6 +28,7 @@ namespace StudentLibraryManagementSystem.Controllers
                     ReservationId = reservation.ReservationId,
                     ReservationDateTime = reservation.ReservationDateTime,
                     UserId = reservation.UserId,
+                    ReservationReturnDateTime = reservation.ReservationReturnDateTime
                 }).ToList();
             return Ok(reservations);
         }
@@ -81,7 +82,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     HasLoan = reservation.User.HasLoan,
                     UserId = reservation.User.UserId,
                     UserName = reservation.User.UserName
-                }
+                },
+                ReservationReturnDateTime = reservation.ReservationReturnDateTime
             });
         }
 
@@ -93,7 +95,8 @@ namespace StudentLibraryManagementSystem.Controllers
                 BookId = reservation.BookId,
                 CatalogId = reservation.CatalogId,
                 ReservationDateTime = reservation.ReservationDateTime,
-                UserId = reservation.UserId
+                UserId = reservation.UserId,
+                ReservationReturnDateTime = reservation.ReservationReturnDateTime
             });
             _dbCtx.SaveChanges();
             var insertedReservation = _dbCtx.Reservation.First(r => r.BookId == reservation.BookId);
@@ -104,7 +107,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     CatalogId = insertedReservation.CatalogId,
                     ReservationDateTime = insertedReservation.ReservationDateTime,
                     ReservationId = insertedReservation.ReservationId,
-                    UserId = insertedReservation.UserId
+                    UserId = insertedReservation.UserId,
+                    ReservationReturnDateTime = insertedReservation.ReservationReturnDateTime
                 });
         }
 
@@ -118,7 +122,8 @@ namespace StudentLibraryManagementSystem.Controllers
                 CatalogId = reservation.CatalogId,
                 ReservationId = reservation.ReservationId,
                 ReservationDateTime = reservation.ReservationDateTime,
-                UserId = reservation.UserId
+                UserId = reservation.UserId,
+                ReservationReturnDateTime = reservation.ReservationReturnDateTime
             };
             _dbCtx.Entry(updatedReservation).State = EntityState.Modified;
             _dbCtx.SaveChanges();

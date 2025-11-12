@@ -2,3 +2,10 @@
 @model AdminModel
 @{
 }
+
+@foreach (var user in Model.Users)
+{
+    <div>
+        @user.UserName @user.HasFine @user.HasLoan @user.IsAdmin
+    </div>
+}
