@@ -51,8 +51,13 @@ public class BookModel : PageModel
             BookGet1Dto book = JsonSerializer.Deserialize<BookGet1Dto>(getBookCont, options);
             if (book.Catalog.Copies - book.Catalog.CopiesBorrowed < 0)
                 return Page(); // todo return a reason why coudn't borrow
-            ReservationCreationDto reservation = new ReservationCreationDto(user.UserId, bookId, DateTime.UtcNow,
-                book.Catalog.CatalogId, DateTime.UtcNow.AddDays(7), false);
+            ReservationCreationDto reservation = new ReservationCreationDto(
+                user.UserId,
+                bookId,
+                DateTime.UtcNow,
+                book.Catalog.CatalogId,
+                DateTime.UtcNow.AddDays(7),
+                false);
             string reservationSerialized = JsonSerializer.Serialize(reservation);
             var reservationHttpCont = new StringContent(reservationSerialized, Encoding.UTF8, "application/json");
             var newReservation =

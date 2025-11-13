@@ -20,7 +20,12 @@ namespace StudentLibraryManagementSystem.Controllers
         public IActionResult GetUsers()
         {
             var users = _dbCtx.User
-                .Select(u => new UserUpdateDto(u.UserId, u.UserName, u.HasFine, u.HasLoan, u.IsAdmin)).ToList();
+                .Select(u => new UserUpdateDto(
+                    u.UserId,
+                    u.UserName,
+                    u.HasFine,
+                    u.HasLoan,
+                    u.IsAdmin)).ToList();
             return Ok(users);
         }
 
@@ -60,35 +65,38 @@ namespace StudentLibraryManagementSystem.Controllers
                             new FineUpdateDto(
                                 r.Fine.FineId,
                                 r.Fine.FineAmount,
-                                r.Fine.HasPayed,
                                 r.Fine.UserId,
                                 r.Fine.ReservatonId),
                             new LoanUpdateDto(
                                 r.Loan.LoanId,
                                 r.Loan.LoanAmount,
-                                r.Loan.HasPayed,
                                 r.Loan.UserId,
                                 r.Loan.ReservatonId),
                             r.ReservationReturnDateTime,
-                            r.HasReturned)).ToList(),
+                            r.HasFine)).ToList(),
                     user.PrevFine
                         .Select(f => new FineUpdateDto(
                             f.FineId,
                             f.FineAmount,
-                            f.HasPayed,
                             f.UserId)).ToList(),
                     user.PrevLoan.Select(l => new LoanUpdateDto(
                         l.LoanId,
                         l.LoanAmount,
-                        l.HasPayed,
                         l.UserId,
                         l.ReservatonId)).ToList(),
                     user.IsAdmin);
                 if (user.Faculty == null)
                 {
-                    userWithReservationsToRet.Student = new StudentUpdateDto(user.Student.StudentId,
-                        user.Student.StudentName, user.Student.Department, user.Student.Course, user.Student.Grade,
-                        user.Student.Email, user.Student.Password, user.Student.IsLoggedIn, user.Student.UserId);
+                    userWithReservationsToRet.Student = new StudentUpdateDto(
+                        user.Student.StudentId,
+                        user.Student.StudentName,
+                        user.Student.Department,
+                        user.Student.Course,
+                        user.Student.Grade,
+                        user.Student.Email,
+                        user.Student.Password,
+                        user.Student.IsLoggedIn,
+                        user.Student.UserId);
                 }
                 else
                 {
@@ -114,17 +122,15 @@ namespace StudentLibraryManagementSystem.Controllers
                     r.ReservationDateTime,
                     r.CatalogId,
                     r.ReservationReturnDateTime,
-                    r.HasReturned)).ToList(),
+                    r.HasFine)).ToList(),
                 user.PrevFine.Select(f => new FineUpdateDto(
                     f.FineId,
                     f.FineAmount,
-                    f.HasPayed,
                     f.UserId)).ToList(),
                 user.PrevLoan.Select(l =>
                     new LoanUpdateDto(
                         l.LoanId,
                         l.LoanAmount,
-                        l.HasPayed,
                         l.UserId,
                         l.ReservatonId)).ToList(),
                 user.IsAdmin);
@@ -141,12 +147,17 @@ namespace StudentLibraryManagementSystem.Controllers
                     user.Student.IsLoggedIn,
                     user.Student.UserId);
             }
-
             else
             {
-                userToRet.Faculty = new FacultyUpdateDto(user.Faculty.FacultyId, user.Faculty.FacultyName,
-                    user.Faculty.Department, user.Faculty.Subject, user.Faculty.Course, user.Faculty.Email,
-                    user.Faculty.Password, user.Faculty.IsLoggedIn);
+                userToRet.Faculty = new FacultyUpdateDto(
+                    user.Faculty.FacultyId,
+                    user.Faculty.FacultyName,
+                    user.Faculty.Department,
+                    user.Faculty.Subject,
+                    user.Faculty.Course,
+                    user.Faculty.Email,
+                    user.Faculty.Password,
+                    user.Faculty.IsLoggedIn);
             }
 
             return Ok(userToRet);
@@ -163,15 +174,24 @@ namespace StudentLibraryManagementSystem.Controllers
             _dbCtx.SaveChanges();
             var insertedUser = _dbCtx.User.First(u => u.UserName == user.UserName);
             return CreatedAtAction(nameof(GetUser), new { id = insertedUser.UserId, withReservation = false },
-                new UserUpdateDto(insertedUser.UserId, insertedUser.UserName, insertedUser.HasFine,
-                    insertedUser.HasLoan, insertedUser.IsAdmin));
+                new UserUpdateDto(
+                    insertedUser.UserId,
+                    insertedUser.UserName,
+                    insertedUser.HasFine,
+                    insertedUser.HasLoan,
+                    insertedUser.IsAdmin));
         }
 
         [HttpPut("{id:int}")]
         public IActionResult UpdateUser(int id, [FromBody] UserUpdateDto user)
         {
             if (id != user.UserId) return BadRequest();
-            User updatedUser = new User(user.UserId, user.UserName, user.HasFine, user.HasLoan, user.IsAdmin);
+            User updatedUser = new User(
+                user.UserId,
+                user.UserName,
+                user.HasFine,
+                user.HasLoan,
+                user.IsAdmin);
             _dbCtx.Entry(updatedUser).State = EntityState.Modified;
             _dbCtx.SaveChanges();
             return NoContent();

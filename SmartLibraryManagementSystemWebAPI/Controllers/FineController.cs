@@ -23,7 +23,6 @@ namespace StudentLibraryManagementSystem.Controllers
                 .Select(f => new FineUpdateDto(
                     f.FineId,
                     f.FineAmount,
-                    f.HasPayed,
                     f.UserId,
                     f.ReservatonId)).ToList();
             return Ok(fines);
@@ -40,7 +39,6 @@ namespace StudentLibraryManagementSystem.Controllers
             return Ok(new FineGet1Dto(
                 fine.FineId,
                 fine.FineAmount,
-                fine.HasPayed,
                 new UserUpdateDto(
                     fine.User.UserId,
                     fine.User.UserName,
@@ -54,17 +52,22 @@ namespace StudentLibraryManagementSystem.Controllers
                     fine.Reservaton.ReservationDateTime,
                     fine.Reservaton.CatalogId,
                     fine.Reservaton.ReservationReturnDateTime,
-                    fine.Reservaton.HasReturned)));
+                    fine.Reservaton.HasFine)));
         }
 
         [HttpPost]
         public IActionResult NewFine([FromBody] FineCreationDto fine)
         {
-            _dbCtx.Fine.Add(new Fine(fine.FineAmount, fine.HasPayed, fine.UserId, fine.ReservatonId));
+            _dbCtx.Fine.Add(new Fine(
+                fine.FineAmount,
+                fine.UserId,
+                fine.ReservatonId));
             _dbCtx.SaveChanges();
             var insertedFine = _dbCtx.Fine.First(f => f.UserId == fine.UserId);
             return CreatedAtAction(nameof(GetFine), new { id = insertedFine.FineId },
-                new FineUpdateDto(insertedFine.FineId, insertedFine.FineAmount, insertedFine.HasPayed,
+                new FineUpdateDto(
+                    insertedFine.FineId,
+                    insertedFine.FineAmount,
                     insertedFine.UserId,
                     insertedFine.ReservatonId));
         }
@@ -73,7 +76,11 @@ namespace StudentLibraryManagementSystem.Controllers
         public IActionResult UpdateFine(int id, [FromBody] FineUpdateDto fine)
         {
             if (id != fine.FineId) return BadRequest();
-            Fine updatedFine = new Fine(fine.FineId, fine.FineAmount, fine.HasPayed, fine.UserId, fine.ReservatonId);
+            Fine updatedFine = new Fine(
+                fine.FineId,
+                fine.FineAmount,
+                fine.UserId,
+                fine.ReservatonId);
             _dbCtx.Entry(updatedFine).State = EntityState.Modified;
             _dbCtx.SaveChanges();
             return NoContent();

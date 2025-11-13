@@ -56,7 +56,7 @@ namespace StudentLibraryManagementSystem.Controllers
                         r.ReservationDateTime,
                         r.CatalogId,
                         r.ReservationReturnDateTime,
-                        r.HasReturned)).ToList(),
+                        r.HasFine)).ToList(),
                 book.ReleaseDate,
                 book.Synopsis));
         }
@@ -72,9 +72,12 @@ namespace StudentLibraryManagementSystem.Controllers
             _dbCtx.SaveChanges();
             var insertedBook = _dbCtx.Book.First(b => b.BookName == book.BookName);
             return CreatedAtAction(nameof(GetBook), new { id = insertedBook.BookId },
-                new BookUpdateDto(insertedBook.BookId, insertedBook.BookName, insertedBook.Author,
-                    insertedBook.ReleaseDate, insertedBook.Synopsis)
-            );
+                new BookUpdateDto(
+                    insertedBook.BookId,
+                    insertedBook.BookName,
+                    insertedBook.Author,
+                    insertedBook.ReleaseDate,
+                    insertedBook.Synopsis));
         }
 
         [HttpPut("{id:int}")]

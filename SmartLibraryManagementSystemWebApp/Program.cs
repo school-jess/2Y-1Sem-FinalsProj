@@ -56,6 +56,21 @@ app.Use(async (context, next) =>
         {
             if (reservation.ReservationReturnDateTime < DateTime.UtcNow)
             {
+                if (reservation.HasFine)
+                {
+                    int daysBookNotReturned = (DateTime.UtcNow - reservation.ReservationReturnDateTime).Days;
+                    if (daysBookNotReturned == 1) continue;
+                    // update fine amount to include days after book return date
+                    reservation.Fine.FineAmount += daysBookNotReturned * 10;
+                    string fineToUpdateSerialized = JsonSerializer.Serialize(reservation.Fine);
+                    var fineToUpdateHttpCont =
+                        new StringContent(fineToUpdateSerialized, Encoding.UTF8, "application/json");
+                    var updateFine =
+                        await httpClient.PutAsync($"http://localhost:5138/api/Fine", fineToUpdateHttpCont);
+                    if (!updateFine.IsSuccessStatusCode) throw new InvalidOperationException("error updating fine");
+                    continue;
+                }
+
                 // create a new Fine
                 FineCreationDto fine = new FineCreationDto(10, reservation.UserId, false, reservation.ReservationId);
                 string fineSerialized = JsonSerializer.Serialize(fine);
@@ -67,8 +82,23 @@ app.Use(async (context, next) =>
                     new UserUpdateDto(user.UserId, user.UserName, true, user.HasLoan, user.IsAdmin);
                 string userToUpdateSerialized = JsonSerializer.Serialize(userToUpdate);
                 var userToUpdateHttpCont = new StringContent(userToUpdateSerialized, Encoding.UTF8, "application/json");
-                var updateUser = await httpClient.PutAsync($"http://localhost:5138/api/User/", userToUpdateHttpCont);
+                var updateUser = await httpClient.PutAsync($"http://localhost:5138/api/User", userToUpdateHttpCont);
                 if (!updateUser.IsSuccessStatusCode) throw new InvalidOperationException("error updating user");
+                // update reservation to have fine
+                ReservationUpdateDto reservationToUpdate = new ReservationUpdateDto(
+                    reservation.ReservationId,
+                    reservation.UserId,
+                    reservation.Book.BookId,
+                    reservation.ReservationDateTime,
+                    reservation.Catalog.CatalogId,
+                    reservation.ReservationReturnDateTime,
+                    true);
+                string reservationToUpdateSerialized = JsonSerializer.Serialize(reservationToUpdate);
+                var reservationToUpdateHttpCont =
+                    new StringContent(reservationToUpdateSerialized, Encoding.UTF8, "application/json");
+                var updateReservation =
+                    await httpClient.PutAsync($"http://localhost:5138/api/Reservation", reservationToUpdateHttpCont);
+                if (!updateReservation.IsSuccessStatusCode) throw new InvalidOperationException("error updating user");
             }
         }
     }

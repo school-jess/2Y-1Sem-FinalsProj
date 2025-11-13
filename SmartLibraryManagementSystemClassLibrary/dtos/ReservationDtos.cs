@@ -7,10 +7,10 @@ public class ReservationCreationDto
     public DateTime ReservationDateTime { get; set; }
     public int CatalogId { get; set; }
     public DateTime ReservationReturnDateTime { get; set; }
-    public bool HasReturned { get; set; }
+    public bool HasFine { get; set; }
 
     public ReservationCreationDto(int userId, int bookId, DateTime reservationDateTime, int catalogId,
-        DateTime reservationReturnDateTime, bool hasReturned)
+        DateTime reservationReturnDateTime, bool hasFine)
     {
         UserId = userId;
         BookId = bookId;
@@ -18,7 +18,7 @@ public class ReservationCreationDto
         ReservationReturnDateTime = reservationReturnDateTime;
         CatalogId = catalogId;
         ReservationReturnDateTime = reservationReturnDateTime;
-        HasReturned = hasReturned;
+        HasFine = hasFine;
     }
 }
 
@@ -30,10 +30,10 @@ public class ReservationUpdateDto
     public DateTime ReservationDateTime { get; set; }
     public int CatalogId { get; set; }
     public DateTime ReservationReturnDateTime { get; set; }
-    public bool HasReturned { get; set; }
+    public bool HasFine { get; set; }
 
     public ReservationUpdateDto(int reservationId, int userId, int bookId, DateTime reservationDateTime, int catalogId,
-        DateTime reservationReturnDateTime, bool hasReturned)
+        DateTime reservationReturnDateTime, bool hasFine)
     {
         ReservationId = reservationId;
         UserId = userId;
@@ -41,7 +41,7 @@ public class ReservationUpdateDto
         ReservationDateTime = reservationDateTime;
         CatalogId = catalogId;
         ReservationReturnDateTime = reservationReturnDateTime;
-        HasReturned = hasReturned;
+        HasFine = hasFine;
     }
 }
 
@@ -55,11 +55,11 @@ public class ReservationGet1Dto
     public FineUpdateDto Fine { get; set; }
     public LoanUpdateDto Loan { get; set; }
     public DateTime ReservationReturnDateTime { get; set; }
-    public bool HasReturned { get; set; }
+    public bool HasFine { get; set; }
 
     public ReservationGet1Dto(int reservationId, UserUpdateDto user, BookUpdateDto book, DateTime reservationDateTime,
         CatalogUpdateDto catalog, FineUpdateDto fine, LoanUpdateDto loan, DateTime reservationReturnDateTime,
-        bool hasReturned)
+        bool hasFine)
     {
         ReservationId = reservationId;
         User = user;
@@ -69,7 +69,7 @@ public class ReservationGet1Dto
         Fine = fine;
         Loan = loan;
         ReservationReturnDateTime = reservationReturnDateTime;
-        HasReturned = hasReturned;
+        HasFine = hasFine;
     }
 }
 
@@ -83,10 +83,11 @@ public class ReservationUserDto
     public FineUpdateDto Fine { get; set; }
     public LoanUpdateDto Loan { get; set; }
     public DateTime ReservationReturnDateTime { get; set; }
-    public bool HasReturned { get; set; }
+    public bool HasFine { get; set; }
 
     public ReservationUserDto(int reservationId, int userId, BookUpdateDto book, DateTime reservationDateTime,
-        CatalogUpdateDto catalog, FineUpdateDto fine, LoanUpdateDto loan, DateTime reservationReturnDateTime, bool hasReturned)
+        CatalogUpdateDto catalog, FineUpdateDto fine, LoanUpdateDto loan, DateTime reservationReturnDateTime,
+        bool hasFine)
     {
         ReservationId = reservationId;
         UserId = userId;
@@ -96,6 +97,6 @@ public class ReservationUserDto
         Fine = fine;
         Loan = loan;
         ReservationReturnDateTime = reservationReturnDateTime;
-        HasReturned = hasReturned;
+        HasFine = hasFine;
     }
 }

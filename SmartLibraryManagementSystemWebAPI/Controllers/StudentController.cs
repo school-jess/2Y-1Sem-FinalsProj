@@ -19,15 +19,26 @@ namespace StudentLibraryManagementSystem.Controllers
         [HttpGet]
         public IActionResult GetStudents()
         {
-            var students = _dbCtx.Student.Select(s => new StudentUpdateDto(s.StudentId, s.StudentName, s.Department,
-                s.Course, s.Grade, s.Email, s.Password, s.IsLoggedIn, s.UserId)).ToList();
+            var students = _dbCtx.Student
+                .Select(s => new StudentUpdateDto(
+                    s.StudentId,
+                    s.StudentName,
+                    s.Department,
+                    s.Course,
+                    s.Grade,
+                    s.Email,
+                    s.Password,
+                    s.IsLoggedIn,
+                    s.UserId)).ToList();
             return Ok(students);
         }
 
         [HttpGet("{id:int}")]
         public IActionResult GetStudent(int id)
         {
-            var student = _dbCtx.Student.Include(s => s.User).FirstOrDefault(s => s.StudentId == id);
+            var student = _dbCtx.Student
+                .Include(s => s.User)
+                .FirstOrDefault(s => s.StudentId == id);
             if (student == null) return NotFound();
             return Ok(new StudentGet1Dto(
                 student.StudentId,
@@ -88,9 +99,16 @@ namespace StudentLibraryManagementSystem.Controllers
             _dbCtx.SaveChanges();
             var insertedStudent = _dbCtx.Student.First(s => s.Email == student.Email);
             return CreatedAtAction(nameof(GetStudent), new { id = insertedStudent.StudentId },
-                new StudentUpdateDto(insertedStudent.StudentId, insertedStudent.StudentName, insertedStudent.Department,
-                    insertedStudent.Course, insertedStudent.Grade, insertedStudent.Email, insertedStudent.Password,
-                    insertedStudent.IsLoggedIn, insertedStudent.UserId));
+                new StudentUpdateDto(
+                    insertedStudent.StudentId,
+                    insertedStudent.StudentName,
+                    insertedStudent.Department,
+                    insertedStudent.Course,
+                    insertedStudent.Grade,
+                    insertedStudent.Email,
+                    insertedStudent.Password,
+                    insertedStudent.IsLoggedIn,
+                    insertedStudent.UserId));
         }
 
         [HttpPut("{id:int}")]

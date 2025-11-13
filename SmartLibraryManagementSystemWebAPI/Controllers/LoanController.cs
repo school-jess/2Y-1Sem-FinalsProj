@@ -23,7 +23,6 @@ namespace StudentLibraryManagementSystem.Controllers
                 .Select(l => new LoanUpdateDto(
                     l.LoanId,
                     l.LoanAmount,
-                    l.HasPayed,
                     l.UserId,
                     l.ReservatonId)).ToList();
             return Ok(loans);
@@ -37,7 +36,6 @@ namespace StudentLibraryManagementSystem.Controllers
             return Ok(new LoanGet1Dto(
                 loan.LoanId,
                 loan.LoanAmount,
-                loan.HasPayed,
                 new UserUpdateDto(
                     loan.User.UserId,
                     loan.User.UserName,
@@ -51,7 +49,7 @@ namespace StudentLibraryManagementSystem.Controllers
                     loan.Reservaton.ReservationDateTime,
                     loan.Reservaton.CatalogId,
                     loan.Reservaton.ReservationReturnDateTime,
-                    loan.Reservaton.HasReturned)));
+                    loan.Reservaton.HasFine)));
         }
 
         [HttpPost]
@@ -59,14 +57,16 @@ namespace StudentLibraryManagementSystem.Controllers
         {
             _dbCtx.Loan.Add(new Loan(
                 loan.LoanAmount,
-                loan.HasPayed,
                 loan.UserId,
                 loan.ReservationId));
             _dbCtx.SaveChanges();
             var insertedLoan = _dbCtx.Loan.First(l => l.UserId == loan.UserId);
             return CreatedAtAction(nameof(GetLoan), new { id = insertedLoan.LoanId },
-                new LoanUpdateDto(insertedLoan.LoanId, insertedLoan.LoanAmount, insertedLoan.HasPayed,
-                    insertedLoan.UserId, insertedLoan.ReservatonId));
+                new LoanUpdateDto(
+                    insertedLoan.LoanId,
+                    insertedLoan.LoanAmount,
+                    insertedLoan.UserId,
+                    insertedLoan.ReservatonId));
         }
 
         [HttpPut("{id:int}")]
@@ -76,7 +76,6 @@ namespace StudentLibraryManagementSystem.Controllers
             Loan updateLoan = new Loan(
                 loan.LoanId,
                 loan.LoanAmount,
-                loan.HasPayed,
                 loan.UserId,
                 loan.ReservationId);
             _dbCtx.Entry(updateLoan).State = EntityState.Modified;
