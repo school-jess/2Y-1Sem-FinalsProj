@@ -28,7 +28,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     reservation.ReservationDateTime,
                     reservation.CatalogId,
                     reservation.ReservationReturnDateTime,
-                    reservation.HasFine)).ToList();
+                    reservation.HasFine,
+                    reservation.HasReturned)).ToList();
             return Ok(reservations);
         }
 
@@ -75,19 +76,21 @@ namespace StudentLibraryManagementSystem.Controllers
                     reservation.Loan.UserId,
                     reservation.Loan.ReservatonId),
                 reservation.ReservationReturnDateTime,
-                reservation.HasFine));
+                reservation.HasFine,
+                reservation.HasReturned));
         }
 
         [HttpPost]
         public IActionResult NewReservation([FromBody] ReservationCreationDto reservation)
         {
             _dbCtx.Reservation.Add(new Reservation(
-                    reservation.UserId,
-                    reservation.BookId,
-                    reservation.ReservationDateTime,
-                    reservation.CatalogId,
-                    reservation.ReservationReturnDateTime,
-                    reservation.HasFine));
+                reservation.UserId,
+                reservation.BookId,
+                reservation.ReservationDateTime,
+                reservation.CatalogId,
+                reservation.ReservationReturnDateTime,
+                reservation.HasFine,
+                reservation.HasReturned));
             _dbCtx.SaveChanges();
             var insertedReservation = _dbCtx.Reservation.First(r => r.BookId == reservation.BookId);
             return CreatedAtAction(nameof(GetReservation), new { id = insertedReservation.ReservationId },
@@ -98,22 +101,24 @@ namespace StudentLibraryManagementSystem.Controllers
                     insertedReservation.ReservationDateTime,
                     insertedReservation.CatalogId,
                     insertedReservation.ReservationReturnDateTime,
-                    insertedReservation.HasFine));
+                    insertedReservation.HasFine,
+                    insertedReservation.HasReturned));
         }
 
         [HttpPut("{id:int}")]
         public IActionResult UpdateReservation(int id, [FromBody] ReservationUpdateDto reservation)
         {
             if (id != reservation.ReservationId) return BadRequest();
-            Reservation updatedReservation = new Reservation(
-                reservation.ReservationId,
-                reservation.UserId,
-                reservation.BookId,
-                reservation.ReservationDateTime,
-                reservation.CatalogId,
-                reservation.ReservationReturnDateTime,
-                reservation.HasFine);
-            _dbCtx.Entry(updatedReservation).State = EntityState.Modified;
+            Reservation? reservationToUpdate = _dbCtx.Reservation.Find(id);
+            if (reservationToUpdate == null) return NotFound();
+            reservationToUpdate.ReservationId = reservation.ReservationId;
+            reservationToUpdate.UserId = reservation.UserId;
+            reservationToUpdate.BookId = reservation.BookId;
+            reservationToUpdate.ReservationDateTime = reservation.ReservationDateTime;
+            reservationToUpdate.CatalogId = reservation.CatalogId;
+            reservationToUpdate.ReservationReturnDateTime = reservation.ReservationReturnDateTime;
+            reservationToUpdate.HasFine = reservation.HasFine;
+            reservationToUpdate.HasReturned = reservation.HasReturned;
             _dbCtx.SaveChanges();
             return NoContent();
         }

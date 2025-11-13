@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using SmartLibraryManagementSystemClassLibrary.Dtos;
 using System.Text.Json;
 using System.Text;
+using Isopoh.Cryptography.Argon2;
 
 namespace SmartLibraryManagementSystemWebApp.Pages;
 
@@ -42,7 +43,7 @@ public class LogInModel : PageModel
                 if (Input.IsEducator)
                 {
                     FacultyGet1Dto faculty = JsonSerializer.Deserialize<FacultyGet1Dto>(respContent, options);
-                    if (faculty.Password == Input.Password)
+                    if (Argon2.Verify(faculty.Password, Input.Password))
                     {
                         HttpContext.Session.SetString("IsLoggedIn", "true");
                         HttpContext.Session.SetString("LogInName", faculty.FacultyName);
@@ -66,7 +67,7 @@ public class LogInModel : PageModel
                 {
                     respContent = await resp.Content.ReadAsStringAsync();
                     StudentGet1Dto student = JsonSerializer.Deserialize<StudentGet1Dto>(respContent, options);
-                    if (student.Password == Input.Password)
+                    if (Argon2.Verify(student.Password, Input.Password))
                     {
                         HttpContext.Session.SetString("IsLoggedIn", "true");
                         HttpContext.Session.SetString("LogInName", student.StudentName);

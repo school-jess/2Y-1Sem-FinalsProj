@@ -54,12 +54,16 @@ app.Use(async (context, next) =>
         UserWithReservationsDto user = JsonSerializer.Deserialize<UserWithReservationsDto>(getUserCont, options);
         foreach (var reservation in user.Reservations)
         {
+            if (reservation.HasReturned)
+            {
+                continue;
+            }
             if (reservation.ReservationReturnDateTime < DateTime.UtcNow)
             {
                 if (reservation.HasFine)
                 {
                     int daysBookNotReturned = (DateTime.UtcNow - reservation.ReservationReturnDateTime).Days;
-                    if (daysBookNotReturned == 1) continue;
+                    if (daysBookNotReturned < 1) continue;
                     // update fine amount to include days after book return date
                     reservation.Fine.FineAmount += daysBookNotReturned * 10;
                     string fineToUpdateSerialized = JsonSerializer.Serialize(reservation.Fine);
@@ -92,7 +96,8 @@ app.Use(async (context, next) =>
                     reservation.ReservationDateTime,
                     reservation.Catalog.CatalogId,
                     reservation.ReservationReturnDateTime,
-                    true);
+                    true,
+                    reservation.HasReturned);
                 string reservationToUpdateSerialized = JsonSerializer.Serialize(reservationToUpdate);
                 var reservationToUpdateHttpCont =
                     new StringContent(reservationToUpdateSerialized, Encoding.UTF8, "application/json");

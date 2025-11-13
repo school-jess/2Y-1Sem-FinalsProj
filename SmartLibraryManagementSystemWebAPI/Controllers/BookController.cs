@@ -56,7 +56,8 @@ namespace StudentLibraryManagementSystem.Controllers
                         r.ReservationDateTime,
                         r.CatalogId,
                         r.ReservationReturnDateTime,
-                        r.HasFine)).ToList(),
+                        r.HasFine,
+                        r.HasReturned)).ToList(),
                 book.ReleaseDate,
                 book.Synopsis));
         }
@@ -84,13 +85,13 @@ namespace StudentLibraryManagementSystem.Controllers
         public IActionResult UpdateBook(int id, [FromBody] BookUpdateDto book)
         {
             if (id != book.BookId) return BadRequest();
-            Book updatedBook = new Book(
-                book.BookId,
-                book.BookName,
-                book.Author,
-                book.ReleaseDate,
-                book.Synopsis);
-            _dbCtx.Entry(updatedBook).State = EntityState.Modified;
+            Book? bookToUpdate = _dbCtx.Book.Find(id);
+            if (bookToUpdate == null) return NotFound();
+            bookToUpdate.Author = book.Author;
+            bookToUpdate.BookId = book.BookId;
+            bookToUpdate.BookName = book.BookName;
+            bookToUpdate.ReleaseDate = book.ReleaseDate;
+            bookToUpdate.Synopsis = book.Synopsis;
             _dbCtx.SaveChanges();
             return NoContent();
         }

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using SmartLibraryManagementSystemClassLibrary.Dtos;
 using System.Text.Json;
 using System.Text;
+using Isopoh.Cryptography.Argon2;
 
 namespace SmartLibraryManagementSystemWebApp.Pages;
 
@@ -53,7 +54,7 @@ public class SignUpModel : PageModel
             if (Input.IsEducator)
             {
                 FacultyCreationDto faculty = new FacultyCreationDto(Input.Name, Input.Department, Input.Subject,
-                    Input.Course, Input.Email, Input.Password, false, newUser.UserId);
+                    Input.Course, Input.Email, Argon2.Hash(Input.Password), false, newUser.UserId);
                 string facultySerialized = JsonSerializer.Serialize(faculty);
                 var facultyHttpCont = new StringContent(facultySerialized, Encoding.UTF8, "application/json");
                 HttpResponseMessage createFaculty = await httpClient.PostAsync(apiLink, facultyHttpCont);
@@ -63,7 +64,7 @@ public class SignUpModel : PageModel
             else
             {
                 StudentCreationDto student = new StudentCreationDto(Input.Name, Input.Department, Input.Course,
-                    Input.Grade ?? 0, Input.Email, Input.Password, false, newUser.UserId);
+                    Input.Grade ?? 0, Input.Email, Argon2.Hash(Input.Password), false, newUser.UserId);
                 string studentSerialized = JsonSerializer.Serialize(student);
                 var studentHttpCont = new StringContent(studentSerialized, Encoding.UTF8, "application/json");
                 HttpResponseMessage createStudent = await httpClient.PostAsync(apiLink, studentHttpCont);

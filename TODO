@@ -1,7 +1,8 @@
 1. give dtos constraints that match models done
-2. figure out how to check days borrowed
-3. save password hash and salt
+2. figure out how to check days borrowed done
+3. save password hash and salt done not yet tested also dont know if includes salt
 4. make uml
-5. come up with explanation for solic principles for code
-6. WebApp/Program.cs:59:47 figure out previous unpaid fines
-7. update put methods
+5. come up with explanation for solid principles for code
+6. WebApp/Program.cs:59:47 figure out previous unpaid fines dont
+7. update put methods done
+8. figure out how to input payments into system

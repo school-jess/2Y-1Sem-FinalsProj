@@ -52,7 +52,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     fine.Reservaton.ReservationDateTime,
                     fine.Reservaton.CatalogId,
                     fine.Reservaton.ReservationReturnDateTime,
-                    fine.Reservaton.HasFine)));
+                    fine.Reservaton.HasFine,
+                    fine.Reservaton.HasReturned)));
         }
 
         [HttpPost]
@@ -76,12 +77,12 @@ namespace StudentLibraryManagementSystem.Controllers
         public IActionResult UpdateFine(int id, [FromBody] FineUpdateDto fine)
         {
             if (id != fine.FineId) return BadRequest();
-            Fine updatedFine = new Fine(
-                fine.FineId,
-                fine.FineAmount,
-                fine.UserId,
-                fine.ReservatonId);
-            _dbCtx.Entry(updatedFine).State = EntityState.Modified;
+            Fine? fineToUpdate = _dbCtx.Fine.Find(id);
+            if (fineToUpdate == null) return NotFound();
+            fineToUpdate.FineId = fine.FineId;
+            fineToUpdate.FineAmount = fine.FineAmount;
+            fineToUpdate.ReservatonId = fine.ReservatonId;
+            fineToUpdate.UserId = fine.UserId;
             _dbCtx.SaveChanges();
             return NoContent();
         }

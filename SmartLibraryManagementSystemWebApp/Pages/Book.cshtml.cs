@@ -57,6 +57,7 @@ public class BookModel : PageModel
                 DateTime.UtcNow,
                 book.Catalog.CatalogId,
                 DateTime.UtcNow.AddDays(7),
+                false,
                 false);
             string reservationSerialized = JsonSerializer.Serialize(reservation);
             var reservationHttpCont = new StringContent(reservationSerialized, Encoding.UTF8, "application/json");

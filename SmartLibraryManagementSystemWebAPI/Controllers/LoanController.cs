@@ -49,7 +49,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     loan.Reservaton.ReservationDateTime,
                     loan.Reservaton.CatalogId,
                     loan.Reservaton.ReservationReturnDateTime,
-                    loan.Reservaton.HasFine)));
+                    loan.Reservaton.HasFine,
+                    loan.Reservaton.HasReturned)));
         }
 
         [HttpPost]
@@ -73,12 +74,12 @@ namespace StudentLibraryManagementSystem.Controllers
         public IActionResult UpdateLoan(int id, [FromBody] LoanUpdateDto loan)
         {
             if (id != loan.LoanId) return BadRequest();
-            Loan updateLoan = new Loan(
-                loan.LoanId,
-                loan.LoanAmount,
-                loan.UserId,
-                loan.ReservationId);
-            _dbCtx.Entry(updateLoan).State = EntityState.Modified;
+            Loan? loanToUpdate = _dbCtx.Loan.Find(id);
+            if (loanToUpdate == null) return NotFound();
+            loanToUpdate.LoanId = loan.LoanId;
+            loanToUpdate.LoanAmount = loan.LoanAmount;
+            loanToUpdate.UserId = loan.UserId;
+            loanToUpdate.ReservatonId = loan.ReservationId;
             _dbCtx.SaveChanges();
             return NoContent();
         }

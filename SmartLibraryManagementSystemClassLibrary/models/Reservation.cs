@@ -17,9 +17,10 @@ public class Reservation
     public Loan Loan { get; set; }
     public DateTime ReservationReturnDateTime { get; set; }
     public bool HasFine { get; set; }
+    public bool HasReturned { get; set; }
 
     public Reservation(int reservationId, int userId, int bookId, DateTime reservationDateTime, int catalogId,
-        DateTime reservationReturnDateTime, bool hasFine)
+        DateTime reservationReturnDateTime, bool hasFine, bool hasReturned)
     {
         ReservationId = reservationId;
         UserId = userId;
@@ -28,10 +29,11 @@ public class Reservation
         CatalogId = catalogId;
         ReservationReturnDateTime = reservationReturnDateTime;
         HasFine = hasFine;
+        HasReturned = hasReturned;
     }
 
     public Reservation(int userId, int bookId, DateTime reservationDateTime, int catalogId,
-        DateTime reservationReturnDateTime, bool hasFine)
+        DateTime reservationReturnDateTime, bool hasFine, bool hasReturned)
     {
         UserId = userId;
         BookId = bookId;
@@ -39,5 +41,6 @@ public class Reservation
         CatalogId = catalogId;
         ReservationReturnDateTime = reservationReturnDateTime;
         HasFine = hasFine;
+        HasReturned = hasReturned;
     }
 }

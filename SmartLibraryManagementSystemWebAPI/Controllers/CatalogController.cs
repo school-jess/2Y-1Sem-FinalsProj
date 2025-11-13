@@ -51,7 +51,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     r.ReservationDateTime,
                     r.CatalogId,
                     r.ReservationReturnDateTime,
-                    r.HasFine)).ToList(),
+                    r.HasFine,
+                    r.HasReturned)).ToList(),
                 catalog.Genre,
                 catalog.ClassificationId,
                 catalog.CopiesBorrowed));
@@ -82,14 +83,14 @@ namespace StudentLibraryManagementSystem.Controllers
         public IActionResult UpdateCatalog(int id, [FromBody] CatalogUpdateDto catalog)
         {
             if (id != catalog.CatalogId) return BadRequest();
-            Catalog updatedCatalog = new Catalog(
-                catalog.CatalogId,
-                catalog.BookId,
-                catalog.Copies,
-                catalog.Genre,
-                catalog.ClassificationId,
-                catalog.CopiesBorrowed);
-            _dbCtx.Entry(updatedCatalog).State = EntityState.Modified;
+            Catalog? catalogToUpdate = _dbCtx.Catalog.Find(id);
+            if (catalogToUpdate == null) return NotFound();
+            catalogToUpdate.CatalogId = catalog.CatalogId;
+            catalogToUpdate.BookId = catalog.BookId;
+            catalogToUpdate.Copies = catalog.Copies;
+            catalogToUpdate.Genre = catalog.Genre;
+            catalogToUpdate.ClassificationId = catalog.ClassificationId;
+            catalogToUpdate.CopiesBorrowed = catalog.CopiesBorrowed;
             _dbCtx.SaveChanges();
             return NoContent();
         }

@@ -73,7 +73,8 @@ namespace StudentLibraryManagementSystem.Controllers
                                 r.Loan.UserId,
                                 r.Loan.ReservatonId),
                             r.ReservationReturnDateTime,
-                            r.HasFine)).ToList(),
+                            r.HasFine,
+                            r.HasReturned)).ToList(),
                     user.PrevFine
                         .Select(f => new FineUpdateDto(
                             f.FineId,
@@ -122,7 +123,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     r.ReservationDateTime,
                     r.CatalogId,
                     r.ReservationReturnDateTime,
-                    r.HasFine)).ToList(),
+                    r.HasFine,
+                    r.HasReturned)).ToList(),
                 user.PrevFine.Select(f => new FineUpdateDto(
                     f.FineId,
                     f.FineAmount,
@@ -186,13 +188,13 @@ namespace StudentLibraryManagementSystem.Controllers
         public IActionResult UpdateUser(int id, [FromBody] UserUpdateDto user)
         {
             if (id != user.UserId) return BadRequest();
-            User updatedUser = new User(
-                user.UserId,
-                user.UserName,
-                user.HasFine,
-                user.HasLoan,
-                user.IsAdmin);
-            _dbCtx.Entry(updatedUser).State = EntityState.Modified;
+            User? userToUpdate = _dbCtx.User.Find(id);
+            if (userToUpdate == null) return NotFound();
+            userToUpdate.UserId = user.UserId;
+            userToUpdate.UserName = user.UserName;
+            userToUpdate.HasFine = user.HasFine;
+            user.HasLoan = user.HasLoan;
+            user.IsAdmin = user.IsAdmin;
             _dbCtx.SaveChanges();
             return NoContent();
         }
