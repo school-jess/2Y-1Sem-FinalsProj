@@ -18,4 +18,21 @@ public class User
     public bool IsAdmin { get; set; }
     public Student? Student { get; set; }
     public Faculty? Faculty { get; set; }
+
+    public User(int userId, string userName, bool hasFine, bool hasLoan, bool isAdmin)
+    {
+        UserId = userId;
+        UserName = userName;
+        HasFine = hasFine;
+        HasLoan = hasLoan;
+        IsAdmin = isAdmin;
+    }
+
+    public User(string userName, bool hasFine, bool hasLoan, bool isAdmin)
+    {
+        UserName = userName;
+        HasFine = hasFine;
+        HasLoan = hasLoan;
+        IsAdmin = isAdmin;
+    }
 }

@@ -49,20 +49,18 @@ public class BookModel : PageModel
             if (!getBook.IsSuccessStatusCode) throw new InvalidOperationException("couldn't get book");
             string getBookCont = await getBook.Content.ReadAsStringAsync();
             BookGet1Dto book = JsonSerializer.Deserialize<BookGet1Dto>(getBookCont, options);
-            if (book.Catalog.Copies - book.Catalog.CopiesBorrowed < 0) return Page(); // todo return a reason why coudn't borrow
-            ReservationCreationDto reservation = new ReservationCreationDto
-            {
-                BookId = bookId,
-                UserId = user.UserId,
-                CatalogId = book.Catalog.CatalogId,
-                ReservationDateTime = DateTime.UtcNow, // standardized timezone,
-                ReservationReturnDateTime = DateTime.UtcNow.AddDays(7)
-            };
+            if (book.Catalog.Copies - book.Catalog.CopiesBorrowed < 0)
+                return Page(); // todo return a reason why coudn't borrow
+            ReservationCreationDto reservation = new ReservationCreationDto(user.UserId, bookId, DateTime.UtcNow,
+                book.Catalog.CatalogId, DateTime.UtcNow.AddDays(7), false);
             string reservationSerialized = JsonSerializer.Serialize(reservation);
             var reservationHttpCont = new StringContent(reservationSerialized, Encoding.UTF8, "application/json");
-            var newReservation = await httpClient.PostAsync("http://localhost:5138/api/Reservation", reservationHttpCont);
-            if (!newReservation.IsSuccessStatusCode) throw new InvalidOperationException("error creating new reservation");
+            var newReservation =
+                await httpClient.PostAsync("http://localhost:5138/api/Reservation", reservationHttpCont);
+            if (!newReservation.IsSuccessStatusCode)
+                throw new InvalidOperationException("error creating new reservation");
         }
+
         return Page();
     }
 }

@@ -20,4 +20,5 @@ public class Reservation
     public Fine Fine { get; set; }
     public Loan Loan { get; set; }
     public DateTime ReservationReturnDateTime { get; set; }
+    public bool HasReturned { get; set; }
 }

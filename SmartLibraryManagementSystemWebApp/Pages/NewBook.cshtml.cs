@@ -47,13 +47,7 @@ public class NewBookModel : PageModel
         if (!ModelState.IsValid) return Page();
         using (var httpClient = new HttpClient())
         {
-            BookCreationDto book = new BookCreationDto
-            {
-                Author = Input.Author,
-                BookName = Input.Name,
-                ReleaseDate = Input.ReleaseDate,
-                Synopsis = Input.Synopsis
-            };
+            BookCreationDto book = new BookCreationDto(Input.Name, Input.Author, Input.ReleaseDate, Input.Synopsis);
             string bookSerialized = JsonSerializer.Serialize(book);
             var bookHttpCont = new StringContent(bookSerialized, Encoding.UTF8, "application/json");
             var newBook = await httpClient.PostAsync("http://localhost:5138/api/Book", bookHttpCont);
@@ -64,13 +58,8 @@ public class NewBookModel : PageModel
                 PropertyNameCaseInsensitive = true
             };
             var insertedBook = JsonSerializer.Deserialize<BookUpdateDto>(getBookContent, options);
-            CatalogCreationDto catalog = new CatalogCreationDto
-            {
-                BookId = insertedBook.BookId,
-                ClassificationId = Input.ClassificationId,
-                Copies = Input.Copies,
-                Genre = Input.Genre,
-            };
+            CatalogCreationDto catalog = new CatalogCreationDto(insertedBook.BookId, Input.Copies, Input.Genre,
+                Input.ClassificationId, 0);
             string catalogSerialized = JsonSerializer.Serialize(catalog);
             var catalogHttpContent = new StringContent(catalogSerialized, Encoding.UTF8, "application/json");
             var createCatalog = await httpClient.PostAsync("http://localhost:5138/api/Catalog", catalogHttpContent);

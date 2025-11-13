@@ -37,13 +37,7 @@ public class SignUpModel : PageModel
             string apiLink = "http://localhost:5138/api/";
             if (Input.IsEducator) apiLink += "Faculty";
             else apiLink += "Student";
-            UserCreationDto user = new UserCreationDto
-            {
-                HasFine = false,
-                HasLoan = false,
-                IsAdmin = false,
-                UserName = Input.Name,
-            };
+            UserCreationDto user = new UserCreationDto(Input.Name, false, false, false);
             string userSerialized = JsonSerializer.Serialize(user);
             var userHttpCont = new StringContent(userSerialized, Encoding.UTF8, "application/json");
             HttpResponseMessage createUser =
@@ -58,17 +52,8 @@ public class SignUpModel : PageModel
                 JsonSerializer.Deserialize<UserUpdateDto>(await createUser.Content.ReadAsStringAsync(), options);
             if (Input.IsEducator)
             {
-                FacultyCreationDto faculty = new FacultyCreationDto
-                {
-                    Course = Input.Course,
-                    Department = Input.Department,
-                    Email = Input.Email,
-                    FacultyName = Input.Name,
-                    IsLoggedIn = false,
-                    Password = Input.Password,
-                    Subject = Input.Subject,
-                    UserId = newUser.UserId
-                };
+                FacultyCreationDto faculty = new FacultyCreationDto(Input.Name, Input.Department, Input.Subject,
+                    Input.Course, Input.Email, Input.Password, false, newUser.UserId);
                 string facultySerialized = JsonSerializer.Serialize(faculty);
                 var facultyHttpCont = new StringContent(facultySerialized, Encoding.UTF8, "application/json");
                 HttpResponseMessage createFaculty = await httpClient.PostAsync(apiLink, facultyHttpCont);
@@ -77,17 +62,8 @@ public class SignUpModel : PageModel
             }
             else
             {
-                StudentCreationDto student = new StudentCreationDto
-                {
-                    Course = Input.Course,
-                    Department = Input.Department,
-                    Email = Input.Email,
-                    StudentName = Input.Name,
-                    IsLoggedIn = false,
-                    Password = Input.Password,
-                    Grade = Input.Grade ?? 0,
-                    UserId = newUser.UserId
-                };
+                StudentCreationDto student = new StudentCreationDto(Input.Name, Input.Department, Input.Course,
+                    Input.Grade ?? 0, Input.Email, Input.Password, false, newUser.UserId);
                 string studentSerialized = JsonSerializer.Serialize(student);
                 var studentHttpCont = new StringContent(studentSerialized, Encoding.UTF8, "application/json");
                 HttpResponseMessage createStudent = await httpClient.PostAsync(apiLink, studentHttpCont);

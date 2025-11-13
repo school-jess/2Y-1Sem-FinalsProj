@@ -16,7 +16,6 @@
     @foreach (var fine in Model.User.Fines)
     {
         <li>
-            @fine.AmtPayedSinceLastFine -
             <p style="font-weight: bold;">@fine.FineAmount</p>
         </li>
     }
@@ -26,7 +25,6 @@
     @foreach (var loan in Model.User.Loans)
     {
         <li>
-            @loan.AmtLoanedSinceLastLoaned -
             <p style="font-weight: bold;">@loan.LoanAmount</p>
         </li>
     }
@@ -37,8 +35,8 @@
     {
         <li>
             @reservation.Book.BookName @reservation.Catalog.ClassificationId @reservation.Catalog.Genre
-            @reservation.Fine.AmtPayedSinceLastFine @reservation.Fine.FineAmount
-            @reservation.Loan.AmtLoanedSinceLastLoaned @reservation.Loan.LoanAmount
+            @reservation.Fine.FineAmount
+            @reservation.Loan.LoanAmount
             @reservation.ReservationDateTime
         </li>
     }

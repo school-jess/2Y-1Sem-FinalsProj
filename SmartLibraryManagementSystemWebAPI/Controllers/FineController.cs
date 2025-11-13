@@ -19,76 +19,61 @@ namespace StudentLibraryManagementSystem.Controllers
         [HttpGet]
         public IActionResult GetFines()
         {
-            var fines = _dbCtx.Fine.Select(f => new FineUpdateDto
-            {
-                AmtPayedSinceLastFine = f.AmtPayedSinceLastFine,
-                FineAmount = f.FineAmount,
-                FineId = f.FineId,
-                UserId = f.UserId
-            }).ToList();
+            var fines = _dbCtx.Fine
+                .Select(f => new FineUpdateDto(
+                    f.FineId,
+                    f.FineAmount,
+                    f.HasPayed,
+                    f.UserId,
+                    f.ReservatonId)).ToList();
             return Ok(fines);
         }
 
         [HttpGet("{id:int}")]
         public IActionResult GetFine(int id)
         {
-            var fine = _dbCtx.Fine.Include(f => f.User).Include(f => f.Reservaton).FirstOrDefault(f => f.FineId == id);
+            var fine = _dbCtx.Fine
+                .Include(f => f.User)
+                .Include(f => f.Reservaton)
+                .FirstOrDefault(f => f.FineId == id);
             if (fine == null) return NotFound();
-            return Ok(new FineGet1Dto
-            {
-                AmtPayedSinceLastFine = fine.AmtPayedSinceLastFine,
-                FineAmount = fine.FineAmount,
-                FineId = fine.FineId,
-                User = new UserUpdateDto
-                {
-                    HasFine = fine.User.HasFine,
-                    HasLoan = fine.User.HasLoan,
-                    UserId = fine.User.UserId,
-                    UserName = fine.User.UserName
-                },
-                Reservation = new ReservationUpdateDto
-                {
-                    BookId = fine.Reservaton.BookId,
-                    CatalogId = fine.Reservaton.CatalogId,
-                    ReservationId = fine.Reservaton.ReservationId,
-                    ReservationDateTime = fine.Reservaton.ReservationDateTime,
-                    UserId = fine.Reservaton.UserId,
-                    ReservationReturnDateTime = fine.Reservaton.ReservationReturnDateTime
-                }
-            });
+            return Ok(new FineGet1Dto(
+                fine.FineId,
+                fine.FineAmount,
+                fine.HasPayed,
+                new UserUpdateDto(
+                    fine.User.UserId,
+                    fine.User.UserName,
+                    fine.User.HasFine,
+                    fine.User.HasLoan,
+                    fine.User.IsAdmin),
+                new ReservationUpdateDto(
+                    fine.Reservaton.ReservationId,
+                    fine.Reservaton.UserId,
+                    fine.Reservaton.BookId,
+                    fine.Reservaton.ReservationDateTime,
+                    fine.Reservaton.CatalogId,
+                    fine.Reservaton.ReservationReturnDateTime,
+                    fine.Reservaton.HasReturned)));
         }
 
         [HttpPost]
         public IActionResult NewFine([FromBody] FineCreationDto fine)
         {
-            _dbCtx.Fine.Add(new Fine
-            {
-                AmtPayedSinceLastFine = fine.AmtPayedSinceLastFine,
-                FineAmount = fine.FineAmount,
-                UserId = fine.UserId
-            });
+            _dbCtx.Fine.Add(new Fine(fine.FineAmount, fine.HasPayed, fine.UserId, fine.ReservatonId));
             _dbCtx.SaveChanges();
             var insertedFine = _dbCtx.Fine.First(f => f.UserId == fine.UserId);
-            return CreatedAtAction(nameof(GetFine), new { id = insertedFine.FineId }, new FineUpdateDto
-            {
-                AmtPayedSinceLastFine = insertedFine.AmtPayedSinceLastFine,
-                FineAmount = insertedFine.FineAmount,
-                FineId = insertedFine.FineId,
-                UserId = insertedFine.UserId
-            });
+            return CreatedAtAction(nameof(GetFine), new { id = insertedFine.FineId },
+                new FineUpdateDto(insertedFine.FineId, insertedFine.FineAmount, insertedFine.HasPayed,
+                    insertedFine.UserId,
+                    insertedFine.ReservatonId));
         }
 
         [HttpPut("{id:int}")]
         public IActionResult UpdateFine(int id, [FromBody] FineUpdateDto fine)
         {
             if (id != fine.FineId) return BadRequest();
-            Fine updatedFine = new Fine
-            {
-                AmtPayedSinceLastFine = fine.AmtPayedSinceLastFine,
-                FineAmount = fine.FineAmount,
-                FineId = fine.FineId,
-                UserId = fine.UserId
-            };
+            Fine updatedFine = new Fine(fine.FineId, fine.FineAmount, fine.HasPayed, fine.UserId, fine.ReservatonId);
             _dbCtx.Entry(updatedFine).State = EntityState.Modified;
             _dbCtx.SaveChanges();
             return NoContent();

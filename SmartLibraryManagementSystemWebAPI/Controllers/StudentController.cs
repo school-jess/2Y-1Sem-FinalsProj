@@ -19,18 +19,8 @@ namespace StudentLibraryManagementSystem.Controllers
         [HttpGet]
         public IActionResult GetStudents()
         {
-            var students = _dbCtx.Student.Select(s => new StudentUpdateDto
-            {
-                Course = s.Course,
-                Department = s.Department,
-                Grade = s.Grade,
-                StudentId = s.StudentId,
-                StudentName = s.StudentName,
-                Email = s.Email,
-                IsLoggedIn = s.IsLoggedIn,
-                Password = s.Password,
-                UserId = s.UserId
-            }).ToList();
+            var students = _dbCtx.Student.Select(s => new StudentUpdateDto(s.StudentId, s.StudentName, s.Department,
+                s.Course, s.Grade, s.Email, s.Password, s.IsLoggedIn, s.UserId)).ToList();
             return Ok(students);
         }
 
@@ -39,25 +29,21 @@ namespace StudentLibraryManagementSystem.Controllers
         {
             var student = _dbCtx.Student.Include(s => s.User).FirstOrDefault(s => s.StudentId == id);
             if (student == null) return NotFound();
-            return Ok(new StudentGet1Dto
-            {
-                Course = student.Course,
-                Department = student.Department,
-                Grade = student.Grade,
-                StudentId = student.StudentId,
-                StudentName = student.StudentName,
-                Email = student.Email,
-                IsLoggedIn = student.IsLoggedIn,
-                Password = student.Password,
-                User = new UserUpdateDto
-                {
-                    HasFine = student.User.HasFine,
-                    HasLoan = student.User.HasLoan,
-                    UserId = student.User.UserId,
-                    UserName = student.User.UserName,
-                    IsAdmin = student.User.IsAdmin,
-                }
-            });
+            return Ok(new StudentGet1Dto(
+                student.StudentId,
+                student.StudentName,
+                student.Department,
+                student.Course,
+                student.Grade,
+                new UserUpdateDto(
+                    student.User.UserId,
+                    student.User.UserName,
+                    student.User.HasFine,
+                    student.User.HasLoan,
+                    student.User.IsAdmin),
+                student.Email,
+                student.Password,
+                student.IsLoggedIn));
         }
 
         [HttpGet("{email:regex(.*@.*)}")]
@@ -67,25 +53,21 @@ namespace StudentLibraryManagementSystem.Controllers
                 .Include(s => s.User)
                 .FirstOrDefault(s => s.Email == email);
             if (student == null) return NotFound();
-            return Ok(new StudentGet1Dto
-            {
-                Course = student.Course,
-                Department = student.Department,
-                Grade = student.Grade,
-                StudentId = student.StudentId,
-                StudentName = student.StudentName,
-                Email = student.Email,
-                IsLoggedIn = student.IsLoggedIn,
-                Password = student.Password,
-                User = new UserUpdateDto
-                {
-                    HasFine = student.User.HasFine,
-                    HasLoan = student.User.HasLoan,
-                    IsAdmin = student.User.IsAdmin,
-                    UserId = student.User.UserId,
-                    UserName = student.User.UserName,
-                }
-            });
+            return Ok(new StudentGet1Dto(
+                student.StudentId,
+                student.StudentName,
+                student.Department,
+                student.Course,
+                student.Grade,
+                new UserUpdateDto(
+                    student.User.UserId,
+                    student.User.UserName,
+                    student.User.HasFine,
+                    student.User.HasLoan,
+                    student.User.IsAdmin),
+                student.Email,
+                student.Password,
+                student.IsLoggedIn));
         }
 
         [HttpPost]
@@ -105,18 +87,10 @@ namespace StudentLibraryManagementSystem.Controllers
             Console.WriteLine(student.UserId);
             _dbCtx.SaveChanges();
             var insertedStudent = _dbCtx.Student.First(s => s.Email == student.Email);
-            return CreatedAtAction(nameof(GetStudent), new { id = insertedStudent.StudentId }, new StudentUpdateDto
-            {
-                Course = insertedStudent.Course,
-                Department = insertedStudent.Department,
-                Email = insertedStudent.Email,
-                Grade = insertedStudent.Grade,
-                IsLoggedIn = insertedStudent.IsLoggedIn,
-                Password = insertedStudent.Password,
-                StudentId = insertedStudent.StudentId,
-                StudentName = insertedStudent.StudentName,
-                UserId = insertedStudent.UserId,
-            });
+            return CreatedAtAction(nameof(GetStudent), new { id = insertedStudent.StudentId },
+                new StudentUpdateDto(insertedStudent.StudentId, insertedStudent.StudentName, insertedStudent.Department,
+                    insertedStudent.Course, insertedStudent.Grade, insertedStudent.Email, insertedStudent.Password,
+                    insertedStudent.IsLoggedIn, insertedStudent.UserId));
         }
 
         [HttpPut("{id:int}")]

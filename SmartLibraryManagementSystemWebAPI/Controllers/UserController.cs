@@ -19,14 +19,8 @@ namespace StudentLibraryManagementSystem.Controllers
         [HttpGet]
         public IActionResult GetUsers()
         {
-            var users = _dbCtx.User.Select(u => new UserUpdateDto
-            {
-                HasFine = u.HasFine,
-                HasLoan = u.HasLoan,
-                UserId = u.UserId,
-                UserName = u.UserName,
-                IsAdmin = u.IsAdmin,
-            }).ToList();
+            var users = _dbCtx.User
+                .Select(u => new UserUpdateDto(u.UserId, u.UserName, u.HasFine, u.HasLoan, u.IsAdmin)).ToList();
             return Ok(users);
         }
 
@@ -43,197 +37,141 @@ namespace StudentLibraryManagementSystem.Controllers
             if (user == null) return NotFound();
             if (withReservation)
             {
-                UserWithReservationsDto userWithReservationsToRet = new UserWithReservationsDto
-                {
-                    HasFine = user.HasFine,
-                    HasLoan = user.HasLoan,
-                    Reservations = user.Reservations.Select(r => new ReservationUserDto
-                    {
-                        Book = new BookUpdateDto
-                        {
-                            Author = r.Book.Author,
-                            BookId = r.Book.BookId,
-                            BookName = r.Book.BookName,
-                            ReleaseDate = r.Book.ReleaseDate,
-                            Synopsis = r.Book.Synopsis
-                        },
-                        Catalog = new CatalogUpdateDto
-                        {
-                            BookId = r.Catalog.BookId,
-                            CatalogId = r.Catalog.CatalogId,
-                            ClassificationId = r.Catalog.ClassificationId,
-                            Copies = r.Catalog.Copies,
-                            Genre = r.Catalog.Genre
-                        },
-                        Fine = new FineUpdateDto
-                        {
-                            AmtPayedSinceLastFine = r.Fine.AmtPayedSinceLastFine,
-                            FineAmount = r.Fine.FineAmount,
-                            FineId = r.Fine.FineId,
-                            UserId = r.Fine.UserId,
-                        },
-                        Loan = new LoanUpdateDto
-                        {
-                            AmtLoanedSinceLastLoaned = r.Loan.AmtLoanedSinceLastLoaned,
-                            LoanAmount = r.Loan.LoanAmount,
-                            LoanId = r.Loan.LoanId,
-                            UserId = r.Loan.UserId
-                        },
-                        ReservationId = r.ReservationId,
-                        ReservationDateTime = r.ReservationDateTime,
-                        UserId = r.UserId,
-                        ReservationReturnDateTime = r.ReservationReturnDateTime
-                    }).ToList(),
-                    UserId = user.UserId,
-                    UserName = user.UserName,
-                    IsAdmin = user.IsAdmin,
-                    Fines = user.PrevFine.Select(f => new FineUpdateDto
-                    {
-                        AmtPayedSinceLastFine = f.AmtPayedSinceLastFine,
-                        FineAmount = f.FineAmount,
-                        FineId = f.FineId,
-                        UserId = f.UserId
-                    }).ToList(),
-                    Loans = user.PrevLoan.Select(l => new LoanUpdateDto
-                    {
-                        AmtLoanedSinceLastLoaned = l.AmtLoanedSinceLastLoaned,
-                        LoanAmount = l.LoanAmount,
-                        LoanId = l.LoanId,
-                        UserId = l.UserId
-                    }).ToList()
-                };
+                UserWithReservationsDto userWithReservationsToRet = new UserWithReservationsDto(
+                    user.UserId,
+                    user.UserName,
+                    null, null,
+                    user.HasFine,
+                    user.HasLoan,
+                    user.Reservations
+                        .Select(r => new ReservationUserDto(
+                            r.ReservationId,
+                            r.UserId,
+                            new BookUpdateDto(r.Book.BookId, r.Book.BookName, r.Book.Author, r.Book.ReleaseDate,
+                                r.Book.Synopsis),
+                            r.ReservationDateTime,
+                            new CatalogUpdateDto(
+                                r.Catalog.CatalogId,
+                                r.Catalog.BookId,
+                                r.Catalog.Copies,
+                                r.Catalog.Genre,
+                                r.Catalog.ClassificationId,
+                                r.Catalog.CopiesBorrowed),
+                            new FineUpdateDto(
+                                r.Fine.FineId,
+                                r.Fine.FineAmount,
+                                r.Fine.HasPayed,
+                                r.Fine.UserId,
+                                r.Fine.ReservatonId),
+                            new LoanUpdateDto(
+                                r.Loan.LoanId,
+                                r.Loan.LoanAmount,
+                                r.Loan.HasPayed,
+                                r.Loan.UserId,
+                                r.Loan.ReservatonId),
+                            r.ReservationReturnDateTime,
+                            r.HasReturned)).ToList(),
+                    user.PrevFine
+                        .Select(f => new FineUpdateDto(
+                            f.FineId,
+                            f.FineAmount,
+                            f.HasPayed,
+                            f.UserId)).ToList(),
+                    user.PrevLoan.Select(l => new LoanUpdateDto(
+                        l.LoanId,
+                        l.LoanAmount,
+                        l.HasPayed,
+                        l.UserId,
+                        l.ReservatonId)).ToList(),
+                    user.IsAdmin);
                 if (user.Faculty == null)
                 {
-                    userWithReservationsToRet.Student = new StudentUpdateDto
-                    {
-                        Course = user.Student.Course,
-                        Department = user.Student.Department,
-                        Grade = user.Student.Grade,
-                        StudentId = user.Student.StudentId,
-                        StudentName = user.Student.StudentName,
-                        Email = user.Student.Email,
-                        IsLoggedIn = user.Student.IsLoggedIn,
-                        Password = user.Student.Password
-                    };
+                    userWithReservationsToRet.Student = new StudentUpdateDto(user.Student.StudentId,
+                        user.Student.StudentName, user.Student.Department, user.Student.Course, user.Student.Grade,
+                        user.Student.Email, user.Student.Password, user.Student.IsLoggedIn, user.Student.UserId);
                 }
                 else
                 {
-                    userWithReservationsToRet.Faculty = new FacultyUpdateDto
-                    {
-                        Course = user.Faculty.Course,
-                        Department = user.Faculty.Department,
-                        FacultyId = user.Faculty.FacultyId,
-                        FacultyName = user.Faculty.FacultyName,
-                        Subject = user.Faculty.Subject,
-                        Email = user.Faculty.Email,
-                        IsLoggedIn = user.Faculty.IsLoggedIn,
-                        Password = user.Faculty.Password
-                    };
+                    userWithReservationsToRet.Faculty = new FacultyUpdateDto(user.Faculty.FacultyId,
+                        user.Faculty.FacultyName, user.Faculty.Department, user.Faculty.Subject, user.Faculty.Course,
+                        user.Faculty.Email, user.Faculty.Password, user.Faculty.IsLoggedIn);
                 }
 
                 return Ok(userWithReservationsToRet);
             }
+
+            UserGet1Dto userToRet = new UserGet1Dto(
+                user.UserId,
+                user.UserName,
+                null,
+                null,
+                user.HasFine,
+                user.HasLoan,
+                user.Reservations.Select(r => new ReservationUpdateDto(
+                    r.ReservationId,
+                    r.UserId,
+                    r.BookId,
+                    r.ReservationDateTime,
+                    r.CatalogId,
+                    r.ReservationReturnDateTime,
+                    r.HasReturned)).ToList(),
+                user.PrevFine.Select(f => new FineUpdateDto(
+                    f.FineId,
+                    f.FineAmount,
+                    f.HasPayed,
+                    f.UserId)).ToList(),
+                user.PrevLoan.Select(l =>
+                    new LoanUpdateDto(
+                        l.LoanId,
+                        l.LoanAmount,
+                        l.HasPayed,
+                        l.UserId,
+                        l.ReservatonId)).ToList(),
+                user.IsAdmin);
+            if (user.Faculty == null)
+            {
+                userToRet.Student = new StudentUpdateDto(
+                    user.Student.StudentId,
+                    user.Student.StudentName,
+                    user.Student.Department,
+                    user.Student.Course,
+                    user.Student.Grade,
+                    user.Student.Email,
+                    user.Student.Password,
+                    user.Student.IsLoggedIn,
+                    user.Student.UserId);
+            }
+
             else
             {
-                UserGet1Dto userToRet = new UserGet1Dto
-                {
-                    HasFine = user.HasFine,
-                    HasLoan = user.HasLoan,
-                    Reservations = user.Reservations.Select(r => new ReservationUpdateDto
-                    {
-                        BookId = r.BookId,
-                        CatalogId = r.CatalogId,
-                        ReservationId = r.ReservationId,
-                        ReservationDateTime = r.ReservationDateTime,
-                        UserId = r.UserId,
-                        ReservationReturnDateTime = r.ReservationReturnDateTime
-                    }).ToList(),
-                    UserId = user.UserId,
-                    UserName = user.UserName,
-                    IsAdmin = user.IsAdmin,
-                    Fines = user.PrevFine.Select(f => new FineUpdateDto
-                    {
-                        AmtPayedSinceLastFine = f.AmtPayedSinceLastFine,
-                        FineAmount = f.FineAmount,
-                        FineId = f.FineId,
-                        UserId = f.UserId
-                    }).ToList(),
-                    Loans = user.PrevLoan.Select(l => new LoanUpdateDto
-                    {
-                        AmtLoanedSinceLastLoaned = l.AmtLoanedSinceLastLoaned,
-                        LoanAmount = l.LoanAmount,
-                        LoanId = l.LoanId,
-                        UserId = l.UserId
-                    }).ToList()
-                };
-                if (user.Faculty == null)
-                {
-                    userToRet.Student = new StudentUpdateDto
-                    {
-                        Course = user.Student.Course,
-                        Department = user.Student.Department,
-                        Grade = user.Student.Grade,
-                        StudentId = user.Student.StudentId,
-                        StudentName = user.Student.StudentName,
-                        Email = user.Student.Email,
-                        IsLoggedIn = user.Student.IsLoggedIn,
-                        Password = user.Student.Password
-                    };
-                }
-                else
-                {
-                    userToRet.Faculty = new FacultyUpdateDto
-                    {
-                        Course = user.Faculty.Course,
-                        Department = user.Faculty.Department,
-                        FacultyId = user.Faculty.FacultyId,
-                        FacultyName = user.Faculty.FacultyName,
-                        Subject = user.Faculty.Subject,
-                        Email = user.Faculty.Email,
-                        IsLoggedIn = user.Faculty.IsLoggedIn,
-                        Password = user.Faculty.Password
-                    };
-                }
-
-                return Ok(userToRet);
+                userToRet.Faculty = new FacultyUpdateDto(user.Faculty.FacultyId, user.Faculty.FacultyName,
+                    user.Faculty.Department, user.Faculty.Subject, user.Faculty.Course, user.Faculty.Email,
+                    user.Faculty.Password, user.Faculty.IsLoggedIn);
             }
+
+            return Ok(userToRet);
         }
 
         [HttpPost]
         public IActionResult NewUser([FromBody] UserCreationDto user)
         {
-            _dbCtx.User.Add(new User
-            {
-                HasFine = user.HasFine,
-                HasLoan = user.HasLoan,
-                UserName = user.UserName,
-                IsAdmin = user.IsAdmin,
-            });
+            _dbCtx.User.Add(new User(
+                user.UserName,
+                user.HasFine,
+                user.HasLoan,
+                user.IsAdmin));
             _dbCtx.SaveChanges();
             var insertedUser = _dbCtx.User.First(u => u.UserName == user.UserName);
             return CreatedAtAction(nameof(GetUser), new { id = insertedUser.UserId, withReservation = false },
-                new UserUpdateDto
-                {
-                    UserId = insertedUser.UserId,
-                    HasFine = insertedUser.HasFine,
-                    HasLoan = insertedUser.HasLoan,
-                    IsAdmin = insertedUser.IsAdmin,
-                    UserName = insertedUser.UserName
-                });
+                new UserUpdateDto(insertedUser.UserId, insertedUser.UserName, insertedUser.HasFine,
+                    insertedUser.HasLoan, insertedUser.IsAdmin));
         }
 
         [HttpPut("{id:int}")]
         public IActionResult UpdateUser(int id, [FromBody] UserUpdateDto user)
         {
             if (id != user.UserId) return BadRequest();
-            User updatedUser = new User
-            {
-                HasFine = user.HasFine,
-                HasLoan = user.HasLoan,
-                UserId = user.UserId,
-                UserName = user.UserName,
-                IsAdmin = user.IsAdmin
-            };
+            User updatedUser = new User(user.UserId, user.UserName, user.HasFine, user.HasLoan, user.IsAdmin);
             _dbCtx.Entry(updatedUser).State = EntityState.Modified;
             _dbCtx.SaveChanges();
             return NoContent();

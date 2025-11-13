@@ -15,4 +15,21 @@ public class Book
     public string Synopsis { get; set; }
     [DataType(DataType.Date)]
     public DateTime ReleaseDate { get; set; }
+
+    public Book(int bookId, string bookName, string author, DateTime releaseDate, string synopsis)
+    {
+        BookId = bookId;
+        BookName = bookName;
+        Author = author;
+        ReleaseDate =  releaseDate;
+        Synopsis = synopsis;
+    }
+
+    public Book(string bookName, string author, DateTime releaseDate, string synopsis)
+    {
+        BookName = bookName;
+        Author = author;
+        ReleaseDate =  releaseDate;
+        Synopsis = synopsis;
+    }
 }

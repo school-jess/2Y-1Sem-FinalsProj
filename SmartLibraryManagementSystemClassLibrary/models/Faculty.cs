@@ -25,4 +25,16 @@ public class Faculty
     public int UserId { get; set; }
     [ForeignKey("UserId")]
     public User User { get; set; }
+
+    public Faculty(string facultyName, string department, string subject, string course, string email, bool isLoggedIn, string password, int userId)
+    {
+        FacultyName = facultyName;
+        Department = department;
+        Subject = subject;
+        Course = course;
+        Email = email;
+        IsLoggedIn = isLoggedIn;
+        Password = password;
+        UserId = userId;
+    }
 }

@@ -19,4 +19,23 @@ public class Catalog
     [StringLength(10)]
     public string ClassificationId { get; set; }
     public int CopiesBorrowed { get; set; }
+
+    public Catalog(int catalogId, int bookId, int copies, string genre, string classificationId, int copiesBorrowed)
+    {
+        CatalogId = catalogId;
+        BookId = bookId;
+        Copies = copies;
+        Genre = genre;
+        ClassificationId = classificationId;
+        CopiesBorrowed = copiesBorrowed;
+    }
+
+    public Catalog(int bookId, int copies, string genre, string classificationId, int copiesBorrowed)
+    {
+        BookId = bookId;
+        Copies = copies;
+        Genre = genre;
+        ClassificationId = classificationId;
+        CopiesBorrowed = copiesBorrowed;
+    }
 }

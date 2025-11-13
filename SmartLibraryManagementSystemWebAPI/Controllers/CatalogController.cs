@@ -19,15 +19,15 @@ namespace StudentLibraryManagementSystem.Controllers
         [HttpGet]
         public IActionResult GetCatalogs()
         {
-            var catalogs = _dbCtx.Catalog.Select(c => new CatalogUpdateDto
-            {
-                BookId = c.BookId,
-                CatalogId = c.CatalogId,
-                Copies = c.Copies,
-                Genre = c.Genre,
-                ClassificationId = c.ClassificationId,
-                CopiesBorrowed = c.CopiesBorrowed
-            }).ToList();
+            var catalogs = _dbCtx.Catalog.Select(c =>
+                    new CatalogUpdateDto(
+                        c.CatalogId,
+                        c.BookId,
+                        c.Copies,
+                        c.Genre,
+                        c.ClassificationId,
+                        c.CopiesBorrowed))
+                .ToList();
             return Ok(catalogs);
         }
 
@@ -39,69 +39,43 @@ namespace StudentLibraryManagementSystem.Controllers
                 .Include(c => c.Reservations)
                 .FirstOrDefault(c => c.CatalogId == id);
             if (catalog == null) return NotFound();
-            return Ok(new CatalogGet1Dto
-            {
-                Book = new BookUpdateDto
-                {
-                    Author = catalog.Book.Author,
-                    BookId = catalog.Book.BookId,
-                    BookName = catalog.Book.BookName,
-                    ReleaseDate = catalog.Book.ReleaseDate,
-                    Synopsis = catalog.Book.Synopsis
-                },
-                CatalogId = catalog.CatalogId,
-                Copies = catalog.Copies,
-                Genre = catalog.Genre,
-                ClassificationId = catalog.ClassificationId,
-                CopiesBorrowed = catalog.CopiesBorrowed,
-                Reservations = catalog.Reservations.Select(r => new ReservationUpdateDto
-                {
-                    BookId = r.BookId,
-                    CatalogId = r.CatalogId,
-                    ReservationId = r.ReservationId,
-                    ReservationDateTime = r.ReservationDateTime,
-                    UserId = r.UserId,
-                    ReservationReturnDateTime = r.ReservationReturnDateTime
-                }).ToList()
-            });
+            return Ok(new CatalogGet1Dto(
+                catalog.CatalogId,
+                new BookUpdateDto(catalog.Book.BookId, catalog.Book.BookName, catalog.Book.Author, catalog.Book.ReleaseDate, catalog.Book.Synopsis),
+                catalog.Copies,
+                catalog.Reservations.Select(r => new ReservationUpdateDto(
+                    r.ReservationId,
+                    r.UserId,
+                    r.BookId,
+                    r.ReservationDateTime,
+                    r.CatalogId,
+                    r.ReservationReturnDateTime,
+                    r.HasReturned)).ToList(),
+                catalog.Genre,
+                catalog.ClassificationId,
+                catalog.CopiesBorrowed));
         }
 
         [HttpPost]
         public IActionResult NewCatalog([FromBody] CatalogCreationDto catalog)
         {
-            _dbCtx.Catalog.Add(new Catalog
-            {
-                BookId = catalog.BookId,
-                Copies = catalog.Copies,
-                ClassificationId = catalog.ClassificationId,
-                Genre = catalog.Genre,
-                CopiesBorrowed = catalog.CopiesBorrowed
-            });
+            _dbCtx.Catalog.Add(new Catalog(catalog.BookId, catalog.Copies, catalog.Genre, catalog.ClassificationId,
+                catalog.CopiesBorrowed)
+            );
             _dbCtx.SaveChanges();
             var insertedCatalog = _dbCtx.Catalog.First(c => c.BookId == catalog.BookId);
-            return CreatedAtAction(nameof(GetCatalog), new { id = insertedCatalog.CatalogId }, new CatalogUpdateDto
-            {
-                BookId = insertedCatalog.BookId,
-                CatalogId = insertedCatalog.CatalogId,
-                ClassificationId = insertedCatalog.ClassificationId,
-                Copies = insertedCatalog.Copies,
-                Genre = insertedCatalog.Genre,
-            });
+            return CreatedAtAction(nameof(GetCatalog), new { id = insertedCatalog.CatalogId },
+                new CatalogUpdateDto(insertedCatalog.CatalogId, insertedCatalog.BookId, insertedCatalog.Copies,
+                    insertedCatalog.Genre, insertedCatalog.ClassificationId, insertedCatalog.CopiesBorrowed)
+            );
         }
 
         [HttpPut("{id:int}")]
         public IActionResult UpdateCatalog(int id, [FromBody] CatalogUpdateDto catalog)
         {
             if (id != catalog.CatalogId) return BadRequest();
-            Catalog updatedCatalog = new Catalog
-            {
-                BookId = catalog.BookId,
-                CatalogId = catalog.CatalogId,
-                Copies = catalog.Copies,
-                ClassificationId = catalog.ClassificationId,
-                Genre = catalog.Genre,
-                CopiesBorrowed = catalog.CopiesBorrowed
-            };
+            Catalog updatedCatalog = new Catalog(catalog.CatalogId, catalog.BookId, catalog.Copies, catalog.Genre,
+                catalog.ClassificationId, catalog.CopiesBorrowed);
             _dbCtx.Entry(updatedCatalog).State = EntityState.Modified;
             _dbCtx.SaveChanges();
             return NoContent();

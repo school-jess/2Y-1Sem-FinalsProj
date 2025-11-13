@@ -21,15 +21,9 @@ namespace StudentLibraryManagementSystem.Controllers
         {
             var reservations = (
                 from reservation in _dbCtx.Reservation
-                select new ReservationUpdateDto
-                {
-                    BookId = reservation.BookId,
-                    CatalogId = reservation.CatalogId,
-                    ReservationId = reservation.ReservationId,
-                    ReservationDateTime = reservation.ReservationDateTime,
-                    UserId = reservation.UserId,
-                    ReservationReturnDateTime = reservation.ReservationReturnDateTime
-                }).ToList();
+                select new ReservationUpdateDto(reservation.ReservationId, reservation.UserId, reservation.BookId,
+                    reservation.ReservationDateTime, reservation.CatalogId, reservation.ReservationReturnDateTime,
+                    reservation.HasReturned)).ToList();
             return Ok(reservations);
         }
 
@@ -44,47 +38,21 @@ namespace StudentLibraryManagementSystem.Controllers
                 .Include(r => r.User)
                 .FirstOrDefault(r => r.ReservationId == id);
             if (reservation == null) return NotFound();
-            return Ok(new ReservationGet1Dto
-            {
-                Book = new BookUpdateDto
-                {
-                    Author = reservation.Book.Author,
-                    BookId = reservation.Book.BookId,
-                    BookName = reservation.Book.BookName,
-                },
-                Catalog = new CatalogUpdateDto
-                {
-                    BookId = reservation.Catalog.BookId,
-                    CatalogId = reservation.Catalog.CatalogId,
-                    Copies = reservation.Catalog.Copies,
-                    ClassificationId = reservation.Catalog.ClassificationId,
-                    Genre = reservation.Catalog.Genre,
-                },
-                Fine = new FineUpdateDto
-                {
-                    AmtPayedSinceLastFine = reservation.Fine.AmtPayedSinceLastFine,
-                    FineAmount = reservation.Fine.AmtPayedSinceLastFine,
-                    FineId = reservation.Fine.FineId,
-                    UserId = reservation.Fine.UserId
-                },
-                Loan = new LoanUpdateDto
-                {
-                    AmtLoanedSinceLastLoaned = reservation.Loan.AmtLoanedSinceLastLoaned,
-                    LoanAmount = reservation.Loan.LoanAmount,
-                    LoanId = reservation.Loan.LoanId,
-                    UserId = reservation.Loan.UserId
-                },
-                ReservationId = reservation.ReservationId,
-                ReservationDateTime = reservation.ReservationDateTime,
-                User = new UserUpdateDto
-                {
-                    HasFine = reservation.User.HasFine,
-                    HasLoan = reservation.User.HasLoan,
-                    UserId = reservation.User.UserId,
-                    UserName = reservation.User.UserName
-                },
-                ReservationReturnDateTime = reservation.ReservationReturnDateTime
-            });
+            return Ok(new ReservationGet1Dto(
+                reservation.ReservationId,
+                new UserUpdateDto(reservation.User.UserId, reservation.User.UserName, reservation.User.HasFine,
+                    reservation.User.HasLoan, reservation.User.IsAdmin),
+                new BookUpdateDto(reservation.Book.BookId, reservation.Book.BookName, reservation.Book.Author,
+                    reservation.Book.ReleaseDate, reservation.Book.Synopsis),
+                reservation.ReservationDateTime,
+                new CatalogUpdateDto(reservation.Catalog.CatalogId, reservation.Catalog.BookId,
+                    reservation.Catalog.Copies, reservation.Catalog.ClassificationId, reservation.Catalog.Genre,
+                    reservation.Catalog.CopiesBorrowed),
+                new FineUpdateDto(reservation.Fine.FineId, reservation.Fine.FineAmount, reservation.Fine.HasPayed,
+                    reservation.Fine.UserId),
+                new LoanUpdateDto(reservation.Loan.LoanId, reservation.Loan.LoanAmount, reservation.Loan.HasPayed,
+                    reservation.Loan.UserId, reservation.Loan.ReservatonId),
+                reservation.ReservationReturnDateTime, reservation.HasReturned));
         }
 
         [HttpPost]
@@ -96,20 +64,15 @@ namespace StudentLibraryManagementSystem.Controllers
                 CatalogId = reservation.CatalogId,
                 ReservationDateTime = reservation.ReservationDateTime,
                 UserId = reservation.UserId,
-                ReservationReturnDateTime = reservation.ReservationReturnDateTime
+                ReservationReturnDateTime = reservation.ReservationReturnDateTime,
+                HasReturned = reservation.HasReturned
             });
             _dbCtx.SaveChanges();
             var insertedReservation = _dbCtx.Reservation.First(r => r.BookId == reservation.BookId);
             return CreatedAtAction(nameof(GetReservation), new { id = insertedReservation.ReservationId },
-                new ReservationUpdateDto
-                {
-                    BookId = insertedReservation.BookId,
-                    CatalogId = insertedReservation.CatalogId,
-                    ReservationDateTime = insertedReservation.ReservationDateTime,
-                    ReservationId = insertedReservation.ReservationId,
-                    UserId = insertedReservation.UserId,
-                    ReservationReturnDateTime = insertedReservation.ReservationReturnDateTime
-                });
+                new ReservationUpdateDto(insertedReservation.ReservationId, insertedReservation.UserId,
+                    insertedReservation.BookId, insertedReservation.ReservationDateTime, insertedReservation.CatalogId,
+                    insertedReservation.ReservationReturnDateTime, insertedReservation.HasReturned));
         }
 
         [HttpPut("{id:int}")]
@@ -123,7 +86,8 @@ namespace StudentLibraryManagementSystem.Controllers
                 ReservationId = reservation.ReservationId,
                 ReservationDateTime = reservation.ReservationDateTime,
                 UserId = reservation.UserId,
-                ReservationReturnDateTime = reservation.ReservationReturnDateTime
+                ReservationReturnDateTime = reservation.ReservationReturnDateTime,
+                HasReturned = reservation.HasReturned
             };
             _dbCtx.Entry(updatedReservation).State = EntityState.Modified;
             _dbCtx.SaveChanges();

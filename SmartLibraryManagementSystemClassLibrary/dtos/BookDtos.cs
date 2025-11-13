@@ -11,6 +11,14 @@ public class BookCreationDto
     [DataType(DataType.Date)]
     public DateTime ReleaseDate { get; set; }
     public string Synopsis { get; set; }
+
+    public BookCreationDto(string bookName, string author, DateTime releaseDate, string synopsis)
+    {
+        BookName = bookName;
+        Author = author;
+        ReleaseDate = releaseDate;
+        Synopsis = synopsis;
+    }
 }
 
 public class BookUpdateDto
@@ -23,6 +31,15 @@ public class BookUpdateDto
     [DataType(DataType.Date)]
     public DateTime ReleaseDate { get; set; }
     public string Synopsis { get; set; }
+
+    public BookUpdateDto(int bookId, string bookName, string author, DateTime releaseDate, string synopsis)
+    {
+        BookId = bookId;
+        BookName = bookName;
+        Author = author;
+        ReleaseDate = releaseDate;
+        Synopsis = synopsis;
+    }
 }
 
 public class BookGet1Dto
@@ -37,4 +54,15 @@ public class BookGet1Dto
     [DataType(DataType.Date)]
     public DateTime ReleaseDate { get; set; }
     public string Synopsis { get; set; }
+
+    public BookGet1Dto(int bookId, string bookName, string author, CatalogUpdateDto catalog, List<ReservationUpdateDto> reservations, DateTime releaseDate, string synopsis)
+    {
+        BookId = bookId;
+        BookName = bookName;
+        Author = author;
+        Catalog = catalog;
+        Reservations = reservations;
+        ReleaseDate = releaseDate;
+        Synopsis = synopsis;
+    }
 }

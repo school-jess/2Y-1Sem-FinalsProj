@@ -18,6 +18,18 @@ public class FacultyCreationDto
     public string Password { get; set; }
     public bool IsLoggedIn { get; set; }
     public int UserId { get; set; }
+
+    public FacultyCreationDto(string facultyName, string department, string subject, string course, string email, string password, bool isLoggedIn, int userId)
+    {
+        FacultyName = facultyName;
+        Department = department;
+        Subject = subject;
+        Course = course;
+        Email = email;
+        Password = password;
+        IsLoggedIn = isLoggedIn;
+        UserId = userId;
+    }
 }
 
 public class FacultyUpdateDto
@@ -37,6 +49,31 @@ public class FacultyUpdateDto
     public string Password { get; set; }
     public bool IsLoggedIn { get; set; }
     public int UserId { get; set; }
+
+    public FacultyUpdateDto(int facultyId, string facultyName, string department, string subject, string course, string email, string password, bool isLoggedIn, int userId)
+    {
+        FacultyId = facultyId;
+        FacultyName = facultyName;
+        Department = department;
+        Subject = subject;
+        Course = course;
+        Email = email;
+        Password = password;
+        IsLoggedIn = IsLoggedIn;
+        UserId = userId;
+    }
+
+    public FacultyUpdateDto(int facultyId, string facultyName, string department, string subject, string course, string email, string password, bool isLoggedIn)
+    {
+        FacultyId = facultyId;
+        FacultyName = facultyName;
+        Department = department;
+        Subject = subject;
+        Course = course;
+        Email = email;
+        Password = password;
+        IsLoggedIn = IsLoggedIn;
+    }
 }
 
 public class FacultyGet1Dto
@@ -56,4 +93,17 @@ public class FacultyGet1Dto
     [DataType(DataType.Password)]
     public string Password { get; set; }
     public bool IsLoggedIn { get; set; }
+
+    public FacultyGet1Dto(int facultyId, string facultyName, string department, string subject, string course, UserUpdateDto user, string email, string password, bool isLoggedIn)
+    {
+        FacultyId = facultyId;
+        FacultyName = facultyName;
+        Department = department;
+        Subject = subject;
+        Course = course;
+        User = user;
+        Email = email;
+        Password = password;
+        IsLoggedIn = isLoggedIn;
+    }
 }

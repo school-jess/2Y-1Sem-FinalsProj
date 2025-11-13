@@ -19,18 +19,8 @@ namespace StudentLibraryManagementSystem.Controllers
         [HttpGet]
         public IActionResult GetFaculties()
         {
-            var faculties = _dbCtx.Faculty.Select(f => new FacultyUpdateDto
-            {
-                Course = f.Course,
-                Department = f.Department,
-                FacultyId = f.FacultyId,
-                FacultyName = f.FacultyName,
-                Subject = f.Subject,
-                Email = f.Email,
-                Password = f.Password,
-                IsLoggedIn = f.IsLoggedIn,
-                UserId = f.UserId
-            }).ToList();
+            var faculties = _dbCtx.Faculty.Select(f => new FacultyUpdateDto(f.FacultyId, f.FacultyName, f.Department,
+                f.Subject, f.Course, f.Email, f.Password, f.IsLoggedIn, f.UserId)).ToList();
             return Ok(faculties);
         }
 
@@ -39,25 +29,9 @@ namespace StudentLibraryManagementSystem.Controllers
         {
             var faculty = _dbCtx.Faculty.Include(f => f.User).FirstOrDefault(f => f.FacultyId == id);
             if (faculty == null) return NotFound();
-            return Ok(new FacultyGet1Dto
-            {
-                Course = faculty.Course,
-                Department = faculty.Department,
-                FacultyId = faculty.FacultyId,
-                FacultyName = faculty.FacultyName,
-                Subject = faculty.Subject,
-                Email = faculty.Email,
-                Password = faculty.Password,
-                User = new UserUpdateDto
-                {
-                    HasFine = faculty.User.HasFine,
-                    HasLoan = faculty.User.HasLoan,
-                    UserId = faculty.User.UserId,
-                    UserName = faculty.User.UserName,
-                    IsAdmin = faculty.User.IsAdmin
-                },
-                IsLoggedIn = faculty.IsLoggedIn
-            });
+            return Ok(new FacultyGet1Dto(faculty.FacultyId, faculty.FacultyName, faculty.Department, faculty.Subject,
+                faculty.Course, new UserUpdateDto(faculty.User.UserId, faculty.User.UserName, faculty.User.HasFine,
+                    faculty.User.HasLoan, faculty.User.IsAdmin), faculty.Email, faculty.Password, faculty.IsLoggedIn));
         }
 
         [HttpGet("{email:regex(.*@.*)}")]
@@ -67,54 +41,24 @@ namespace StudentLibraryManagementSystem.Controllers
                 .Include(f => f.User)
                 .FirstOrDefault(f => f.Email == email);
             if (faculty == null) return NotFound();
-            return Ok(new FacultyGet1Dto
-            {
-                Course = faculty.Course,
-                Department = faculty.Department,
-                FacultyId = faculty.FacultyId,
-                FacultyName = faculty.FacultyName,
-                Subject = faculty.Subject,
-                Email = faculty.Email,
-                Password = faculty.Password,
-                User = new UserUpdateDto
-                {
-                    HasFine = faculty.User.HasFine,
-                    HasLoan = faculty.User.HasLoan,
-                    UserId = faculty.User.UserId,
-                    UserName = faculty.User.UserName,
-                    IsAdmin = faculty.User.IsAdmin
-                }
-            });
+            return Ok(new FacultyGet1Dto(faculty.FacultyId, faculty.FacultyName, faculty.Department, faculty.Subject,
+                faculty.Course,
+                new UserUpdateDto(faculty.User.UserId, faculty.User.UserName, faculty.User.HasFine,
+                    faculty.User.HasLoan, faculty.User.IsAdmin), faculty.Email, faculty.Password,
+                faculty.IsLoggedIn));
         }
 
         [HttpPost]
         public IActionResult NewFaculty([FromBody] FacultyCreationDto faculty)
         {
-            _dbCtx.Faculty.Add(new Faculty
-            {
-                Course = faculty.Course,
-                Department = faculty.Department,
-                FacultyName = faculty.FacultyName,
-                Subject = faculty.Subject,
-                Email = faculty.Email,
-                IsLoggedIn = faculty.IsLoggedIn,
-                Password = faculty.Password,
-                UserId = faculty.UserId
-            });
+            _dbCtx.Faculty.Add(new Faculty(faculty.FacultyName, faculty.Department, faculty.Subject, faculty.Course,
+                faculty.Email, faculty.IsLoggedIn, faculty.Password, faculty.UserId));
             _dbCtx.SaveChanges();
             var insertedFaculty = _dbCtx.Faculty.First(f => f.Email == faculty.Email);
-            return CreatedAtAction(nameof(GetFaculty), new { id = insertedFaculty.FacultyId }, new FacultyUpdateDto
-            {
-                Course = insertedFaculty.Course,
-                Department = insertedFaculty.Department,
-                Email = insertedFaculty.Email,
-                FacultyId = insertedFaculty.FacultyId,
-                FacultyName = insertedFaculty.FacultyName,
-                IsLoggedIn = insertedFaculty.IsLoggedIn,
-                Password = insertedFaculty.Password,
-                Subject = insertedFaculty.Subject,
-                UserId = insertedFaculty.UserId,
-            });
+            return CreatedAtAction(nameof(GetFaculty), new { id = insertedFaculty.FacultyId },
+                new FacultyUpdateDto(insertedFaculty.FacultyId, insertedFaculty.FacultyName, insertedFaculty.Department,
+                    insertedFaculty.Subject, insertedFaculty.Course, insertedFaculty.Email, insertedFaculty.Password,
+                    insertedFaculty.IsLoggedIn, insertedFaculty.UserId));
         }
 
         [HttpPut("{id:int}")]

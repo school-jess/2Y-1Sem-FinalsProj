@@ -1,3 +1,7 @@
 1. give dtos constraints that match models done
 2. figure out how to check days borrowed
 3. save password hash and salt
+4. make uml
+5. come up with explanation for solic principles for code
+6. WebApp/Program.cs:59:47 figure out previous unpaid fines
+7. update put methods

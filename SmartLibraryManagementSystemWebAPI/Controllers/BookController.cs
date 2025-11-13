@@ -19,14 +19,13 @@ namespace StudentLibraryManagementSystem.Controllers
         [HttpGet]
         public IActionResult GetBooks()
         {
-            var books = _dbCtx.Book.Select(b => new BookUpdateDto
-            {
-                Author = b.Author,
-                BookId = b.BookId,
-                BookName = b.BookName,
-                Synopsis = b.Synopsis,
-                ReleaseDate = b.ReleaseDate,
-            }).ToList();
+            var books = _dbCtx.Book
+                .Select(b => new BookUpdateDto(
+                    b.BookId,
+                    b.BookName,
+                    b.Author,
+                    b.ReleaseDate,
+                    b.Synopsis)).ToList();
             return Ok(books);
         }
 
@@ -38,66 +37,56 @@ namespace StudentLibraryManagementSystem.Controllers
                 .Include(b => b.Reservation)
                 .FirstOrDefault(b => b.BookId == id);
             if (book == null) return NotFound();
-            return Ok(new BookGet1Dto
-            {
-                Author = book.Author,
-                BookId = book.BookId,
-                BookName = book.BookName,
-                Synopsis = book.Synopsis,
-                ReleaseDate = book.ReleaseDate,
-                Catalog = new CatalogUpdateDto
-                {
-                    BookId = book.Catalog.BookId,
-                    CatalogId = book.Catalog.CatalogId,
-                    Copies = book.Catalog.Copies,
-                    ClassificationId = book.Catalog.ClassificationId,
-                    Genre = book.Catalog.Genre
-                },
-                Reservations = book.Reservation.Select(r => new ReservationUpdateDto
-                    {
-                        BookId = r.ReservationId,
-                        CatalogId = r.CatalogId,
-                        ReservationId = r.ReservationId,
-                        ReservationDateTime = r.ReservationDateTime,
-                        UserId = r.UserId,
-                        ReservationReturnDateTime = r.ReservationReturnDateTime
-                    }
-                ).ToList()
-            });
+            return Ok(new BookGet1Dto(
+                book.BookId,
+                book.BookName,
+                book.Author,
+                new CatalogUpdateDto(
+                    book.Catalog.CatalogId,
+                    book.Catalog.BookId,
+                    book.Catalog.Copies,
+                    book.Catalog.Genre,
+                    book.Catalog.ClassificationId,
+                    book.Catalog.CopiesBorrowed),
+                book.Reservation
+                    .Select(r => new ReservationUpdateDto(
+                        r.ReservationId,
+                        r.UserId,
+                        r.BookId,
+                        r.ReservationDateTime,
+                        r.CatalogId,
+                        r.ReservationReturnDateTime,
+                        r.HasReturned)).ToList(),
+                book.ReleaseDate,
+                book.Synopsis));
         }
 
         [HttpPost]
         public IActionResult NewBook([FromBody] BookCreationDto book)
         {
-            _dbCtx.Book.Add(new Book
-            {
-                Author = book.Author,
-                BookName = book.BookName,
-                Synopsis = book.Synopsis,
-                ReleaseDate = book.ReleaseDate,
-            });
+            _dbCtx.Book.Add(new Book(
+                book.BookName,
+                book.Author,
+                book.ReleaseDate,
+                book.Synopsis));
             _dbCtx.SaveChanges();
             var insertedBook = _dbCtx.Book.First(b => b.BookName == book.BookName);
-            return CreatedAtAction(nameof(GetBook), new { id = insertedBook.BookId }, new BookUpdateDto
-            {
-                Author = insertedBook.Author,
-                BookId = insertedBook.BookId,
-                BookName = insertedBook.BookName,
-                ReleaseDate = insertedBook.ReleaseDate,
-                Synopsis = insertedBook.Synopsis
-            });
+            return CreatedAtAction(nameof(GetBook), new { id = insertedBook.BookId },
+                new BookUpdateDto(insertedBook.BookId, insertedBook.BookName, insertedBook.Author,
+                    insertedBook.ReleaseDate, insertedBook.Synopsis)
+            );
         }
 
         [HttpPut("{id:int}")]
         public IActionResult UpdateBook(int id, [FromBody] BookUpdateDto book)
         {
             if (id != book.BookId) return BadRequest();
-            Book updatedBook = new Book
-            {
-                Author = book.Author,
-                BookId = book.BookId,
-                BookName = book.BookName,
-            };
+            Book updatedBook = new Book(
+                book.BookId,
+                book.BookName,
+                book.Author,
+                book.ReleaseDate,
+                book.Synopsis);
             _dbCtx.Entry(updatedBook).State = EntityState.Modified;
             _dbCtx.SaveChanges();
             return NoContent();
