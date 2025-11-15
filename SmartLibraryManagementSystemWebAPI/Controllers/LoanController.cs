@@ -24,7 +24,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     l.LoanId,
                     l.LoanAmount,
                     l.UserId,
-                    l.ReservatonId)).ToList();
+                    l.ReservatonId,
+                    l.HasPayed)).ToList();
             return Ok(loans);
         }
 
@@ -50,7 +51,9 @@ namespace StudentLibraryManagementSystem.Controllers
                     loan.Reservaton.CatalogId,
                     loan.Reservaton.ReservationReturnDateTime,
                     loan.Reservaton.HasFine,
-                    loan.Reservaton.HasReturned)));
+                    loan.Reservaton.HasReturned,
+                    loan.Reservaton.HasLoan),
+                loan.HasPayed));
         }
 
         [HttpPost]
@@ -59,7 +62,8 @@ namespace StudentLibraryManagementSystem.Controllers
             _dbCtx.Loan.Add(new Loan(
                 loan.LoanAmount,
                 loan.UserId,
-                loan.ReservationId));
+                loan.ReservationId,
+                loan.HasPayed));
             _dbCtx.SaveChanges();
             var insertedLoan = _dbCtx.Loan.First(l => l.UserId == loan.UserId);
             return CreatedAtAction(nameof(GetLoan), new { id = insertedLoan.LoanId },
@@ -67,7 +71,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     insertedLoan.LoanId,
                     insertedLoan.LoanAmount,
                     insertedLoan.UserId,
-                    insertedLoan.ReservatonId));
+                    insertedLoan.ReservatonId,
+                    insertedLoan.HasPayed));
         }
 
         [HttpPut("{id:int}")]
@@ -80,6 +85,7 @@ namespace StudentLibraryManagementSystem.Controllers
             loanToUpdate.LoanAmount = loan.LoanAmount;
             loanToUpdate.UserId = loan.UserId;
             loanToUpdate.ReservatonId = loan.ReservationId;
+            loanToUpdate.HasPayed = loan.HasPayed;
             _dbCtx.SaveChanges();
             return NoContent();
         }

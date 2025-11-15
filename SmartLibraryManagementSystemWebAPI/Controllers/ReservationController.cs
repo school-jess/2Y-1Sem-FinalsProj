@@ -29,7 +29,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     reservation.CatalogId,
                     reservation.ReservationReturnDateTime,
                     reservation.HasFine,
-                    reservation.HasReturned)).ToList();
+                    reservation.HasReturned,
+                    reservation.HasLoan)).ToList();
             return Ok(reservations);
         }
 
@@ -69,15 +70,18 @@ namespace StudentLibraryManagementSystem.Controllers
                 new FineUpdateDto(
                     reservation.Fine.FineId,
                     reservation.Fine.FineAmount,
-                    reservation.Fine.UserId),
+                    reservation.Fine.UserId,
+                    reservation.Fine.HasPayed),
                 new LoanUpdateDto(
                     reservation.Loan.LoanId,
                     reservation.Loan.LoanAmount,
                     reservation.Loan.UserId,
-                    reservation.Loan.ReservatonId),
+                    reservation.Loan.ReservatonId,
+                    reservation.Loan.HasPayed),
                 reservation.ReservationReturnDateTime,
                 reservation.HasFine,
-                reservation.HasReturned));
+                reservation.HasReturned,
+                reservation.HasLoan));
         }
 
         [HttpPost]
@@ -90,7 +94,8 @@ namespace StudentLibraryManagementSystem.Controllers
                 reservation.CatalogId,
                 reservation.ReservationReturnDateTime,
                 reservation.HasFine,
-                reservation.HasReturned));
+                reservation.HasReturned,
+                reservation.HasLoan));
             _dbCtx.SaveChanges();
             var insertedReservation = _dbCtx.Reservation.First(r => r.BookId == reservation.BookId);
             return CreatedAtAction(nameof(GetReservation), new { id = insertedReservation.ReservationId },
@@ -102,7 +107,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     insertedReservation.CatalogId,
                     insertedReservation.ReservationReturnDateTime,
                     insertedReservation.HasFine,
-                    insertedReservation.HasReturned));
+                    insertedReservation.HasReturned,
+                    insertedReservation.HasLoan));
         }
 
         [HttpPut("{id:int}")]
@@ -119,6 +125,7 @@ namespace StudentLibraryManagementSystem.Controllers
             reservationToUpdate.ReservationReturnDateTime = reservation.ReservationReturnDateTime;
             reservationToUpdate.HasFine = reservation.HasFine;
             reservationToUpdate.HasReturned = reservation.HasReturned;
+            reservationToUpdate.HasLoan = reservation.HasLoan;
             _dbCtx.SaveChanges();
             return NoContent();
         }

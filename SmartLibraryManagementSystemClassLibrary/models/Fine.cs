@@ -14,19 +14,22 @@ public class Fine
     public int ReservatonId { get; set; }
     [ForeignKey("ReservatonId")]
     public Reservation Reservaton { get; set; }
+    public bool HasPayed { get; set; }
 
-    public Fine(int fineId, int fineAmount, int userId, int reservatonId)
+    public Fine(int fineId, int fineAmount, int userId, int reservatonId, bool hasPayed)
     {
         FineId = fineId;
         FineAmount = fineAmount;
         UserId = userId;
         ReservatonId = reservatonId;
+        HasPayed = hasPayed;
     }
 
-    public Fine(int fineAmount, int userId, int reservatonId)
+    public Fine(int fineAmount, int userId, int reservatonId, bool hasPayed)
     {
         FineAmount = fineAmount;
         UserId = userId;
         ReservatonId = reservatonId;
+        HasPayed = hasPayed;
     }
 }

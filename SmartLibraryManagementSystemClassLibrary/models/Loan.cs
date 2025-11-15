@@ -14,20 +14,23 @@ public class Loan
     public int ReservatonId { get; set; }
     [ForeignKey("ReservatonId")]
     public Reservation Reservaton { get; set; }
+    public bool HasPayed { get; set; }
 
-    public Loan(int loanId, int loanAmount, int userId, int reservationId)
+    public Loan(int loanId, int loanAmount, int userId, int reservationId, bool hasPayed)
     {
         LoanId = loanId;
         LoanAmount = loanAmount;
         UserId = userId;
         ReservatonId = reservationId;
+        HasPayed = hasPayed;
     }
 
-    public Loan(int loanAmount, int userId, int reservationId)
+    public Loan(int loanAmount, int userId, int reservationId, bool hasPayed)
     {
         LoanAmount = loanAmount;
         UserId = userId;
         ReservatonId = reservationId;
+        HasPayed = hasPayed;
     }
 
     protected Loan() {}

@@ -12,5 +12,10 @@
 @Model.Book.Catalog.Copies
 @Model.Book.Catalog.Genre
 <form method="post">
-    <button id="borrow">Borrow</button>
+    @if (Model.HasFine) {
+        <button id="loan">Loan</button>
+    } else {
+        <button id="borrow">Borrow</button>
+    }
 </form>
+

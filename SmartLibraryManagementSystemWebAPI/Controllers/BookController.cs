@@ -57,7 +57,8 @@ namespace StudentLibraryManagementSystem.Controllers
                         r.CatalogId,
                         r.ReservationReturnDateTime,
                         r.HasFine,
-                        r.HasReturned)).ToList(),
+                        r.HasReturned,
+                        r.HasLoan)).ToList(),
                 book.ReleaseDate,
                 book.Synopsis));
         }

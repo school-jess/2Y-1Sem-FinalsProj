@@ -24,7 +24,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     f.FineId,
                     f.FineAmount,
                     f.UserId,
-                    f.ReservatonId)).ToList();
+                    f.ReservatonId,
+                    f.HasPayed)).ToList();
             return Ok(fines);
         }
 
@@ -53,7 +54,9 @@ namespace StudentLibraryManagementSystem.Controllers
                     fine.Reservaton.CatalogId,
                     fine.Reservaton.ReservationReturnDateTime,
                     fine.Reservaton.HasFine,
-                    fine.Reservaton.HasReturned)));
+                    fine.Reservaton.HasReturned,
+                    fine.Reservaton.HasLoan),
+                fine.HasPayed));
         }
 
         [HttpPost]
@@ -62,7 +65,8 @@ namespace StudentLibraryManagementSystem.Controllers
             _dbCtx.Fine.Add(new Fine(
                 fine.FineAmount,
                 fine.UserId,
-                fine.ReservatonId));
+                fine.ReservatonId,
+                fine.HasPayed));
             _dbCtx.SaveChanges();
             var insertedFine = _dbCtx.Fine.First(f => f.UserId == fine.UserId);
             return CreatedAtAction(nameof(GetFine), new { id = insertedFine.FineId },
@@ -70,7 +74,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     insertedFine.FineId,
                     insertedFine.FineAmount,
                     insertedFine.UserId,
-                    insertedFine.ReservatonId));
+                    insertedFine.ReservatonId,
+                    insertedFine.HasPayed));
         }
 
         [HttpPut("{id:int}")]
@@ -83,6 +88,7 @@ namespace StudentLibraryManagementSystem.Controllers
             fineToUpdate.FineAmount = fine.FineAmount;
             fineToUpdate.ReservatonId = fine.ReservatonId;
             fineToUpdate.UserId = fine.UserId;
+            fineToUpdate.HasPayed = fine.HasPayed;
             _dbCtx.SaveChanges();
             return NoContent();
         }

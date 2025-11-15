@@ -66,25 +66,30 @@ namespace StudentLibraryManagementSystem.Controllers
                                 r.Fine.FineId,
                                 r.Fine.FineAmount,
                                 r.Fine.UserId,
-                                r.Fine.ReservatonId),
+                                r.Fine.ReservatonId,
+                                r.Fine.HasPayed),
                             new LoanUpdateDto(
                                 r.Loan.LoanId,
                                 r.Loan.LoanAmount,
                                 r.Loan.UserId,
-                                r.Loan.ReservatonId),
+                                r.Loan.ReservatonId,
+                                r.Loan.HasPayed),
                             r.ReservationReturnDateTime,
                             r.HasFine,
-                            r.HasReturned)).ToList(),
+                            r.HasReturned,
+                            r.HasLoan)).ToList(),
                     user.PrevFine
                         .Select(f => new FineUpdateDto(
                             f.FineId,
                             f.FineAmount,
-                            f.UserId)).ToList(),
+                            f.UserId,
+                            f.HasPayed)).ToList(),
                     user.PrevLoan.Select(l => new LoanUpdateDto(
                         l.LoanId,
                         l.LoanAmount,
                         l.UserId,
-                        l.ReservatonId)).ToList(),
+                        l.ReservatonId,
+                        l.HasPayed)).ToList(),
                     user.IsAdmin);
                 if (user.Faculty == null)
                 {
@@ -124,17 +129,20 @@ namespace StudentLibraryManagementSystem.Controllers
                     r.CatalogId,
                     r.ReservationReturnDateTime,
                     r.HasFine,
-                    r.HasReturned)).ToList(),
+                    r.HasReturned,
+                    r.HasLoan)).ToList(),
                 user.PrevFine.Select(f => new FineUpdateDto(
                     f.FineId,
                     f.FineAmount,
-                    f.UserId)).ToList(),
+                    f.UserId,
+                    f.HasPayed)).ToList(),
                 user.PrevLoan.Select(l =>
                     new LoanUpdateDto(
                         l.LoanId,
                         l.LoanAmount,
                         l.UserId,
-                        l.ReservatonId)).ToList(),
+                        l.ReservatonId,
+                        l.HasPayed)).ToList(),
                 user.IsAdmin);
             if (user.Faculty == null)
             {
@@ -193,8 +201,8 @@ namespace StudentLibraryManagementSystem.Controllers
             userToUpdate.UserId = user.UserId;
             userToUpdate.UserName = user.UserName;
             userToUpdate.HasFine = user.HasFine;
-            user.HasLoan = user.HasLoan;
-            user.IsAdmin = user.IsAdmin;
+            userToUpdate.HasLoan = user.HasLoan;
+            userToUpdate.IsAdmin = user.IsAdmin;
             _dbCtx.SaveChanges();
             return NoContent();
         }

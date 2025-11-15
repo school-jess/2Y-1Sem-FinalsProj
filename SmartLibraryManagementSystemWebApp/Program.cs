@@ -97,7 +97,8 @@ app.Use(async (context, next) =>
                     reservation.Catalog.CatalogId,
                     reservation.ReservationReturnDateTime,
                     true,
-                    reservation.HasReturned);
+                    reservation.HasReturned,
+                    reservation.HasLoan);
                 string reservationToUpdateSerialized = JsonSerializer.Serialize(reservationToUpdate);
                 var reservationToUpdateHttpCont =
                     new StringContent(reservationToUpdateSerialized, Encoding.UTF8, "application/json");
