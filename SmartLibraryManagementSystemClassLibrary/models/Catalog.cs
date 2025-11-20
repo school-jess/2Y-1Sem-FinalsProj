@@ -38,4 +38,14 @@ public class Catalog
         ClassificationId = classificationId;
         CopiesBorrowed = copiesBorrowed;
     }
+
+    public void UpdateCatalog(int catalogId, int bookId, int copies, string genre, string classificationId, int copiesBorrowed)
+    {
+        CatalogId = catalogId;
+        BookId = bookId;
+        Copies = copies;
+        Genre = genre;
+        ClassificationId = classificationId;
+        CopiesBorrowed = copiesBorrowed;
+    }
 }

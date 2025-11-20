@@ -9,10 +9,12 @@ public class IndexModel : PageModel
     public bool IsAdmin { get; set; }
     public List<BookUpdateDto> Books { get; set; }
     private readonly ILogger<IndexModel> _logger;
+    private readonly IHttpClientFactory _httpClientFactory;
 
-    public IndexModel(ILogger<IndexModel> logger)
+    public IndexModel(ILogger<IndexModel> logger, IHttpClientFactory httpClientFactory)
     {
         _logger = logger;
+        _httpClientFactory = httpClientFactory;
     }
 
     public async Task OnGetAsync()
@@ -21,7 +23,7 @@ public class IndexModel : PageModel
         {
             PropertyNameCaseInsensitive = true
         };
-        using (var httpClient = new HttpClient())
+        using (var httpClient = _httpClientFactory.CreateClient("LibraryApi"))
         {
             var getBooks = await httpClient.GetAsync("http://localhost:5138/api/Book");
             if (getBooks.IsSuccessStatusCode)

@@ -12,10 +12,13 @@
 @Model.Book.Catalog.Copies
 @Model.Book.Catalog.Genre
 <form method="post">
-    @if (Model.HasFine) {
+    <input type="hidden" asp-page="HasFine"/>
+    @if (Model.HasFine)
+    {
         <button id="loan">Loan</button>
-    } else {
+    }
+    else
+    {
         <button id="borrow">Borrow</button>
     }
 </form>
-

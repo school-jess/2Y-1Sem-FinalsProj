@@ -2,68 +2,52 @@ using System.Text;
 using SmartLibraryManagementSystemClassLibrary.Dtos;
 using System.Text.Json;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace SmartLibraryManagementSystemWebApp;
 
-// Add services to the container.
-builder.Services.AddRazorPages();
-builder.Services.AddSession();
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+public class CheckOverdueReservationMiddleware
 {
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
+    private readonly RequestDelegate _next;
+    private readonly IHttpClientFactory _httpClientFactory;
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseRouting();
-app.UseSession();
-
-app.UseAuthorization();
-
-app.MapRazorPages();
-
-app.Use(async (context, next) =>
-{
-    if (context.Session.GetString("IsLoggedIn") != "true")
+    public CheckOverdueReservationMiddleware(RequestDelegate next, IHttpClientFactory httpClientFactory)
     {
-        await next(context);
-        return;
+        _next = next;
+        _httpClientFactory = httpClientFactory;
     }
 
-    using (var httpClient = new HttpClient())
+    public async Task InvokeAsync(HttpContext context)
     {
-        var getUser =
-            await httpClient.GetAsync(
-                $"http://localhost:5138/api/User/{context.Session.GetString("UserId")}?withReservation=true");
-        if (!getUser.IsSuccessStatusCode)
+        if (context.Session.GetString("IsLoggedIn") != "true")
         {
-            await next(context);
+            await _next(context);
             return;
         }
 
-        var options = new JsonSerializerOptions
+        var httpClient = _httpClientFactory.CreateClient("LibrraryApi");
+        var getUser =
+            await httpClient.GetAsync(
+                $"http://localhost:5138/api/User/{context.Session.GetString("UserId")}?withReservation=true");
+
+        if (!getUser.IsSuccessStatusCode)
         {
-            PropertyNameCaseInsensitive = true
-        };
+            await _next(context);
+            return;
+        }
+
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         string getUserCont = await getUser.Content.ReadAsStringAsync();
         UserWithReservationsDto user = JsonSerializer.Deserialize<UserWithReservationsDto>(getUserCont, options);
         foreach (var reservation in user.Reservations)
         {
             if (reservation.HasReturned)
-            {
                 continue;
-            }
+
             if (reservation.ReservationReturnDateTime < DateTime.UtcNow)
             {
                 if (reservation.HasFine)
                 {
                     int daysBookNotReturned = (DateTime.UtcNow - reservation.ReservationReturnDateTime).Days;
-                    if (daysBookNotReturned < 1) continue;
+                    if (daysBookNotReturned < 2) continue;
                     // update fine amount to include days after book return date
                     reservation.Fine.FineAmount += daysBookNotReturned * 10;
                     string fineToUpdateSerialized = JsonSerializer.Serialize(reservation.Fine);
@@ -76,7 +60,8 @@ app.Use(async (context, next) =>
                 }
 
                 // create a new Fine
-                FineCreationDto fine = new FineCreationDto(10, reservation.UserId, false, reservation.ReservationId);
+                FineCreationDto fine =
+                    new FineCreationDto(10, reservation.UserId, false, reservation.ReservationId);
                 string fineSerialized = JsonSerializer.Serialize(fine);
                 var fineHttpCont = new StringContent(fineSerialized, Encoding.UTF8, "application/json");
                 var newFine = await httpClient.PostAsync("http://localhost:5138/api/Fine", fineHttpCont);
@@ -85,7 +70,8 @@ app.Use(async (context, next) =>
                 UserUpdateDto userToUpdate =
                     new UserUpdateDto(user.UserId, user.UserName, true, user.HasLoan, user.IsAdmin);
                 string userToUpdateSerialized = JsonSerializer.Serialize(userToUpdate);
-                var userToUpdateHttpCont = new StringContent(userToUpdateSerialized, Encoding.UTF8, "application/json");
+                var userToUpdateHttpCont =
+                    new StringContent(userToUpdateSerialized, Encoding.UTF8, "application/json");
                 var updateUser = await httpClient.PutAsync($"http://localhost:5138/api/User", userToUpdateHttpCont);
                 if (!updateUser.IsSuccessStatusCode) throw new InvalidOperationException("error updating user");
                 // update reservation to have fine
@@ -103,13 +89,53 @@ app.Use(async (context, next) =>
                 var reservationToUpdateHttpCont =
                     new StringContent(reservationToUpdateSerialized, Encoding.UTF8, "application/json");
                 var updateReservation =
-                    await httpClient.PutAsync($"http://localhost:5138/api/Reservation", reservationToUpdateHttpCont);
-                if (!updateReservation.IsSuccessStatusCode) throw new InvalidOperationException("error updating user");
+                    await httpClient.PutAsync($"http://localhost:5138/api/Reservation",
+                        reservationToUpdateHttpCont);
+                if (!updateReservation.IsSuccessStatusCode)
+                    throw new InvalidOperationException("error updating user");
             }
         }
+
+        await _next(context);
     }
+}
 
-    await next(context);
-});
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
-app.Run();
+        // Add services to the container.
+        builder.Services.AddRazorPages();
+        builder.Services.AddSession();
+        builder.Services.AddHttpClient("LibraryApi", client =>
+        {
+            client.BaseAddress = new Uri("http://localhost:5138");
+        });
+        var app = builder.Build();
+
+        // Configure the HTTP request pipeline.
+        if (!app.Environment.IsDevelopment())
+        {
+            app.UseExceptionHandler("/Error");
+            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            app.UseHsts();
+        }
+
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+
+        app.UseRouting();
+        app.UseSession();
+
+        app.UseAuthorization();
+
+        app.MapRazorPages();
+
+        app.UseMiddleware<CheckOverdueReservationMiddleware>();
+
+        app.Run();
+    }
+}
+

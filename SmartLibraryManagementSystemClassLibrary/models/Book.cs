@@ -32,4 +32,13 @@ public class Book
         ReleaseDate =  releaseDate;
         Synopsis = synopsis;
     }
+
+    public void UpdateBook(int bookId, string bookName, string author, string synopsis, DateTime releaseDate)
+    {
+        BookId = bookId;
+        BookName = bookName;
+        Author = author;
+        Synopsis = synopsis;
+        ReleaseDate = releaseDate;
+    }
 }

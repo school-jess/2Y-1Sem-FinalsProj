@@ -88,11 +88,12 @@ namespace StudentLibraryManagementSystem.Controllers
             if (id != book.BookId) return BadRequest();
             Book? bookToUpdate = _dbCtx.Book.Find(id);
             if (bookToUpdate == null) return NotFound();
-            bookToUpdate.Author = book.Author;
-            bookToUpdate.BookId = book.BookId;
-            bookToUpdate.BookName = book.BookName;
-            bookToUpdate.ReleaseDate = book.ReleaseDate;
-            bookToUpdate.Synopsis = book.Synopsis;
+            bookToUpdate.UpdateBook(
+                book.BookId,
+                book.BookName,
+                book.Author,
+                book.Synopsis,
+                book.ReleaseDate);
             _dbCtx.SaveChanges();
             return NoContent();
         }

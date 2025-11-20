@@ -117,15 +117,16 @@ namespace StudentLibraryManagementSystem.Controllers
             if (id != reservation.ReservationId) return BadRequest();
             Reservation? reservationToUpdate = _dbCtx.Reservation.Find(id);
             if (reservationToUpdate == null) return NotFound();
-            reservationToUpdate.ReservationId = reservation.ReservationId;
-            reservationToUpdate.UserId = reservation.UserId;
-            reservationToUpdate.BookId = reservation.BookId;
-            reservationToUpdate.ReservationDateTime = reservation.ReservationDateTime;
-            reservationToUpdate.CatalogId = reservation.CatalogId;
-            reservationToUpdate.ReservationReturnDateTime = reservation.ReservationReturnDateTime;
-            reservationToUpdate.HasFine = reservation.HasFine;
-            reservationToUpdate.HasReturned = reservation.HasReturned;
-            reservationToUpdate.HasLoan = reservation.HasLoan;
+            reservationToUpdate.UpdateReservation(
+                reservation.ReservationId,
+                reservation.UserId,
+                reservation.BookId,
+                reservation.ReservationDateTime,
+                reservation.CatalogId,
+                reservation.ReservationReturnDateTime,
+                reservation.HasFine,
+                reservation.HasReturned,
+                reservation.HasLoan);
             _dbCtx.SaveChanges();
             return NoContent();
         }

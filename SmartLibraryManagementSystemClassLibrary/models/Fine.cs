@@ -32,4 +32,13 @@ public class Fine
         ReservatonId = reservatonId;
         HasPayed = hasPayed;
     }
+
+    public void UpdateFine(int fineId, int fineAmount, int userId, int reservatonId, bool hasPayed)
+    {
+        FineId = fineId;
+        FineAmount = fineAmount;
+        UserId = userId;
+        ReservatonId = reservatonId;
+        HasPayed = hasPayed;
+    }
 }

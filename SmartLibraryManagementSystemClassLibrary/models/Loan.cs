@@ -34,4 +34,13 @@ public class Loan
     }
 
     protected Loan() {}
+
+    public void UpdateLoan(int loanId, int loanAmount, int userId, int reservationId, bool hasPayed)
+    {
+        LoanId = loanId;
+        LoanAmount = loanAmount;
+        UserId = userId;
+        ReservatonId = reservationId;
+        HasPayed = hasPayed;
+    }
 }

@@ -13,8 +13,8 @@ public class Reservation
     public DateTime ReservationDateTime { get; set; }
     public int CatalogId { get; set; }
     [ForeignKey("CatalogId")] public Catalog Catalog { get; set; }
-    public Fine Fine { get; set; }
-    public Loan Loan { get; set; }
+    public Fine? Fine { get; set; }
+    public Loan? Loan { get; set; }
     public DateTime ReservationReturnDateTime { get; set; }
     public bool HasFine { get; set; }
     public bool HasReturned { get; set; }
@@ -37,6 +37,20 @@ public class Reservation
     public Reservation(int userId, int bookId, DateTime reservationDateTime, int catalogId,
         DateTime reservationReturnDateTime, bool hasFine, bool hasReturned, bool hasLoan)
     {
+        UserId = userId;
+        BookId = bookId;
+        ReservationDateTime = reservationDateTime;
+        CatalogId = catalogId;
+        ReservationReturnDateTime = reservationReturnDateTime;
+        HasFine = hasFine;
+        HasReturned = hasReturned;
+        HasLoan = hasLoan;
+    }
+
+    public void UpdateReservation(int reservationId, int userId, int bookId, DateTime reservationDateTime,
+        int catalogId, DateTime reservationReturnDateTime, bool hasFine, bool hasReturned, bool hasLoan)
+    {
+        ReservationId = reservationId;
         UserId = userId;
         BookId = bookId;
         ReservationDateTime = reservationDateTime;

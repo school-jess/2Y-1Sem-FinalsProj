@@ -51,13 +51,22 @@ public class LogInModel : PageModel
                         HttpContext.Session.SetString("IsEducator", "true");
                         if (faculty.User.IsAdmin) HttpContext.Session.SetString("IsAdmin", "true");
                         else HttpContext.Session.SetString("IsAdmin", "false");
-                        faculty.IsLoggedIn = true;
-                        string facultySerialized = JsonSerializer.Serialize(faculty);
-                        var facultyHttpCont =
-                            new StringContent(facultySerialized, Encoding.UTF8, "application/json");
+                        FacultyUpdateDto facultyToUpdate = new FacultyUpdateDto(
+                            faculty.FacultyId,
+                            faculty.FacultyName,
+                            faculty.Department,
+                            faculty.Subject,
+                            faculty.Course,
+                            faculty.Email,
+                            faculty.Password,
+                            true,
+                            faculty.User.UserId);
+                        string facultyToUpdateSerialized = JsonSerializer.Serialize(facultyToUpdate);
+                        var facultyToUpdateHttpCont =
+                            new StringContent(facultyToUpdateSerialized, Encoding.UTF8, "application/json");
                         var setLoginStat =
-                            await httpClient.PutAsync($"http://localhost:5138/api/Faculty/{faculty.FacultyId}",
-                                facultyHttpCont);
+                            await httpClient.PutAsync($"http://localhost:5138/api/Faculty/{facultyToUpdate.FacultyId}",
+                                facultyToUpdateHttpCont);
                         if (!setLoginStat.IsSuccessStatusCode)
                             throw new InvalidOperationException("error setting login status");
                     }
@@ -75,17 +84,26 @@ public class LogInModel : PageModel
                         HttpContext.Session.SetString("IsEducator", "false");
                         if (student.User.IsAdmin) HttpContext.Session.SetString("IsAdmin", "true");
                         else HttpContext.Session.SetString("IsAdmin", "false");
-                        student.IsLoggedIn = true;
-                        string studentSerialized = JsonSerializer.Serialize(student);
-                        var studentHttpCont =
-                            new StringContent(studentSerialized, Encoding.UTF8, "application/json");
+                        StudentUpdateDto studentToUpdate = new StudentUpdateDto(
+                            student.StudentId,
+                            student.StudentName,
+                            student.Department,
+                            student.Course,
+                            student.Grade,
+                            student.Email,
+                            student.Password,
+                            true,
+                            student.User.UserId);
+                        string studentToUpdateSerialized = JsonSerializer.Serialize(studentToUpdate);
+                        var studentToUpdateHttpCont =
+                            new StringContent(studentToUpdateSerialized, Encoding.UTF8, "application/json");
                         var setLoginStat =
-                            await httpClient.PutAsync($"http://localhost:5138/api/Student/{student.StudentId}",
-                                studentHttpCont);
+                            await httpClient.PutAsync($"http://localhost:5138/api/Student/{studentToUpdate.StudentId}",
+                                studentToUpdateHttpCont);
                         if (!setLoginStat.IsSuccessStatusCode)
                             throw new InvalidOperationException("error setting login status");
                     }
-                    else return Page(); // todo handle with more care
+                    else throw new InvalidOperationException("password dont match"); // todo handle with more care
                 }
             }
             else throw new InvalidOperationException("couldn't find user");

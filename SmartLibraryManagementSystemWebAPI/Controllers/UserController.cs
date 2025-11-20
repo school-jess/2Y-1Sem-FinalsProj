@@ -106,9 +106,16 @@ namespace StudentLibraryManagementSystem.Controllers
                 }
                 else
                 {
-                    userWithReservationsToRet.Faculty = new FacultyUpdateDto(user.Faculty.FacultyId,
-                        user.Faculty.FacultyName, user.Faculty.Department, user.Faculty.Subject, user.Faculty.Course,
-                        user.Faculty.Email, user.Faculty.Password, user.Faculty.IsLoggedIn);
+                    userWithReservationsToRet.Faculty = new FacultyUpdateDto(
+                        user.Faculty.FacultyId,
+                        user.Faculty.FacultyName,
+                        user.Faculty.Department,
+                        user.Faculty.Subject,
+                        user.Faculty.Course,
+                        user.Faculty.Email,
+                        user.Faculty.Password,
+                        user.Faculty.IsLoggedIn,
+                        user.Faculty.UserId);
                 }
 
                 return Ok(userWithReservationsToRet);
@@ -167,7 +174,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     user.Faculty.Course,
                     user.Faculty.Email,
                     user.Faculty.Password,
-                    user.Faculty.IsLoggedIn);
+                    user.Faculty.IsLoggedIn,
+                    user.Faculty.UserId);
             }
 
             return Ok(userToRet);
@@ -199,10 +207,13 @@ namespace StudentLibraryManagementSystem.Controllers
             User? userToUpdate = _dbCtx.User.Find(id);
             if (userToUpdate == null) return NotFound();
             userToUpdate.UserId = user.UserId;
-            userToUpdate.UserName = user.UserName;
-            userToUpdate.HasFine = user.HasFine;
-            userToUpdate.HasLoan = user.HasLoan;
-            userToUpdate.IsAdmin = user.IsAdmin;
+            userToUpdate.UpdateUser(
+                user.UserId,
+                user.UserName,
+                user.HasFine,
+                user.HasLoan,
+                user.IsAdmin
+            );
             _dbCtx.SaveChanges();
             return NoContent();
         }

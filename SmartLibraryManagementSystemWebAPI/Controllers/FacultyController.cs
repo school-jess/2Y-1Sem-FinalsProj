@@ -114,13 +114,16 @@ namespace StudentLibraryManagementSystem.Controllers
             if (id != faculty.FacultyId) return BadRequest();
             Faculty? facultyToUpdate = _dbCtx.Faculty.Find(id);
             if (facultyToUpdate == null) return NotFound();
-            facultyToUpdate.Course = faculty.Course;
-            facultyToUpdate.Department = faculty.Department;
-            facultyToUpdate.FacultyId = faculty.FacultyId;
-            facultyToUpdate.Subject = faculty.Subject;
-            facultyToUpdate.Email = faculty.Email;
-            facultyToUpdate.IsLoggedIn = faculty.IsLoggedIn;
-            facultyToUpdate.Password = faculty.Password;
+            facultyToUpdate.UpdateFaculty(
+                faculty.FacultyId,
+                faculty.FacultyName,
+                faculty.Department,
+                faculty.Subject,
+                faculty.Course,
+                faculty.Email,
+                faculty.IsLoggedIn,
+                faculty.Password,
+                faculty.UserId);
             _dbCtx.SaveChanges();
             return NoContent();
         }

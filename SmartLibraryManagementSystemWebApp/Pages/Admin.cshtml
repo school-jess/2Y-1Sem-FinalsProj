@@ -3,9 +3,58 @@
 @{
 }
 
-@foreach (var user in Model.Users)
-{
+<div id="grid">
     <div>
-        @user.UserName @user.HasFine @user.HasLoan @user.IsAdmin
+        Username
     </div>
+    <div>
+        Has fine
+    </div>
+    <div>
+        Has loan
+    </div>
+    <div>
+        Is admin
+    </div>
+    <div></div>
+    @foreach (var user in Model.Users)
+    {
+        <div>
+            @user.UserName
+        </div>
+        <div>
+            @if (user.HasFine)
+            {
+                <input type="checkbox" checked/>
+            }
+            else
+            {
+                <input type="checkbox"/>
+            }
+        </div>
+        <div>
+            @if (user.HasLoan)
+            {
+                <input type="checkbox" checked/>
+            }
+            else
+            {
+                <input type="checkbox"/>
+            }
+        </div>
+        <div>
+            @if (user.IsAdmin)
+            {
+                <input type="checkbox" checked/>
+            }
+            else
+            {
+                <input type="checkbox"/>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="~/js/Admin.js"></script>
 }

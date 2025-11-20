@@ -60,15 +60,15 @@ public class ReservationGet1Dto
     public BookUpdateDto Book { get; set; }
     public DateTime ReservationDateTime { get; set; }
     public CatalogUpdateDto Catalog { get; set; }
-    public FineUpdateDto Fine { get; set; }
-    public LoanUpdateDto Loan { get; set; }
+    public FineUpdateDto? Fine { get; set; }
+    public LoanUpdateDto? Loan { get; set; }
     public DateTime ReservationReturnDateTime { get; set; }
     public bool HasFine { get; set; }
     public bool HasReturned { get; set; }
     public bool HasLoan { get; set; }
 
     public ReservationGet1Dto(int reservationId, UserUpdateDto user, BookUpdateDto book, DateTime reservationDateTime,
-        CatalogUpdateDto catalog, FineUpdateDto fine, LoanUpdateDto loan, DateTime reservationReturnDateTime,
+        CatalogUpdateDto catalog, FineUpdateDto? fine, LoanUpdateDto? loan, DateTime reservationReturnDateTime,
         bool hasFine, bool hasReturned, bool hasLoan)
     {
         ReservationId = reservationId;
@@ -92,15 +92,15 @@ public class ReservationUserDto
     public BookUpdateDto Book { get; set; }
     public DateTime ReservationDateTime { get; set; }
     public CatalogUpdateDto Catalog { get; set; }
-    public FineUpdateDto Fine { get; set; }
-    public LoanUpdateDto Loan { get; set; }
+    public FineUpdateDto? Fine { get; set; }
+    public LoanUpdateDto? Loan { get; set; }
     public DateTime ReservationReturnDateTime { get; set; }
     public bool HasFine { get; set; }
     public bool HasReturned { get; set; }
     public bool HasLoan { get; set; }
 
     public ReservationUserDto(int reservationId, int userId, BookUpdateDto book, DateTime reservationDateTime,
-        CatalogUpdateDto catalog, FineUpdateDto fine, LoanUpdateDto loan, DateTime reservationReturnDateTime,
+        CatalogUpdateDto catalog, FineUpdateDto? fine, LoanUpdateDto? loan, DateTime reservationReturnDateTime,
         bool hasFine, bool hasReturned, bool hasLoan)
     {
         ReservationId = reservationId;

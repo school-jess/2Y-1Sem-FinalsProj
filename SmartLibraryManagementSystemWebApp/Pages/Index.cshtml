@@ -13,15 +13,6 @@
     {
         <li>
             <a asp-page="/Book" asp-route-id="@book.BookId">@book.BookName - @book.Author</a>
-            @if (Model.IsAdmin)
-            {
-                <button id="edit-book@book.BookId">
-                    <img src="~/pen.png"/>
-                </button>
-                <button>
-                    <img id="delete-book@book.BookId" src="~/recycle-bin.png"/>
-                </button>
-            }
         </li>
     }
 </ol>

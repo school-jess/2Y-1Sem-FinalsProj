@@ -35,4 +35,13 @@ public class User
         HasLoan = hasLoan;
         IsAdmin = isAdmin;
     }
+
+    public void UpdateUser(int userId, string userName, bool hasFine, bool hasLoan, bool isAdmin)
+    {
+        UserId = userId;
+        UserName = userName;
+        HasFine = hasFine;
+        HasLoan = hasLoan;
+        IsAdmin = isAdmin;
+    }
 }

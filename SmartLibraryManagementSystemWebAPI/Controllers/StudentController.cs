@@ -117,14 +117,16 @@ namespace StudentLibraryManagementSystem.Controllers
             if (id != student.StudentId) return BadRequest();
             Student? studentToUpdate = _dbCtx.Student.Find(id);
             if (studentToUpdate == null) return NotFound();
-            studentToUpdate.Course = student.Course;
-            studentToUpdate.Department = student.Department;
-            studentToUpdate.Grade = student.Grade;
-            studentToUpdate.StudentId = student.StudentId;
-            studentToUpdate.StudentName = student.StudentName;
-            studentToUpdate.Email = student.Email;
-            studentToUpdate.IsLoggedIn = student.IsLoggedIn;
-            studentToUpdate.Password = student.Password;
+            studentToUpdate.UpdateStudent(
+                student.StudentId,
+                student.StudentName,
+                student.Department,
+                student.Course,
+                student.Grade,
+                student.Email,
+                student.IsLoggedIn,
+                student.Password,
+                student.UserId);
             _dbCtx.SaveChanges();
             return NoContent();
         }

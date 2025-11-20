@@ -24,4 +24,17 @@ public class Student
     public int UserId { get; set; }
     [ForeignKey("UserId")]
     public User User { get; set; }
+
+    public void UpdateStudent(int studentId, string studentName, string department, string course, int grade, string email, bool isLoggedIn, string password, int userId)
+    {
+        StudentId = studentId;
+        StudentName = studentName;
+        Department = department;
+        Course = course;
+        Grade = grade;
+        Email = email;
+        IsLoggedIn = isLoggedIn;
+        Password = password;
+        UserId = userId;
+    }
 }

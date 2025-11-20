@@ -84,11 +84,12 @@ namespace StudentLibraryManagementSystem.Controllers
             if (id != fine.FineId) return BadRequest();
             Fine? fineToUpdate = _dbCtx.Fine.Find(id);
             if (fineToUpdate == null) return NotFound();
-            fineToUpdate.FineId = fine.FineId;
-            fineToUpdate.FineAmount = fine.FineAmount;
-            fineToUpdate.ReservatonId = fine.ReservatonId;
-            fineToUpdate.UserId = fine.UserId;
-            fineToUpdate.HasPayed = fine.HasPayed;
+            fineToUpdate.UpdateFine(
+                fine.FineId,
+                fine.FineAmount,
+                fine.ReservatonId,
+                fine.UserId,
+                fine.HasPayed);
             _dbCtx.SaveChanges();
             return NoContent();
         }

@@ -81,11 +81,12 @@ namespace StudentLibraryManagementSystem.Controllers
             if (id != loan.LoanId) return BadRequest();
             Loan? loanToUpdate = _dbCtx.Loan.Find(id);
             if (loanToUpdate == null) return NotFound();
-            loanToUpdate.LoanId = loan.LoanId;
-            loanToUpdate.LoanAmount = loan.LoanAmount;
-            loanToUpdate.UserId = loan.UserId;
-            loanToUpdate.ReservatonId = loan.ReservationId;
-            loanToUpdate.HasPayed = loan.HasPayed;
+            loanToUpdate.UpdateLoan(
+                loan.LoanId,
+                loan.LoanAmount,
+                loan.UserId,
+                loan.ReservationId,
+                loan.HasPayed);
             _dbCtx.SaveChanges();
             return NoContent();
         }

@@ -24,23 +24,44 @@ public class LogOutModel : PageModel
             UserGet1Dto user = JsonSerializer.Deserialize<UserGet1Dto>(getUserCont, options);
             if (HttpContext.Session.GetString("IsEducator") == "true")
             {
-                user.Faculty.IsLoggedIn = false;
-                var facultySerialized = JsonSerializer.Serialize(user.Faculty);
-                var facultyHttpCont = new StringContent(facultySerialized, Encoding.UTF8, "application/json");
+                FacultyUpdateDto facultyToLogout = new FacultyUpdateDto(
+                    user.Faculty.FacultyId,
+                    user.Faculty.FacultyName,
+                    user.Faculty.Department,
+                    user.Faculty.Subject,
+                    user.Faculty.Course,
+                    user.Faculty.Email,
+                    user.Faculty.Password,
+                    false,
+                    user.Faculty.UserId);
+                var facultyToLogoutSerialized = JsonSerializer.Serialize(facultyToLogout);
+                var facultyToLogoutHttpCont =
+                    new StringContent(facultyToLogoutSerialized, Encoding.UTF8, "application/json");
                 var setLogInStat =
-                    await httpClient.PutAsync($"http://localhost:5138/api/Faculty/{user.Faculty.FacultyId}",
-                        facultyHttpCont);
-                if (!setLogInStat.IsSuccessStatusCode) return new StatusCodeResult(500);
+                    await httpClient.PutAsync($"http://localhost:5138/api/Faculty/{facultyToLogout.FacultyId}",
+                        facultyToLogoutHttpCont);
+                if (!setLogInStat.IsSuccessStatusCode)
+                    throw new InvalidOperationException("couldn't faculty set log in status");
             }
             else
             {
-                user.Student.IsLoggedIn = false;
-                var studentSerialized = JsonSerializer.Serialize(user.Student);
-                var studentHttpCont = new StringContent(studentSerialized, Encoding.UTF8, "application/json");
+                StudentUpdateDto studentToLogout = new StudentUpdateDto(
+                    user.Student.StudentId,
+                    user.Student.StudentName,
+                    user.Student.Department,
+                    user.Student.Course,
+                    user.Student.Grade,
+                    user.Student.Email,
+                    user.Student.Password,
+                    false,
+                    user.Student.UserId);
+                var studentToLogoutSerialized = JsonSerializer.Serialize(studentToLogout);
+                var studentToLogoutHttpCont = new StringContent(studentToLogoutSerialized, Encoding.UTF8, "application/json");
                 var setLogInStat =
-                    await httpClient.PutAsync($"http://localhost:5138/api/Student/{user.Student.StudentId}",
-                        studentHttpCont);
-                if (!setLogInStat.IsSuccessStatusCode) return new StatusCodeResult(500);
+                    await httpClient.PutAsync($"http://localhost:5138/api/Student/{studentToLogout.StudentId}",
+                        studentToLogoutHttpCont);
+                if (!setLogInStat.IsSuccessStatusCode)
+                    throw new InvalidOperationException("couldn't set student log in status");
             }
         }
 

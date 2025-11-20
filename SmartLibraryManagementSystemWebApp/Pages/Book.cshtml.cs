@@ -9,16 +9,23 @@ namespace SmartLibraryManagementSystemWebApp.Pages;
 public class BookModel : PageModel
 {
     public BookGet1Dto Book { get; set; }
+    [BindProperty]
     public bool HasFine { get; set; }
+    private readonly IHttpClientFactory _httpClientFactory;
 
     public class InputModel
     {
         public bool Borrow { get; set; }
     }
 
+    public BookModel(IHttpClientFactory httpClientFactory)
+    {
+        _httpClientFactory = httpClientFactory;
+    }
+
     public async Task<IActionResult> OnGetAsync(int id)
     {
-        using (var httpClient = new HttpClient())
+        using (var httpClient = _httpClientFactory.CreateClient("LibraryApi"))
         {
             var getBook = await httpClient.GetAsync($"http://localhost:5138/api/Book/{id}");
             if (!getBook.IsSuccessStatusCode) return NotFound();
@@ -43,7 +50,7 @@ public class BookModel : PageModel
     public async Task<IActionResult> OnPosAsync()
     {
         if (HttpContext.Session.GetString("IsLoggedIn") != "true") return Page();
-        using (var httpClient = new HttpClient())
+        using (var httpClient = _httpClientFactory.CreateClient("LibraryApi"))
         {
             int bookId = int.Parse(RouteData.Values["id"].ToString());
             int userId = int.Parse(HttpContext.Session.GetString("UserId"));
@@ -127,4 +134,3 @@ public class BookModel : PageModel
         return Page();
     }
 }
-

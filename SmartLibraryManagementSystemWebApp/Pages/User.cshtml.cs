@@ -8,7 +8,6 @@ namespace SmartLibraryManagementSystemWebApp.Pages;
 public class UserModel : PageModel
 {
     public UserWithReservationsDto User { get; set; }
-//    public List<ReservationGet1Dto> Reservations { get; set; } = new List<ReservationGet1Dto>();
     public bool IsFaculty { get; set; }
 
     public async Task<IActionResult> OnGetAsync(int id)
@@ -26,6 +25,7 @@ public class UserModel : PageModel
             };
             var getUserContent = await getUser.Content.ReadAsStringAsync();
             User = JsonSerializer.Deserialize<UserWithReservationsDto>(getUserContent, options);
+            Console.WriteLine(User.Faculty);
         }
         return Page();
     }
