@@ -8,10 +8,17 @@ namespace SmartLibraryManagementSystemWebApp.Pages;
 
 public class LogOutModel : PageModel
 {
+    private readonly IHttpClientFactory _httpClientFactory;
+
+    public LogOutModel(IHttpClientFactory httpClientFactory)
+    {
+        _httpClientFactory = httpClientFactory;
+    }
+
     public async Task<IActionResult> OnGetAsync()
     {
         if (HttpContext.Session.GetString("IsLoggedIn") != "true") return NotFound();
-        using (var httpClient = new HttpClient())
+        using (var httpClient = _httpClientFactory.CreateClient("LibraryApi"))
         {
             var options = new JsonSerializerOptions
             {
@@ -56,7 +63,8 @@ public class LogOutModel : PageModel
                     false,
                     user.Student.UserId);
                 var studentToLogoutSerialized = JsonSerializer.Serialize(studentToLogout);
-                var studentToLogoutHttpCont = new StringContent(studentToLogoutSerialized, Encoding.UTF8, "application/json");
+                var studentToLogoutHttpCont =
+                    new StringContent(studentToLogoutSerialized, Encoding.UTF8, "application/json");
                 var setLogInStat =
                     await httpClient.PutAsync($"http://localhost:5138/api/Student/{studentToLogout.StudentId}",
                         studentToLogoutHttpCont);

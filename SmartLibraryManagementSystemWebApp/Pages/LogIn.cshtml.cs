@@ -11,6 +11,7 @@ namespace SmartLibraryManagementSystemWebApp.Pages;
 public class LogInModel : PageModel
 {
     [BindProperty] public InputModel Input { get; set; }
+    private readonly IHttpClientFactory _httpClientFactory;
 
     public class InputModel
     {
@@ -19,14 +20,15 @@ public class LogInModel : PageModel
         public bool IsEducator { get; set; }
     }
 
-    public void OnGet()
+    public LogInModel(IHttpClientFactory httpClientFactory)
     {
+        _httpClientFactory = httpClientFactory;
     }
 
     public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid) return Page();
-        using (var httpClient = new HttpClient())
+        using (var httpClient = _httpClientFactory.CreateClient("LibraryApi"))
         {
             string apiLink = "http://localhost:5138/api/";
             if (Input.IsEducator) apiLink += $"Faculty/{Input.Email}";

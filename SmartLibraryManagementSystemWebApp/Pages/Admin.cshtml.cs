@@ -8,10 +8,17 @@ namespace SmartLibraryManagementSystemWebApp.Pages;
 public class AdminModel : PageModel
 {
     public List<UserUpdateDto> Users { get; set; }
+    private readonly IHttpClientFactory _httpClientFactory;
+
+    public AdminModel(IHttpClientFactory httpClientFactory)
+    {
+        _httpClientFactory = httpClientFactory;
+    }
+
     public async Task<IActionResult> OnGetAsync()
     {
         if (HttpContext.Session.GetString("IsLoggedIn") != "true") return NotFound();
-        using (var httpClient = new HttpClient())
+        using (var httpClient = _httpClientFactory.CreateClient("LibraryApi"))
         {
             var getUser = await httpClient.GetAsync($"http://localhost:5138/api/User/{HttpContext.Session.GetString("UserId")}?withReservation=false");
             if (!getUser.IsSuccessStatusCode) throw new InvalidOperationException("coudn't get user");

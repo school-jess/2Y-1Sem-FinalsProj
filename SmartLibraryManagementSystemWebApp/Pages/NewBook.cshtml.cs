@@ -10,6 +10,7 @@ namespace SmartLibraryManagementSystemWebApp.Pages;
 public class NewBookModel : PageModel
 {
     [BindProperty] public InputModel Input { get; set; }
+    private readonly IHttpClientFactory _httpClientFactory;
 
     public class InputModel
     {
@@ -22,11 +23,16 @@ public class NewBookModel : PageModel
         [StringLength(10)] public string Genre { get; set; }
     }
 
+    public NewBookModel(IHttpClientFactory httpClientFactory)
+    {
+        _httpClientFactory = httpClientFactory;
+    }
+
     public async Task<IActionResult> OnGetAsync()
     {
         if (HttpContext.Session.GetString("IsLoggedIn") != "true") return NotFound();
         string userId = HttpContext.Session.GetString("UserId");
-        using (var httpClient = new HttpClient())
+        using (var httpClient = _httpClientFactory.CreateClient("LibraryApi"))
         {
             var getUser = await httpClient.GetAsync($"http://localhost:5138/api/User/{userId}");
             if (!getUser.IsSuccessStatusCode) return new StatusCodeResult(500);
@@ -45,7 +51,7 @@ public class NewBookModel : PageModel
     public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid) return Page();
-        using (var httpClient = new HttpClient())
+        using (var httpClient = _httpClientFactory.CreateClient("LibraryApi"))
         {
             BookCreationDto book = new BookCreationDto(Input.Name, Input.Author, Input.ReleaseDate, Input.Synopsis);
             string bookSerialized = JsonSerializer.Serialize(book);
