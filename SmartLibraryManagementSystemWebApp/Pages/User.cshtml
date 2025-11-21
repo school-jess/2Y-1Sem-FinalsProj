@@ -10,7 +10,52 @@
         ViewData["Title"] = Model.User.Student.StudentName;
     }
 }
-
+<div id="userInfo" data-is-faculty="@Model.IsFaculty">
+    @if (Model.IsFaculty)
+    {
+        <div>
+            <p id="editName">@Model.User.Faculty.FacultyName</p>
+        </div>
+        <div>
+            <p id="editCourse">@Model.User.Faculty.Course</p>
+        </div>
+        <div>
+            <p id="editDepartment">@Model.User.Faculty.Department</p>
+        </div>
+        <div>
+            <p id="editEmail">@Model.User.Faculty.Email</p>
+        </div>
+        <div>
+            <span id="editPassword">todo dont show password</span>
+        </div>
+        <div>
+            <p id="editSubject">@Model.User.Faculty.Subject</p>
+        </div>
+    }
+    else
+    {
+        <div>
+            <p id="editName">@Model.User.Student.StudentName</p>
+        </div>
+        <div>
+            <p id="editCourse">@Model.User.Student.Course</p>
+        </div>
+        <div>
+            <p id="editDepartment">@Model.User.Student.Department</p>
+        </div>
+        <div>
+            <p id="editEmail">@Model.User.Student.Email</p>
+        </div>
+        <div>
+            <span id="editPassword">todo dont show password</span>
+        </div>
+        <div>
+            <p id="editGrade">@Model.User.Student.Grade</p>
+        </div>
+    }
+    <input type="hidden" asp-for="Input.UserIsUpdateing" value="1">
+    <button id="edit">Edit</button>
+</div>
 <h1>Fines</h1>
 <ul>
     @foreach (var fine in Model.User.Fines)
@@ -42,5 +87,15 @@
     }
 </ul>
 <form method="post">
+    <input type="hidden" asp-for="Input.UserName" value="name">
+    <input type="hidden" asp-for="Input.UserCourse" value="course">
+    <input type="hidden" asp-for="Input.UserDepartment" value="department">
+    <input type="hidden" asp-for="Input.UserEmail" value="email">
+    <input type="hidden" asp-for="Input.UserPassword" value="password">
+    <input type="hidden" asp-for="Input.UserIsUpdateing" value="0">
     <button type="submit">Delete</button>
 </form>
+
+@section Scripts {
+    <script src="~/js/User.js"></script>
+}

@@ -8,7 +8,7 @@ using Isopoh.Cryptography.Argon2;
 
 namespace SmartLibraryManagementSystemWebApp.Pages;
 
-public class LogInModel : PageModel
+public class  LogInModel : PageModel
 {
     [BindProperty] public InputModel Input { get; set; }
     private readonly IHttpClientFactory _httpClientFactory;
