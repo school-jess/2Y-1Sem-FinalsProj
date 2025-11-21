@@ -22,8 +22,8 @@ public class UserModel : PageModel
         public string UserEmail { get; set; }
         public string UserPassword { get; set; }
         public string? UserSubject { get; set; }
-        public int UserGrade { get; set; }
-        public int UserIsUpdateing { get; set; }
+        public int? UserGrade { get; set; }
+        public int UserIsUpdating { get; set; }
     }
 
     public UserModel(IHttpClientFactory httpClientFactory)
@@ -58,7 +58,7 @@ public class UserModel : PageModel
         if (HttpContext.Session.GetString("IsLoggedIn") != "true") return NotFound();
         using (var httpClient = _httpClientFactory.CreateClient("LibraryApi"))
         {
-            if (Input.UserIsUpdateing == 1)
+            if (Input.UserIsUpdating == 1)
             {
                 var getUser = await httpClient.GetAsync($"http://localhost:5138/api/User/{HttpContext.Session.GetString("UserId")}?withReservation=false");
                 if (!getUser.IsSuccessStatusCode) throw new InvalidOperationException("couldn't get user");

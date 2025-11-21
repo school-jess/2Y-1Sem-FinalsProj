@@ -1,0 +1,48 @@
+$(document).ready(() => {
+    $("#cancelEdit").hide();
+    $("#edit").click((e) => {
+        e.preventDefault();
+        $("#cancelEdit").show();
+        let bookInfoElem = $("#bookInfo");
+        let bookInfoChildren = bookInfoElem.children().detach();
+        let bookInfoForm = $("<form method=\"post\">");
+        bookInfoElem.replaceWith(bookInfoForm);
+        bookInfoForm.append(bookInfoChildren);
+        $("#edit").prop("type", "submit");
+        $("#edit").text("submit");
+        $("#bookName").replaceWith($(`<input id="bookName" name="Input.BookName" value="${$("#bookName").text()}">`));
+        $("#bookAuthor").replaceWith($(`<input id="bookAuthor" name="Input.BookAuthor" value="${$("#bookAuthor").text()}">`));
+        $("#bookReleaseDate").replaceWith($(`<input id="bookReleaseDate" name="Input.ReleaseDate" value="${$("#bookReleaseDate").text()}">`));
+        $("#bookSynopsis").replaceWith($(`<input id="bookSynopsis" name="Input.Synopsis" value="${$("#bookSynopsis").text()}">`));
+        $("#bookClassificationId").replaceWith($(`<input id="bookClassificationId" name="Input.ClassificationId" value="${$("#bookClassificationId").text()}">`));
+        $("#bookCopies").replaceWith($(`<input id="bookCopies" name="Input.BookCopies" value="${$("#bookCopies").text()}">`));
+        $("#bookGenre").replaceWith($(`<input id="bookGenre" name="Input.BookGenre" value="${$("#bookGenre").text()}">`));
+    });
+    $("#cancelEdit").click((e) => {
+        e.preventDefault();
+        $("#cancelEdit").hide();
+        $("#edit").prop("type", "button");
+        let cancelBookName = $(`<h1 id="bookName">`);
+        let cancelBookAuthor = $(`<h2 id="bookAuthor">`);
+        let cancelBookReleaseDate = $(`<h3 id="bookReleaseDate"">`);
+        let cancelSynopsis = $(`<p id="bookSynopsis">`);
+        let cancelClassificationId = $(`<p id="bookClassificationId">`);
+        let cancelCopies = $(`<p id="bookCopies">`);
+        let cancelGenre = $(`<p id="bookGenre">`);
+        cancelBookName.text($("#bookName").val());
+        cancelBookAuthor.text($("#bookAuthor").val());
+        cancelBookReleaseDate.text($("#bookReleaseDate").val());
+        cancelSynopsis.text($("#bookSynopsis").val());
+        cancelClassificationId.text($("#bookClassificationId").val());
+        cancelCopies.text($("#bookCopies").val());
+        cancelGenre.text($("#bookGenre").val());
+        $("#bookName").replaceWith(cancelBookName);
+        $("#bookAuthor").replaceWith(cancelBookAuthor);
+        $("#bookReleaseDate").replaceWith(cancelBookReleaseDate);
+        $("#bookSynopsis").replaceWith(cancelSynopsis);
+        $("#bookClassificationId").replaceWith(cancelClassificationId);
+        $("#bookCopies").replaceWith(cancelCopies);
+        $("#bookGenre").replaceWith(cancelGenre);
+        $("#edit").text("edit");
+    });
+});

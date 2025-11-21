@@ -53,8 +53,9 @@
             <p id="editGrade">@Model.User.Student.Grade</p>
         </div>
     }
-    <input type="hidden" asp-for="Input.UserIsUpdateing" value="1">
+    <input type="hidden" asp-for="Input.UserIsUpdating" value="1">
     <button id="edit">Edit</button>
+    <button id="cancelEdit">Cancel</button>
 </div>
 <h1>Fines</h1>
 <ul>
@@ -92,7 +93,7 @@
     <input type="hidden" asp-for="Input.UserDepartment" value="department">
     <input type="hidden" asp-for="Input.UserEmail" value="email">
     <input type="hidden" asp-for="Input.UserPassword" value="password">
-    <input type="hidden" asp-for="Input.UserIsUpdateing" value="0">
+    <input type="hidden" asp-for="Input.UserIsUpdating" value="0">
     <button type="submit">Delete</button>
 </form>
 

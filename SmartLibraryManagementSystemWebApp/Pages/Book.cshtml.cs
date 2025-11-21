@@ -15,7 +15,13 @@ public class BookModel : PageModel
 
     public class InputModel
     {
-        public bool Borrow { get; set; }
+        public string BookName { get; set; }
+        public string BookAuthor { get; set; }
+        public DateTime ReleaseDate { get; set; }
+        public string Synopsis { get; set; }
+        public string ClassificationId { get; set; }
+        public int Copies { get; set; }
+        public string Genre { get; set; }
     }
 
     public BookModel(IHttpClientFactory httpClientFactory)

@@ -4,15 +4,32 @@
     ViewData["Title"] = @Model.Book.BookName;
 }
 
-<h1>@Model.Book.BookName</h1>
-<h2>@Model.Book.Author</h2>
-<h3>@Model.Book.ReleaseDate</h3>
-<p>@Model.Book.Synopsis</p>
-@Model.Book.Catalog.ClassificationId
-@Model.Book.Catalog.Copies
-@Model.Book.Catalog.Genre
+<div id="bookInfo">
+    <div>
+        <h1 id="bookName">@Model.Book.BookName</h1>
+    </div>
+    <div>
+        <h2 id="bookAuthor">@Model.Book.Author</h2>
+    </div>
+    <div>
+        <h3 id="bookReleaseDate">@Model.Book.ReleaseDate</h3>
+    </div>
+    <div>
+        <p id="bookSynopsis">@Model.Book.Synopsis</p>
+    </div>
+    <div>
+        <p id="bookClassificationId">@Model.Book.Catalog.ClassificationId</p>
+    </div>
+    <div>
+        <p id="bookCopies">@Model.Book.Catalog.Copies</p>
+    </div>
+    <div>
+        <p id="bookGenre">@Model.Book.Catalog.Genre</p>
+    </div>
+    <button id="edit">edit</button>
+    <button id="cancelEdit">cancel</button>
+</div>
 <form method="post">
-    <input type="hidden" asp-page="HasFine"/>
     @if (Model.HasFine)
     {
         <button id="loan">Loan</button>
@@ -22,3 +39,7 @@
         <button id="borrow">Borrow</button>
     }
 </form>
+
+@section Scripts {
+    <script src="~/js/Book.js"></script>
+}
