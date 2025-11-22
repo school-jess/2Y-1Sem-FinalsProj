@@ -19,41 +19,52 @@
     <div></div>
     @foreach (var user in Model.Users)
     {
-        <div>
+        <div id="userName-@user.UserId">
             @user.UserName
         </div>
         <div>
             @if (user.HasFine)
             {
-                <input type="checkbox" checked/>
+                <input form="editUserForm-@user.UserId" id="hasFine-@user.UserId" asp-for="Input.HasFine" type="checkbox" disabled checked/>
             }
             else
             {
-                <input type="checkbox"/>
+                <input form="editUserForm-@user.UserId" id="hasFine-@user.UserId" asp-for="Input.HasFine" type="checkbox" disabled/>
             }
         </div>
         <div>
             @if (user.HasLoan)
             {
-                <input type="checkbox" checked/>
+                <input form="editUserForm-@user.UserId" id="hasLoan-@user.UserId" asp-for="Input.HasLoan" type="checkbox" disabled checked/>
             }
             else
             {
-                <input type="checkbox"/>
+                <input form="editUserForm-@user.UserId" id="hasLoan-@user.UserId" asp-for="Input.HasLoan" type="checkbox" disabled/>
             }
         </div>
         <div>
             @if (user.IsAdmin)
             {
-                <input type="checkbox" checked/>
+                <input form="editUserForm-@user.UserId" id="isAdmin-@user.UserId" asp-for="Input.IsAdmin" type="checkbox" disabled checked/>
             }
             else
             {
-                <input type="checkbox"/>
+                <input form="editUserForm-@user.UserId" id="isAdmin-@user.UserId" asp-for="Input.IsAdmin" type="checkbox" disabled/>
             }
         </div>
         <div>
-            
+            <form id="editUserForm-@user.UserId" method="post">
+                <input type="hidden" asp-for="Input.UserId" value="@user.UserId"/>
+                <input type="hidden" id="isDelete-@user.UserId" asp-for="Input.IsDelete" value="1"/>
+                <button id="editUser-@user.UserId" class="edit-user" data-user-id="@user.UserId">
+                    <img src="~/pen.png"/>
+                </button>
+            <button id="cancelEdit-@user.UserId" class="cancelEditUser" data-user-id="@user.UserId" hidden>cancel</button>
+                <button hidden id="submitEdit-@user.UserId">submit</button>
+                <button>
+                    <img src="~/recycle-bin.png"/>
+                </button>
+            </form>
         </div>
     }
 </div>

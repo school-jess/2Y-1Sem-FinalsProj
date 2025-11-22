@@ -8,7 +8,19 @@ namespace SmartLibraryManagementSystemWebApp.Pages;
 public class AdminModel : PageModel
 {
     public List<UserUpdateDto> Users { get; set; }
+    [BindProperty]
+    public InputModel Input { get; set; }
     private readonly IHttpClientFactory _httpClientFactory;
+
+    public class InputModel
+    {
+        public int UserId { get; set; }
+        public int IsDelete { get; set; }
+        public string UserName { get; set; }
+        public bool HasFine { get; set;}
+        public bool HasLoan { get; set; }
+        public bool IsAdmin { get; set; }
+    }
 
     public AdminModel(IHttpClientFactory httpClientFactory)
     {
@@ -18,6 +30,7 @@ public class AdminModel : PageModel
     public async Task<IActionResult> OnGetAsync()
     {
         if (HttpContext.Session.GetString("IsLoggedIn") != "true") return NotFound();
+        if (HttpContext.Session.GetString("IsAdmin") != "true") return NotFound();
         using (var httpClient = _httpClientFactory.CreateClient("LibraryApi"))
         {
             var getUser = await httpClient.GetAsync($"http://localhost:5138/api/User/{HttpContext.Session.GetString("UserId")}?withReservation=false");
@@ -33,6 +46,25 @@ public class AdminModel : PageModel
             if (!getUsers.IsSuccessStatusCode) throw new InvalidOperationException("coudn't get users");
             string getUsersCont = await getUsers.Content.ReadAsStringAsync();
             Users = JsonSerializer.Deserialize<List<UserUpdateDto>>(getUsersCont, options);
+        }
+        return Page();
+    }
+
+    public async Task<IActionResult> OnPostAsync()
+    {
+        if (HttpContext.Session.GetString("IsLoggedIn") != "true") return NotFound();
+        if (HttpContext.Session.GetString("IsAdmin") != "true") return NotFound();
+        if (!ModelState.IsValid) return Page();
+        using (var httpClient = _httpClientFactory.CreateClient("LibraryApi"))
+        {
+            if (Input.IsDelete == 1)
+            {
+                var deleteUser = await httpClient.DeleteAsync($"http://localhost:5138/api/User/{Input.UserId}");
+                if (!deleteUser.IsSuccessStatusCode) throw new InvalidOperationException("couldn't delete user");
+            } else
+            {
+
+            }
         }
         return Page();
     }
