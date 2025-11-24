@@ -43,9 +43,10 @@ public class BookModel : PageModel
         return Page();
     }
 
-    public async Task<IActionResult> OnPosAsync(int id)
+    public async Task<IActionResult> OnPostAsync(int id)
     {
-        if (HttpContext.Session.GetString("IsLoggedIn") != "true") return Page();
+        if (HttpContext.Session.GetString("IsLoggedIn") != "true") return RedirectToPage();
+        Console.WriteLine("hello");
         using (var httpClient = _httpClientFactory.CreateClient("LibraryApi"))
         {
             int bookId = int.Parse(RouteData.Values["id"].ToString());
@@ -127,6 +128,6 @@ public class BookModel : PageModel
             }
         }
 
-        return Page();
+        return RedirectToPage();
     }
 }

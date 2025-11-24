@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,15 @@ public class UserModel : PageModel
     public UserWithReservationsDto User { get; set; }
     public bool IsFaculty { get; set; }
     private readonly IHttpClientFactory _httpClientFactory;
+    [BindProperty] public InputModel Input { get; set; }
+
+    public class InputModel
+    {
+        public int IsDeleting { get; set; }
+        public int IsFine { get; set; }
+        public int FineId { get; set; }
+        public int LoanId { get; set; }
+    }
 
     public UserModel(IHttpClientFactory httpClientFactory)
     {
@@ -38,13 +48,62 @@ public class UserModel : PageModel
 
     public async Task<IActionResult> OnPostAsync(int? id)
     {
+        if (!ModelState.IsValid) return RedirectToPage();
         if (HttpContext.Session.GetString("IsLoggedIn") != "true") return NotFound();
         using (var httpClient = _httpClientFactory.CreateClient("LibraryApi"))
         {
-            var deleteUser =
-                await httpClient.DeleteAsync(
-                    $"http://localhost:5138/api/User/{HttpContext.Session.GetString("UserId")}");
-            if (!deleteUser.IsSuccessStatusCode) throw new InvalidOperationException("couldn't delete user");
+            if (Input.IsDeleting == 1)
+            {
+                var deleteUser =
+                    await httpClient.DeleteAsync(
+                        $"http://localhost:5138/api/User/{HttpContext.Session.GetString("UserId")}");
+                if (!deleteUser.IsSuccessStatusCode) throw new InvalidOperationException("couldn't delete user");
+            }
+            else
+            {
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+                if (Input.IsFine == 1)
+                {
+                    var getFine = await httpClient.GetAsync($"http://localhost:5138/api/Fine/{Input.FineId}");
+                    if (!getFine.IsSuccessStatusCode) throw new InvalidOperationException("couldn't get fine");
+                    string getFineContent = await getFine.Content.ReadAsStringAsync();
+                    FineGet1Dto fine = JsonSerializer.Deserialize<FineGet1Dto>(getFineContent, options);
+                    FineUpdateDto fineToUpdate = new FineUpdateDto(
+                        fine.FineId,
+                        fine.FineAmount,
+                        fine.User.UserId,
+                        fine.Reservation.ReservationId,
+                        true);
+                    string fineToUpdateSerialized = JsonSerializer.Serialize(fineToUpdate);
+                    var fineToUpdateHttpCont =
+                        new StringContent(fineToUpdateSerialized, Encoding.UTF8, "application/json");
+                    var updateFine = await httpClient.PutAsync($"http://localhost:5138/api/Fine/{Input.FineId}",
+                        fineToUpdateHttpCont);
+                    if (!updateFine.IsSuccessStatusCode) throw new InvalidOperationException("couldn't update fine");
+                }
+                else
+                {
+                    var getLoan = await httpClient.GetAsync($"http://localhost:5138/api/Loan/{Input.LoanId}");
+                    if (!getLoan.IsSuccessStatusCode) throw new InvalidOperationException("couldn't get loan");
+                    string getLoanContent = await getLoan.Content.ReadAsStringAsync();
+                    LoanGet1Dto loan = JsonSerializer.Deserialize<LoanGet1Dto>(getLoanContent, options);
+                    LoanUpdateDto loanToUpdate = new LoanUpdateDto(
+                        loan.LoanId,
+                        loan.LoanAmount,
+                        loan.User.UserId,
+                        loan.Reservation.ReservationId,
+                        loan.HasPayed);
+                    string loanToUpdateSerialized = JsonSerializer.Serialize(loanToUpdate);
+                    var loanToUpdateHttpCont =
+                        new StringContent(loanToUpdateSerialized, Encoding.UTF8, "application/json");
+                    var updateLoan = await httpClient.PutAsync($"http://localhost:5138/api/Loan/{Input.LoanId}",
+                        loanToUpdateHttpCont);
+                    if (!updateLoan.IsSuccessStatusCode) throw new InvalidOperationException("couldn't update loan");
+                }
+            }
         }
 
         return Page();

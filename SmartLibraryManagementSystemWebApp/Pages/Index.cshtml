@@ -12,6 +12,7 @@
     @foreach (var book in Model.Books)
     {
         <li>
+            <img src="@book.BookImgPath"/>
             <a asp-page="/Book" asp-route-id="@book.BookId">@book.BookName - @book.Author</a>
             <form method="post">
                 <input type="hidden" asp-for="Input.BookId" value="@book.BookId"/>

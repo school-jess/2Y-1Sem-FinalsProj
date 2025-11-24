@@ -65,6 +65,13 @@
     {
         <li>
             <p style="font-weight: bold;">@fine.FineAmount</p>
+            <form method="post">
+                <input type="hidden" asp-for="Input.IsDeleting" value="0"/>
+                <input type="hidden" asp-for="Input.IsFine" value="1"/>
+                <input type="hidden" asp-for="Input.FineId" value="@fine.FineId"/>
+                <input type="hidden" asp-for="Input.FineId" value="0"/>
+                <button>pay</button>
+            </form>
         </li>
     }
 </ul>
@@ -74,6 +81,13 @@
     {
         <li>
             <p style="font-weight: bold;">@loan.LoanAmount</p>
+            <form method="post">
+                <input type="hidden" asp-for="Input.IsDeleting" value="0"/>
+                <input type="hidden" asp-for="Input.IsFine" value="0"/>
+                <input type="hidden" asp-for="Input.FineId" value="0"/>
+                <input type="hidden" asp-for="Input.LoanId" value="@loan.LoanId"/>
+                <button>pay</button>
+            </form>
         </li>
     }
 </ul>
@@ -90,6 +104,10 @@
     }
 </ul>
 <form method="post" asp-page="UpdateUser">
+    <input type="hidden" asp-for="Input.IsDeleting" value="1"/>
+    <input type="hidden" asp-for="Input.IsFine" value="0"/>
+    <input type="hidden" asp-for="Input.FineId" value="0"/>
+    <input type="hidden" asp-for="Input.LoanId" value="0"/>
     <button type="submit">Delete</button>
 </form>
 
