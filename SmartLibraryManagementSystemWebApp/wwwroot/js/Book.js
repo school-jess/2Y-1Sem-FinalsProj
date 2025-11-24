@@ -1,5 +1,6 @@
 $(document).ready(() => {
     $("#cancelEdit").hide();
+    $("#submitEdit").hide();
     let bookName = "";
     let bookAuthor = "";
     let bookReleaseDate = "";
@@ -10,13 +11,8 @@ $(document).ready(() => {
     $("#edit").click((e) => {
         e.preventDefault();
         $("#cancelEdit").show();
-        let bookInfoElem = $("#bookInfo");
-        let bookInfoChildren = bookInfoElem.children().detach();
-        let bookInfoForm = $("<form method=\"post\">");
-        bookInfoElem.replaceWith(bookInfoForm);
-        bookInfoForm.append(bookInfoChildren);
-        $("#edit").prop("type", "submit");
-        $("#edit").text("submit");
+        $("#submitEdit").show();
+        $("#edit").hide();
         bookName = $("#bookName").text();
         bookAuthor = $("#bookAuthor").text();
         bookReleaseDate = $("#bookReleaseDate").text();
@@ -29,13 +25,14 @@ $(document).ready(() => {
         $("#bookReleaseDate").replaceWith($(`<input id="bookReleaseDate" name="Input.ReleaseDate" value="${$("#bookReleaseDate").text()}">`));
         $("#bookSynopsis").replaceWith($(`<input id="bookSynopsis" name="Input.Synopsis" value="${$("#bookSynopsis").text()}">`));
         $("#bookClassificationId").replaceWith($(`<input id="bookClassificationId" name="Input.ClassificationId" value="${$("#bookClassificationId").text()}">`));
-        $("#bookCopies").replaceWith($(`<input id="bookCopies" name="Input.BookCopies" value="${$("#bookCopies").text()}">`));
-        $("#bookGenre").replaceWith($(`<input id="bookGenre" name="Input.BookGenre" value="${$("#bookGenre").text()}">`));
+        $("#bookCopies").replaceWith($(`<input id="bookCopies" name="Input.Copies" value="${$("#bookCopies").text()}">`));
+        $("#bookGenre").replaceWith($(`<input id="bookGenre" name="Input.Genre" value="${$("#bookGenre").text()}">`));
     });
     $("#cancelEdit").click((e) => {
         e.preventDefault();
         $("#cancelEdit").hide();
-        $("#edit").prop("type", "button");
+        $("#submitEdit").hide();
+        $("#edit").show();
         let cancelBookName = $(`<h1 id="bookName">`);
         let cancelBookAuthor = $(`<h2 id="bookAuthor">`);
         let cancelBookReleaseDate = $(`<h3 id="bookReleaseDate"">`);
@@ -57,6 +54,5 @@ $(document).ready(() => {
         $("#bookClassificationId").replaceWith(cancelClassificationId);
         $("#bookCopies").replaceWith(cancelCopies);
         $("#bookGenre").replaceWith(cancelGenre);
-        $("#edit").text("edit");
     });
 });

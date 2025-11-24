@@ -9,20 +9,9 @@ namespace SmartLibraryManagementSystemWebApp.Pages;
 public class BookModel : PageModel
 {
     public BookGet1Dto Book { get; set; }
-    [BindProperty]
     public bool HasFine { get; set; }
+    public bool IsAdmin { get; set; }
     private readonly IHttpClientFactory _httpClientFactory;
-
-    public class InputModel
-    {
-        public string BookName { get; set; }
-        public string BookAuthor { get; set; }
-        public DateTime ReleaseDate { get; set; }
-        public string Synopsis { get; set; }
-        public string ClassificationId { get; set; }
-        public int Copies { get; set; }
-        public string Genre { get; set; }
-    }
 
     public BookModel(IHttpClientFactory httpClientFactory)
     {
@@ -49,6 +38,7 @@ public class BookModel : PageModel
             UserGet1Dto user = JsonSerializer.Deserialize<UserGet1Dto>(getUserCont);
             HasFine = user.HasFine;
         }
+        IsAdmin = HttpContext.Session.GetString("IsAdmin") == "true";
 
         return Page();
     }

@@ -49,7 +49,7 @@ public class CatalogGet1Dto
     public int CatalogId { get; set; }
     public BookUpdateDto Book { get; set; }
     public int Copies { get; set; }
-    public ICollection<ReservationUpdateDto> Reservations { get; set; }
+    public List<ReservationUpdateDto> Reservations { get; set; }
     [StringLength(10)]
     public string Genre { get; set; }
     [StringLength(10)]

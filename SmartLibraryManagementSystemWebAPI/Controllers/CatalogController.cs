@@ -64,6 +64,39 @@ namespace StudentLibraryManagementSystem.Controllers
                 catalog.CopiesBorrowed));
         }
 
+        [HttpGet("{classificationId}")]
+        public IActionResult GetCatalogByClassificationId(string classificationId)
+        {
+            var catalog = _dbCtx.Catalog
+                .Include(c => c.Book)
+                .Include(c => c.Reservations)
+                .FirstOrDefault(c => c.ClassificationId == classificationId);
+            if (catalog == null) return NotFound();
+            return Ok(new CatalogGet1Dto(
+                catalog.CatalogId,
+                new BookUpdateDto(
+                    catalog.Book.BookId,
+                    catalog.Book.BookName,
+                    catalog.Book.Author,
+                    catalog.Book.ReleaseDate,
+                    catalog.Book.Synopsis,
+                    catalog.Book.BookImgPath),
+                catalog.Copies,
+                catalog.Reservations.Select(r => new ReservationUpdateDto(
+                    r.ReservationId,
+                    r.UserId,
+                    r.BookId,
+                    r.ReservationDateTime,
+                    r.CatalogId,
+                    r.ReservationReturnDateTime,
+                    r.HasFine,
+                    r.HasReturned,
+                    r.HasLoan)).ToList(),
+                catalog.Genre,
+                catalog.ClassificationId,
+                catalog.CopiesBorrowed));
+        }
+
         [HttpPost]
         public IActionResult NewCatalog([FromBody] CatalogCreationDto catalog)
         {
