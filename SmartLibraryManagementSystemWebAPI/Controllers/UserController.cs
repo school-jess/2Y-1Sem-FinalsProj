@@ -52,8 +52,13 @@ namespace StudentLibraryManagementSystem.Controllers
                         .Select(r => new ReservationUserDto(
                             r.ReservationId,
                             r.UserId,
-                            new BookUpdateDto(r.Book.BookId, r.Book.BookName, r.Book.Author, r.Book.ReleaseDate,
-                                r.Book.Synopsis),
+                            new BookUpdateDto(
+                                r.Book.BookId,
+                                r.Book.BookName,
+                                r.Book.Author,
+                                r.Book.ReleaseDate,
+                                r.Book.Synopsis,
+                                r.Book.BookImgPath),
                             r.ReservationDateTime,
                             new CatalogUpdateDto(
                                 r.Catalog.CatalogId,

@@ -10,7 +10,7 @@
         ViewData["Title"] = Model.User.Student.StudentName;
     }
 }
-<div id="userInfo" data-is-faculty="@Model.IsFaculty">
+<form id="userInfo" asp-page="UpdateUser" method="post" data-is-faculty="@Model.IsFaculty">
     @if (Model.IsFaculty)
     {
         <div>
@@ -26,7 +26,8 @@
             <p id="editEmail">@Model.User.Faculty.Email</p>
         </div>
         <div>
-            <span id="editPassword">todo dont show password</span>
+            <label>Password:</label>
+            <input disabled id="editPassword" type="password"/>
         </div>
         <div>
             <p id="editSubject">@Model.User.Faculty.Subject</p>
@@ -47,16 +48,17 @@
             <p id="editEmail">@Model.User.Student.Email</p>
         </div>
         <div>
-            <span id="editPassword">todo dont show password</span>
+            <label>Password:</label>
+            <input disabled id="editPassword" type="password"/>
         </div>
         <div>
             <p id="editGrade">@Model.User.Student.Grade</p>
         </div>
     }
-    <input type="hidden" asp-for="Input.UserIsUpdating" value="1">
     <button id="edit">Edit</button>
     <button id="cancelEdit">Cancel</button>
-</div>
+    <button id="submitEdit" type="submit">Submit</button>
+</form>
 <h1>Fines</h1>
 <ul>
     @foreach (var fine in Model.User.Fines)
@@ -87,13 +89,7 @@
         </li>
     }
 </ul>
-<form method="post">
-    <input type="hidden" asp-for="Input.UserName" value="name">
-    <input type="hidden" asp-for="Input.UserCourse" value="course">
-    <input type="hidden" asp-for="Input.UserDepartment" value="department">
-    <input type="hidden" asp-for="Input.UserEmail" value="email">
-    <input type="hidden" asp-for="Input.UserPassword" value="password">
-    <input type="hidden" asp-for="Input.UserIsUpdating" value="0">
+<form method="post" asp-page="UpdateUser">
     <button type="submit">Delete</button>
 </form>
 

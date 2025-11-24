@@ -25,7 +25,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     b.BookName,
                     b.Author,
                     b.ReleaseDate,
-                    b.Synopsis)).ToList();
+                    b.Synopsis,
+                    b.BookImgPath)).ToList();
             return Ok(books);
         }
 
@@ -60,7 +61,8 @@ namespace StudentLibraryManagementSystem.Controllers
                         r.HasReturned,
                         r.HasLoan)).ToList(),
                 book.ReleaseDate,
-                book.Synopsis));
+                book.Synopsis,
+                book.BookImgPath));
         }
 
         [HttpPost]
@@ -70,7 +72,8 @@ namespace StudentLibraryManagementSystem.Controllers
                 book.BookName,
                 book.Author,
                 book.ReleaseDate,
-                book.Synopsis));
+                book.Synopsis,
+                book.BookImgPath));
             _dbCtx.SaveChanges();
             var insertedBook = _dbCtx.Book.First(b => b.BookName == book.BookName);
             return CreatedAtAction(nameof(GetBook), new { id = insertedBook.BookId },
@@ -79,7 +82,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     insertedBook.BookName,
                     insertedBook.Author,
                     insertedBook.ReleaseDate,
-                    insertedBook.Synopsis));
+                    insertedBook.Synopsis,
+                    insertedBook.BookImgPath));
         }
 
         [HttpPut("{id:int}")]
@@ -93,7 +97,8 @@ namespace StudentLibraryManagementSystem.Controllers
                 book.BookName,
                 book.Author,
                 book.Synopsis,
-                book.ReleaseDate);
+                book.ReleaseDate,
+                book.BookImgPath);
             _dbCtx.SaveChanges();
             return NoContent();
         }

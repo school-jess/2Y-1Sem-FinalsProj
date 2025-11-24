@@ -58,7 +58,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     reservation.Book.BookName,
                     reservation.Book.Author,
                     reservation.Book.ReleaseDate,
-                    reservation.Book.Synopsis),
+                    reservation.Book.Synopsis,
+                    reservation.Book.BookImgPath),
                 reservation.ReservationDateTime,
                 new CatalogUpdateDto(
                     reservation.Catalog.CatalogId,

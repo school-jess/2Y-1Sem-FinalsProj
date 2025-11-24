@@ -2,7 +2,7 @@
 @model NewBookModel
 @{
 }
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     <div>
         <label asp-for="Input.Name">Book Name: </label>
         <input asp-for="Input.Name"/>
@@ -37,6 +37,11 @@
         <label asp-for="Input.Genre">Genre: </label>
         <input asp-for="Input.Genre"/>
         <span asp-validation-for="Input.Genre"></span>
+    </div>
+    <div>
+        <label asp-for="Input.BookImg"></label>
+        <input asp-for="Input.BookImg" accept=".png,.jpg,.jpeg"/>
+        <span asp-validation-for="Input.BookImg"></span>
     </div>
     <button type="submit">Submit</button>
 </form>

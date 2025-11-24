@@ -41,8 +41,13 @@ namespace StudentLibraryManagementSystem.Controllers
             if (catalog == null) return NotFound();
             return Ok(new CatalogGet1Dto(
                 catalog.CatalogId,
-                new BookUpdateDto(catalog.Book.BookId, catalog.Book.BookName, catalog.Book.Author,
-                    catalog.Book.ReleaseDate, catalog.Book.Synopsis),
+                new BookUpdateDto(
+                    catalog.Book.BookId,
+                    catalog.Book.BookName,
+                    catalog.Book.Author,
+                    catalog.Book.ReleaseDate,
+                    catalog.Book.Synopsis,
+                    catalog.Book.BookImgPath),
                 catalog.Copies,
                 catalog.Reservations.Select(r => new ReservationUpdateDto(
                     r.ReservationId,

@@ -41,6 +41,7 @@ public class TestFineCreation
                             "",
                             "",
                             DateTime.Now,
+                            "",
                             ""),
                         DateTime.UtcNow.AddDays(-2),
                         new CatalogUpdateDto(

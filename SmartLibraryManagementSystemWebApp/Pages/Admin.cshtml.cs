@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
@@ -8,8 +9,7 @@ namespace SmartLibraryManagementSystemWebApp.Pages;
 public class AdminModel : PageModel
 {
     public List<UserUpdateDto> Users { get; set; }
-    [BindProperty]
-    public InputModel Input { get; set; }
+    [BindProperty] public InputModel Input { get; set; }
     private readonly IHttpClientFactory _httpClientFactory;
 
     public class InputModel
@@ -17,7 +17,7 @@ public class AdminModel : PageModel
         public int UserId { get; set; }
         public int IsDelete { get; set; }
         public string UserName { get; set; }
-        public bool HasFine { get; set;}
+        public bool HasFine { get; set; }
         public bool HasLoan { get; set; }
         public bool IsAdmin { get; set; }
     }
@@ -33,7 +33,8 @@ public class AdminModel : PageModel
         if (HttpContext.Session.GetString("IsAdmin") != "true") return NotFound();
         using (var httpClient = _httpClientFactory.CreateClient("LibraryApi"))
         {
-            var getUser = await httpClient.GetAsync($"http://localhost:5138/api/User/{HttpContext.Session.GetString("UserId")}?withReservation=false");
+            var getUser = await httpClient.GetAsync(
+                $"http://localhost:5138/api/User/{HttpContext.Session.GetString("UserId")}?withReservation=false");
             if (!getUser.IsSuccessStatusCode) throw new InvalidOperationException("coudn't get user");
             var options = new JsonSerializerOptions
             {
@@ -47,6 +48,7 @@ public class AdminModel : PageModel
             string getUsersCont = await getUsers.Content.ReadAsStringAsync();
             Users = JsonSerializer.Deserialize<List<UserUpdateDto>>(getUsersCont, options);
         }
+
         return Page();
     }
 
@@ -61,11 +63,27 @@ public class AdminModel : PageModel
             {
                 var deleteUser = await httpClient.DeleteAsync($"http://localhost:5138/api/User/{Input.UserId}");
                 if (!deleteUser.IsSuccessStatusCode) throw new InvalidOperationException("couldn't delete user");
-            } else
+            }
+            else
             {
-
+                UserUpdateDto userToUpdate = new UserUpdateDto(Input.UserId, Input.UserName, Input.HasFine,
+                    Input.HasLoan, Input.IsAdmin);
+                string userToUpdateSerialized = JsonSerializer.Serialize(userToUpdate);
+                var userToUpdateHttpCont = new StringContent(userToUpdateSerialized, Encoding.UTF8, "application/json");
+                var updateUser = await httpClient.PutAsync($"http://localhost:5138/api/User/{Input.UserId}",
+                    userToUpdateHttpCont);
+                if (!updateUser.IsSuccessStatusCode) throw new InvalidOperationException("couldn't update user");
+                var getUsers = await httpClient.GetAsync("http://localhost:5138/api/User");
+                if (!getUsers.IsSuccessStatusCode) throw new InvalidOperationException("coudn't get users");
+                string getUsersCont = await getUsers.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+                Users = JsonSerializer.Deserialize<List<UserUpdateDto>>(getUsersCont, options);
             }
         }
+
         return Page();
     }
 }

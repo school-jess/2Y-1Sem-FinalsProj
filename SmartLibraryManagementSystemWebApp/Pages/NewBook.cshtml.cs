@@ -11,6 +11,7 @@ public class NewBookModel : PageModel
 {
     [BindProperty] public InputModel Input { get; set; }
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IWebHostEnvironment _environment;
 
     public class InputModel
     {
@@ -21,39 +22,39 @@ public class NewBookModel : PageModel
         [StringLength(10)] public string ClassificationId { get; set; }
         public int Copies { get; set; }
         [StringLength(10)] public string Genre { get; set; }
+        public IFormFile BookImg { get; set; }
     }
 
-    public NewBookModel(IHttpClientFactory httpClientFactory)
+    public NewBookModel(IHttpClientFactory httpClientFactory, IWebHostEnvironment environment)
     {
         _httpClientFactory = httpClientFactory;
+        _environment = environment;
     }
 
-    public async Task<IActionResult> OnGetAsync()
+    public IActionResult OnGet()
     {
         if (HttpContext.Session.GetString("IsLoggedIn") != "true") return NotFound();
-        string userId = HttpContext.Session.GetString("UserId");
-        using (var httpClient = _httpClientFactory.CreateClient("LibraryApi"))
-        {
-            var getUser = await httpClient.GetAsync($"http://localhost:5138/api/User/{userId}");
-            if (!getUser.IsSuccessStatusCode) return new StatusCodeResult(500);
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-            var getUserCont = await getUser.Content.ReadAsStringAsync();
-            var user = JsonSerializer.Deserialize<UserGet1Dto>(getUserCont, options);
-            if (!user.IsAdmin) return NotFound();
-        }
-
+        if (HttpContext.Session.GetString("IsAdmin") != "true") return NotFound();
         return Page();
     }
 
     public async Task<IActionResult> OnPostAsync()
     {
+        if (HttpContext.Session.GetString("IsLoggedIn") != "true") return NotFound();
+        if (HttpContext.Session.GetString("IsAdmin") != "true") return NotFound();
         if (!ModelState.IsValid) return Page();
         using (var httpClient = _httpClientFactory.CreateClient("LibraryApi"))
         {
-            BookCreationDto book = new BookCreationDto(Input.Name, Input.Author, Input.ReleaseDate, Input.Synopsis);
+            var uploadFolder = Path.Combine(_environment.WebRootPath, "uploads");
+            if (!Directory.Exists(uploadFolder)) Directory.CreateDirectory(uploadFolder);
+            var uniqueFileName = Guid.NewGuid() + "_" + Input.BookImg.FileName;
+            var filePath = Path.Combine(uploadFolder, uniqueFileName);
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await Input.BookImg.CopyToAsync(fileStream);
+            }
+            string uploadPath = "/uploads/" + uniqueFileName;
+            BookCreationDto book = new BookCreationDto(Input.Name, Input.Author, Input.ReleaseDate, Input.Synopsis, uploadPath);
             string bookSerialized = JsonSerializer.Serialize(book);
             var bookHttpCont = new StringContent(bookSerialized, Encoding.UTF8, "application/json");
             var newBook = await httpClient.PostAsync("http://localhost:5138/api/Book", bookHttpCont);

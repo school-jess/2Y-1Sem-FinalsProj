@@ -53,7 +53,7 @@ public class BookModel : PageModel
         return Page();
     }
 
-    public async Task<IActionResult> OnPosAsync()
+    public async Task<IActionResult> OnPosAsync(int id)
     {
         if (HttpContext.Session.GetString("IsLoggedIn") != "true") return Page();
         using (var httpClient = _httpClientFactory.CreateClient("LibraryApi"))
