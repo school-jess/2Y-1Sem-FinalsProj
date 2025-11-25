@@ -18,7 +18,6 @@
     string isAdmin = Context.Session.GetString("IsAdmin");
 }
 <a asp-page="/Index">Home</a>
-<input placeholder="Search a book..."/>
 @if (isLoggedIn == "true")
 {
     <a asp-page="/User" asp-route-id="@userId">@logInName</a>

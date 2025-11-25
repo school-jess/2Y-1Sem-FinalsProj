@@ -4,6 +4,7 @@
     ViewData["Title"] = "Home page";
 }
 
+<input id="searchBar" placeholder="Search a book..."/>
 @if (Model.IsAdmin)
 {
     <a asp-page="/NewBook">New Book</a>
@@ -21,3 +22,7 @@
         </li>
     }
 </ol>
+
+@section Scripts {
+    <script src="~/js/Index.js"></script>
+}
