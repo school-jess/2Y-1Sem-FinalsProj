@@ -5,10 +5,11 @@
 5. come up with explanation for solid principles for code
 6. WebApp/Program.cs:59:47 figure out previous unpaid fines dont
 7. update put methods done
-8. figure out how to input payments into system
+8. figure out how to input payments into system done
 9. figure out why sessions dont last long
-10. what to do with the search bar
+10. what to do with the search bar done
 11. create methods to set when doing put method done
 12. return a reason for failure when password and confirm password dont match in sign up page
 13. profile pics and book pics
 14. complete basic info
+15. implement returns

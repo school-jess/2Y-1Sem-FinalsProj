@@ -4,21 +4,18 @@ namespace SmartLibraryManagementSystemClassLibrary.Dtos;
 
 public class StudentCreationDto
 {
-    [StringLength(50)]
-    public string StudentName { get; set; }
-    [StringLength(10)]
-    public string Department { get; set; }
-    [StringLength(2)]
-    public string Course { get; set; }
+    [StringLength(50)] public string StudentName { get; set; }
+    [StringLength(10)] public string Department { get; set; }
+    [StringLength(2)] public string Course { get; set; }
     public int Grade { get; set; }
-    [DataType(DataType.EmailAddress)]
-    public string Email { get; set; }
-    [DataType(DataType.Password)]
-    public string Password { get; set; }
+    [DataType(DataType.EmailAddress)] public string Email { get; set; }
+    [DataType(DataType.Password)] public string Password { get; set; }
     public bool IsLoggedIn { get; set; }
     public int UserId { get; set; }
+    [StringLength(255)] public string ProfileImgPath { get; set; }
 
-    public StudentCreationDto(string studentName, string department, string course, int grade, string email, string password, bool isLoggedIn, int userId)
+    public StudentCreationDto(string studentName, string department, string course, int grade, string email,
+        string password, bool isLoggedIn, int userId, string profileImgPath)
     {
         StudentName = studentName;
         Department = department;
@@ -28,27 +25,25 @@ public class StudentCreationDto
         Password = password;
         IsLoggedIn = isLoggedIn;
         UserId = userId;
+        ProfileImgPath = profileImgPath;
     }
 }
 
 public class StudentUpdateDto
 {
     public int StudentId { get; set; }
-    [StringLength(50)]
-    public string StudentName { get; set; }
-    [StringLength(10)]
-    public string Department { get; set; }
-    [StringLength(2)]
-    public string Course { get; set; }
+    [StringLength(50)] public string StudentName { get; set; }
+    [StringLength(10)] public string Department { get; set; }
+    [StringLength(2)] public string Course { get; set; }
     public int Grade { get; set; }
-    [DataType(DataType.EmailAddress)]
-    public string Email { get; set; }
-    [DataType(DataType.Password)]
-    public string Password { get; set; }
+    [DataType(DataType.EmailAddress)] public string Email { get; set; }
+    [DataType(DataType.Password)] public string Password { get; set; }
     public bool IsLoggedIn { get; set; }
     public int UserId { get; set; }
+    [StringLength(255)] public string ProfileImgPath { get; set; }
 
-    public StudentUpdateDto(int studentId, string studentName, string department, string course, int grade, string email, string password, bool isLoggedIn, int userId)
+    public StudentUpdateDto(int studentId, string studentName, string department, string course, int grade,
+        string email, string password, bool isLoggedIn, int userId, string profileImgPath)
     {
         StudentId = studentId;
         StudentName = studentName;
@@ -59,27 +54,25 @@ public class StudentUpdateDto
         Password = password;
         IsLoggedIn = isLoggedIn;
         UserId = userId;
+        ProfileImgPath = profileImgPath;
     }
 }
 
 public class StudentGet1Dto
 {
     public int StudentId { get; set; }
-    [StringLength(50)]
-    public string StudentName { get; set; }
-    [StringLength(10)]
-    public string Department { get; set; }
-    [StringLength(2)]
-    public string Course { get; set; }
+    [StringLength(50)] public string StudentName { get; set; }
+    [StringLength(10)] public string Department { get; set; }
+    [StringLength(2)] public string Course { get; set; }
     public int Grade { get; set; }
     public UserUpdateDto User { get; set; }
-    [DataType(DataType.EmailAddress)]
-    public string Email { get; set; }
-    [DataType(DataType.Password)]
-    public string Password { get; set; }
+    [DataType(DataType.EmailAddress)] public string Email { get; set; }
+    [DataType(DataType.Password)] public string Password { get; set; }
     public bool IsLoggedIn { get; set; }
+    [StringLength(255)] public string ProfileImgPath { get; set; }
 
-    public StudentGet1Dto(int studentId, string studentName, string department, string course, int grade, UserUpdateDto user, string email, string password, bool isLoggedIn)
+    public StudentGet1Dto(int studentId, string studentName, string department, string course, int grade,
+        UserUpdateDto user, string email, string password, bool isLoggedIn, string profileImgPath)
     {
         StudentId = studentId;
         StudentName = studentName;
@@ -90,5 +83,6 @@ public class StudentGet1Dto
         Email = email;
         Password = password;
         IsLoggedIn = isLoggedIn;
+        ProfileImgPath = profileImgPath;
     }
 }

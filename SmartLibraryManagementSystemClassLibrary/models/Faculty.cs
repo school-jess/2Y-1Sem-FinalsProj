@@ -17,9 +17,10 @@ public class Faculty
     [DataType(DataType.Password)] public string Password { get; set; }
     public int UserId { get; set; }
     [ForeignKey("UserId")] public User User { get; set; }
+    [StringLength(255)] public string ProfileImgPath { get; set; }
 
     public Faculty(string facultyName, string department, string subject, string course, string email, bool isLoggedIn,
-        string password, int userId)
+        string password, int userId, string profileImgPath)
     {
         FacultyName = facultyName;
         Department = department;
@@ -29,10 +30,11 @@ public class Faculty
         IsLoggedIn = isLoggedIn;
         Password = password;
         UserId = userId;
+        ProfileImgPath = profileImgPath;
     }
 
     public void UpdateFaculty(int facultyId, string facultyName, string department, string subject, string course,
-        string email, bool isLoggedIn, string password, int userId)
+        string email, bool isLoggedIn, string password, int userId, string profileImg)
     {
         FacultyId = facultyId;
         FacultyName = facultyName;
@@ -43,5 +45,6 @@ public class Faculty
         IsLoggedIn = isLoggedIn;
         Password = password;
         UserId = userId;
+        ProfileImgPath = profileImg;
     }
 }

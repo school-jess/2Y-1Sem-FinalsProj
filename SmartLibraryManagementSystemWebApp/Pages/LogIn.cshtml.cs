@@ -66,7 +66,8 @@ public class  LogInModel : PageModel
                             faculty.Email,
                             faculty.Password,
                             true,
-                            faculty.User.UserId);
+                            faculty.User.UserId,
+                            faculty.ProfileImgPath);
                         string facultyToUpdateSerialized = JsonSerializer.Serialize(facultyToUpdate);
                         var facultyToUpdateHttpCont =
                             new StringContent(facultyToUpdateSerialized, Encoding.UTF8, "application/json");
@@ -99,7 +100,8 @@ public class  LogInModel : PageModel
                             student.Email,
                             student.Password,
                             true,
-                            student.User.UserId);
+                            student.User.UserId,
+                            student.ProfileImgPath);
                         string studentToUpdateSerialized = JsonSerializer.Serialize(studentToUpdate);
                         var studentToUpdateHttpCont =
                             new StringContent(studentToUpdateSerialized, Encoding.UTF8, "application/json");

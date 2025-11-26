@@ -53,8 +53,15 @@ public class NewBookModel : PageModel
             {
                 await Input.BookImg.CopyToAsync(fileStream);
             }
+
             string uploadPath = "/uploads/" + uniqueFileName;
-            BookCreationDto book = new BookCreationDto(Input.Name, Input.Author, Input.ReleaseDate, Input.Synopsis, uploadPath);
+            BookCreationDto book =
+                new BookCreationDto(
+                    Input.Name,
+                    Input.Author,
+                    Input.ReleaseDate,
+                    Input.Synopsis,
+                    uploadPath);
             string bookSerialized = JsonSerializer.Serialize(book);
             var bookHttpCont = new StringContent(bookSerialized, Encoding.UTF8, "application/json");
             var newBook = await httpClient.PostAsync("http://localhost:5138/api/Book", bookHttpCont);
@@ -65,8 +72,12 @@ public class NewBookModel : PageModel
                 PropertyNameCaseInsensitive = true
             };
             var insertedBook = JsonSerializer.Deserialize<BookUpdateDto>(getBookContent, options);
-            CatalogCreationDto catalog = new CatalogCreationDto(insertedBook.BookId, Input.Copies, Input.Genre,
-                Input.ClassificationId, 0);
+            CatalogCreationDto catalog = new CatalogCreationDto(
+                insertedBook.BookId,
+                Input.Copies,
+                Input.Genre,
+                Input.ClassificationId,
+                0);
             string catalogSerialized = JsonSerializer.Serialize(catalog);
             var catalogHttpContent = new StringContent(catalogSerialized, Encoding.UTF8, "application/json");
             var createCatalog = await httpClient.PostAsync("http://localhost:5138/api/Catalog", catalogHttpContent);

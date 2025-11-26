@@ -40,7 +40,8 @@ public class LogOutModel : PageModel
                     user.Faculty.Email,
                     user.Faculty.Password,
                     false,
-                    user.Faculty.UserId);
+                    user.Faculty.UserId,
+                    user.Faculty.ProfileImgPath);
                 var facultyToLogoutSerialized = JsonSerializer.Serialize(facultyToLogout);
                 var facultyToLogoutHttpCont =
                     new StringContent(facultyToLogoutSerialized, Encoding.UTF8, "application/json");
@@ -61,7 +62,8 @@ public class LogOutModel : PageModel
                     user.Student.Email,
                     user.Student.Password,
                     false,
-                    user.Student.UserId);
+                    user.Student.UserId,
+                    user.Student.ProfileImgPath);
                 var studentToLogoutSerialized = JsonSerializer.Serialize(studentToLogout);
                 var studentToLogoutHttpCont =
                     new StringContent(studentToLogoutSerialized, Encoding.UTF8, "application/json");

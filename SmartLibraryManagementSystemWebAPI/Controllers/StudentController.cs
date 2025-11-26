@@ -29,7 +29,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     s.Email,
                     s.Password,
                     s.IsLoggedIn,
-                    s.UserId)).ToList();
+                    s.UserId,
+                    s.ProfileImgPath)).ToList();
             return Ok(students);
         }
 
@@ -54,7 +55,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     student.User.IsAdmin),
                 student.Email,
                 student.Password,
-                student.IsLoggedIn));
+                student.IsLoggedIn,
+                student.ProfileImgPath));
         }
 
         [HttpGet("{email:regex(.*@.*)}")]
@@ -78,24 +80,24 @@ namespace StudentLibraryManagementSystem.Controllers
                     student.User.IsAdmin),
                 student.Email,
                 student.Password,
-                student.IsLoggedIn));
+                student.IsLoggedIn,
+                student.ProfileImgPath));
         }
 
         [HttpPost]
         public IActionResult NewStudent([FromBody] StudentCreationDto student)
         {
-            _dbCtx.Student.Add(new Student
-            {
-                Course = student.Course,
-                Department = student.Department,
-                Grade = student.Grade,
-                StudentName = student.StudentName,
-                Email = student.Email,
-                IsLoggedIn = student.IsLoggedIn,
-                Password = student.Password,
-                UserId = student.UserId
-            });
-            Console.WriteLine(student.UserId);
+            _dbCtx.Student.Add(new Student(
+                student.StudentName,
+                student.Department,
+                student.Course,
+                student.Grade,
+                student.Email,
+                student.IsLoggedIn,
+                student.Password,
+                student.UserId,
+                student.ProfileImgPath
+                ));
             _dbCtx.SaveChanges();
             var insertedStudent = _dbCtx.Student.First(s => s.Email == student.Email);
             return CreatedAtAction(nameof(GetStudent), new { id = insertedStudent.StudentId },
@@ -108,7 +110,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     insertedStudent.Email,
                     insertedStudent.Password,
                     insertedStudent.IsLoggedIn,
-                    insertedStudent.UserId));
+                    insertedStudent.UserId,
+                    insertedStudent.ProfileImgPath));
         }
 
         [HttpPut("{id:int}")]
@@ -126,7 +129,8 @@ namespace StudentLibraryManagementSystem.Controllers
                 student.Email,
                 student.IsLoggedIn,
                 student.Password,
-                student.UserId);
+                student.UserId,
+                student.ProfileImgPath);
             _dbCtx.SaveChanges();
             return NoContent();
         }

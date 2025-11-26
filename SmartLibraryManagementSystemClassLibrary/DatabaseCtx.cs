@@ -11,5 +11,6 @@ public class DatabaseContext : DbContext
     public DbSet<Reservation> Reservation { get; set; }
     public DbSet<Student> Student { get; set; }
     public DbSet<User> User { get; set; }
+    public DbSet<SessionData> SessionData { get; set; }
     public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
 }

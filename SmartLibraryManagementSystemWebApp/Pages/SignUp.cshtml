@@ -5,7 +5,7 @@
     ViewData["Title"] = "Sign Up Page";
 }
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     <div>
         <label asp-for="Input.Name">Name: </label>
         <input asp-for="Input.Name" />
@@ -45,6 +45,11 @@
         <label asp-for="Input.Grade">Grade: </label>
         <input asp-for="Input.Grade" />
         <span asp-validation-for="Input.Grade"></span>
+    </div>
+    <div>
+        <label asp-for="Input.ProfileImg"></label>
+        <input asp-for="Input.ProfileImg" accept=".png,.jpg,.jpeg"/>
+        <span asp-validation-for="Input.ProfileImg"></span>
     </div>
     <div>
         <input type="checkbox" asp-for="Input.IsEducator" id="IsEducator" />

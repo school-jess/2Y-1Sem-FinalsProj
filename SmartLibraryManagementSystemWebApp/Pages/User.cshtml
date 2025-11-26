@@ -10,9 +10,12 @@
         ViewData["Title"] = Model.User.Student.StudentName;
     }
 }
-<form id="userInfo" asp-page="UpdateUser" method="post" data-is-faculty="@Model.IsFaculty">
+<form id="userInfo" asp-page="UpdateUser" method="post" data-is-faculty="@Model.IsFaculty" enctype="multipart/form-data">
     @if (Model.IsFaculty)
     {
+        <div>
+            <img id="editProfileImg" src="@Model.User.Faculty.ProfileImgPath" />
+        </div>
         <div>
             <p id="editName">@Model.User.Faculty.FacultyName</p>
         </div>
@@ -35,6 +38,9 @@
     }
     else
     {
+        <div>
+            <img id="editProfileImg" src="@Model.User.Student.ProfileImgPath" />
+        </div>
         <div>
             <p id="editName">@Model.User.Student.StudentName</p>
         </div>
@@ -100,6 +106,9 @@
             @reservation.Fine.FineAmount
             @reservation.Loan.LoanAmount
             @reservation.ReservationDateTime
+            <form>
+                <button>Return</button>
+            </form>
         </li>
     }
 </ul>

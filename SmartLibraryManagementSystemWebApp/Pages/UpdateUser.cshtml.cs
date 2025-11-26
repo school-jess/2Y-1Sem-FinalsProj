@@ -11,6 +11,7 @@ namespace SmartLibraryManagementSystemWebApp.Pages
     {
         private readonly IHttpClientFactory _httpClientFactory;
         [BindProperty] public InputModel Input { get; set; }
+        private readonly IWebHostEnvironment _environment;
 
         public class InputModel
         {
@@ -21,11 +22,13 @@ namespace SmartLibraryManagementSystemWebApp.Pages
             public string? UserPassword { get; set; }
             public string? UserSubject { get; set; }
             public int? UserGrade { get; set; }
+            public IFormFile ProfileImg { get; set; }
         }
 
-        public UpdateUserModel(IHttpClientFactory httpClientFactory)
+        public UpdateUserModel(IHttpClientFactory httpClientFactory, IWebHostEnvironment environment)
         {
             _httpClientFactory = httpClientFactory;
+            _environment = environment;
         }
 
         public IActionResult OnGet() => NotFound();
@@ -46,10 +49,16 @@ namespace SmartLibraryManagementSystemWebApp.Pages
                 };
                 UserGet1Dto user = JsonSerializer.Deserialize<UserGet1Dto>(getUserContent, options);
                 string password = "";
+
                 if (HttpContext.Session.GetString("IsEducator") == "true")
                 {
                     if (Input.UserPassword == null) password = user.Faculty.Password;
                     else password = Argon2.Hash(Input.UserPassword);
+                    var uploadPath = Path.Join(_environment.WebRootPath, user.Faculty.ProfileImgPath);
+                    using (var fileStream = new FileStream(uploadPath, FileMode.Create, FileAccess.Write))
+                    {
+                        await Input.ProfileImg.CopyToAsync(fileStream);
+                    }
 
                     FacultyUpdateDto facultyToUpdate = new FacultyUpdateDto(
                         user.Faculty.FacultyId,
@@ -60,10 +69,11 @@ namespace SmartLibraryManagementSystemWebApp.Pages
                         Input.UserEmail,
                         password,
                         true,
-                        user.Faculty.UserId);
+                        user.Faculty.UserId,
+                        user.Faculty.ProfileImgPath);
                     string facultyToUpdateSerialized = JsonSerializer.Serialize(facultyToUpdate);
                     var facultyToUpdateHttpCont =
-                        new StringContent(facultyToUpdateSerialized, Encoding.UTF8, "application/json");
+                     new StringContent(facultyToUpdateSerialized, Encoding.UTF8, "application/json");
                     var updateFaculty =
                         await httpClient.PutAsync(
                             $"http://localhost:5138/api/Faculty/{user.Faculty.FacultyId}", facultyToUpdateHttpCont);
@@ -74,6 +84,11 @@ namespace SmartLibraryManagementSystemWebApp.Pages
                 {
                     if (Input.UserPassword == null) password = user.Student.Password;
                     else password = Argon2.Hash(Input.UserPassword);
+                    var uploadPath = Path.Join(_environment.WebRootPath, user.Student.ProfileImgPath);
+                    using (var fileStream = new FileStream(uploadPath, FileMode.Create, FileAccess.Write))
+                    {
+                        await Input.ProfileImg.CopyToAsync(fileStream);
+                    }
 
                     StudentUpdateDto studentToUpdate = new StudentUpdateDto(
                         user.Student.StudentId,
@@ -84,7 +99,8 @@ namespace SmartLibraryManagementSystemWebApp.Pages
                         Input.UserEmail,
                         password,
                         true,
-                        user.Student.UserId);
+                        user.Student.UserId,
+                        user.Student.ProfileImgPath);
                     string studentToUpdateSerialized = JsonSerializer.Serialize(studentToUpdate);
                     var studentToUpdateHttpCont =
                         new StringContent(studentToUpdateSerialized, Encoding.UTF8, "application/json");

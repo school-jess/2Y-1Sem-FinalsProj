@@ -107,7 +107,8 @@ namespace StudentLibraryManagementSystem.Controllers
                         user.Student.Email,
                         user.Student.Password,
                         user.Student.IsLoggedIn,
-                        user.Student.UserId);
+                        user.Student.UserId,
+                        user.Student.ProfileImgPath);
                 }
                 else
                 {
@@ -120,7 +121,8 @@ namespace StudentLibraryManagementSystem.Controllers
                         user.Faculty.Email,
                         user.Faculty.Password,
                         user.Faculty.IsLoggedIn,
-                        user.Faculty.UserId);
+                        user.Faculty.UserId,
+                        user.Faculty.ProfileImgPath);
                 }
 
                 return Ok(userWithReservationsToRet);
@@ -167,7 +169,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     user.Student.Email,
                     user.Student.Password,
                     user.Student.IsLoggedIn,
-                    user.Student.UserId);
+                    user.Student.UserId,
+                    user.Student.ProfileImgPath);
             }
             else
             {
@@ -180,7 +183,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     user.Faculty.Email,
                     user.Faculty.Password,
                     user.Faculty.IsLoggedIn,
-                    user.Faculty.UserId);
+                    user.Faculty.UserId,
+                    user.Faculty.ProfileImgPath);
             }
 
             return Ok(userToRet);

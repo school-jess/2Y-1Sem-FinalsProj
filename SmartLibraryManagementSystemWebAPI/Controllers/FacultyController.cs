@@ -29,7 +29,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     f.Email,
                     f.Password,
                     f.IsLoggedIn,
-                    f.UserId)).ToList();
+                    f.UserId,
+                    f.ProfileImgPath)).ToList();
             return Ok(faculties);
         }
 
@@ -54,7 +55,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     faculty.User.IsAdmin),
                 faculty.Email,
                 faculty.Password,
-                faculty.IsLoggedIn));
+                faculty.IsLoggedIn,
+                faculty.ProfileImgPath));
         }
 
         [HttpGet("{email:regex(.*@.*)}")]
@@ -78,7 +80,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     faculty.User.IsAdmin),
                 faculty.Email,
                 faculty.Password,
-                faculty.IsLoggedIn));
+                faculty.IsLoggedIn,
+                faculty.ProfileImgPath));
         }
 
         [HttpPost]
@@ -92,7 +95,8 @@ namespace StudentLibraryManagementSystem.Controllers
                 faculty.Email,
                 faculty.IsLoggedIn,
                 faculty.Password,
-                faculty.UserId));
+                faculty.UserId,
+                faculty.ProfileImgPath));
             _dbCtx.SaveChanges();
             var insertedFaculty = _dbCtx.Faculty.First(f => f.Email == faculty.Email);
             return CreatedAtAction(nameof(GetFaculty), new { id = insertedFaculty.FacultyId },
@@ -105,7 +109,8 @@ namespace StudentLibraryManagementSystem.Controllers
                     insertedFaculty.Email,
                     insertedFaculty.Password,
                     insertedFaculty.IsLoggedIn,
-                    insertedFaculty.UserId));
+                    insertedFaculty.UserId,
+                    insertedFaculty.ProfileImgPath));
         }
 
         [HttpPut("{id:int}")]
@@ -123,7 +128,8 @@ namespace StudentLibraryManagementSystem.Controllers
                 faculty.Email,
                 faculty.IsLoggedIn,
                 faculty.Password,
-                faculty.UserId);
+                faculty.UserId,
+                faculty.ProfileImgPath);
             _dbCtx.SaveChanges();
             return NoContent();
         }
