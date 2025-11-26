@@ -4,7 +4,7 @@
     ViewData["Title"] = @Model.Book.BookName;
 }
 
-<form id="bookInfo" asp-page="UpdateBook">
+<form id="bookInfo" asp-page="UpdateBook" enctype="multipart/form-data">
     <div>
         <h1 id="bookName">@Model.Book.BookName</h1>
     </div>
@@ -26,9 +26,9 @@
     <div>
         <p id="bookGenre">@Model.Book.Catalog.Genre</p>
     </div>
-        <div>
-            <img id="bookImg" src="@Model.Book.BookImgPath"/>
-        </div>
+    <div>
+        <img id="bookImg" src="@Model.Book.BookImgPath"/>
+    </div>
     @if (Model.IsAdmin)
     {
         <button id="edit">edit</button>

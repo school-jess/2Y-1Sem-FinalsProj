@@ -5,10 +5,20 @@ string redisConn = "localhost:6379";
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddSession();
 builder.Services.AddHttpClient("LibraryApi", client =>
 {
     client.BaseAddress = new Uri("http://localhost:5138");
+});
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = "";
+    options.InstanceName = "";
+});
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
 });
 var app = builder.Build();
 

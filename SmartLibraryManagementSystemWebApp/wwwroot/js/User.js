@@ -25,7 +25,7 @@ $(document).ready(() => {
         $("#editDepartment").replaceWith($(`<input id="editDepartment" name="Input.UserDepartment" value="${editDepartment}">`));
         $("#editEmail").replaceWith($(`<input id="editEmail" name="Input.UserEmail" type="email" value="${editEmail}">`));
         $("#editPassword").replaceWith($(`<input id="editPassword" name="Input.UserPassword" type="password" value="${editPassword}">`));
-        $("#editProfileImg").replaceWith($(`<input id="editProfileImg" type="file" name="Input.ProfileImg">`));
+        $("#editProfileImg").replaceWith($(`<input id="editProfileImg" type="file" name="Input.ProfileImg" accept=".png,.jpg,.jpeg">`));
         if (isFaculty) {
             $("#editSubject").replaceWith(`<input id="editSubject" name="Input.UserSubject" value="${$("#editSubject").text()}">`);
         } else {

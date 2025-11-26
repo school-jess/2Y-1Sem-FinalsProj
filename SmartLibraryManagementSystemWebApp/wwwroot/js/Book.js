@@ -8,6 +8,7 @@ $(document).ready(() => {
     let bookClassificationId = "";
     let bookCopies = "";
     let bookGenre = "";
+    let bookImgPath = "";
     $("#edit").click((e) => {
         e.preventDefault();
         $("#cancelEdit").show();
@@ -20,6 +21,7 @@ $(document).ready(() => {
         bookClassificationId = $("#bookClassificationId").text();
         bookCopies = $("#bookCopies").text();
         bookGenre = $("#bookGenre").text();
+        bookImgPath = $("#bookImg").prop("src");
         $("#bookName").replaceWith($(`<input id="bookName" name="Input.BookName" value="${$("#bookName").text()}">`));
         $("#bookAuthor").replaceWith($(`<input id="bookAuthor" name="Input.BookAuthor" value="${$("#bookAuthor").text()}">`));
         $("#bookReleaseDate").replaceWith($(`<input id="bookReleaseDate" name="Input.ReleaseDate" value="${$("#bookReleaseDate").text()}">`));
@@ -27,6 +29,7 @@ $(document).ready(() => {
         $("#bookClassificationId").replaceWith($(`<input id="bookClassificationId" name="Input.ClassificationId" value="${$("#bookClassificationId").text()}">`));
         $("#bookCopies").replaceWith($(`<input id="bookCopies" name="Input.Copies" value="${$("#bookCopies").text()}">`));
         $("#bookGenre").replaceWith($(`<input id="bookGenre" name="Input.Genre" value="${$("#bookGenre").text()}">`));
+        $("#bookImg").replaceWith($(`<input id="bookImg" name="Input.BookImg" type="file" accept=".png,.jpg,.jpeg">`));
     });
     $("#cancelEdit").click((e) => {
         e.preventDefault();
@@ -40,6 +43,7 @@ $(document).ready(() => {
         let cancelClassificationId = $(`<p id="bookClassificationId">`);
         let cancelCopies = $(`<p id="bookCopies">`);
         let cancelGenre = $(`<p id="bookGenre">`);
+        let cancelBookImg = $(`<img id="bookImg">`);
         cancelBookName.text(bookName);
         cancelBookAuthor.text(bookAuthor);
         cancelBookReleaseDate.text(bookReleaseDate);
@@ -47,6 +51,7 @@ $(document).ready(() => {
         cancelClassificationId.text(bookClassificationId);
         cancelCopies.text(bookCopies);
         cancelGenre.text(bookGenre);
+        cancelBookImg.prop("src", bookImgPath);
         $("#bookName").replaceWith(cancelBookName);
         $("#bookAuthor").replaceWith(cancelBookAuthor);
         $("#bookReleaseDate").replaceWith(cancelBookReleaseDate);
@@ -54,5 +59,6 @@ $(document).ready(() => {
         $("#bookClassificationId").replaceWith(cancelClassificationId);
         $("#bookCopies").replaceWith(cancelCopies);
         $("#bookGenre").replaceWith(cancelGenre);
+        $("#bookImg").replaceWith(cancelBookImg);
     });
 });

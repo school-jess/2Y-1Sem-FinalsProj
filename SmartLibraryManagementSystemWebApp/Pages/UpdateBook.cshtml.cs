@@ -9,9 +9,8 @@ namespace SmartLibraryManagementSystemWebApp.Pages
     public class UpdateBookModel : PageModel
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        [BindProperty]
-        public InputModel Input { get; set; }
-
+        [BindProperty] public InputModel Input { get; set; }
+        private readonly IWebHostEnvironment _environment;
 
         public class InputModel
         {
@@ -22,11 +21,13 @@ namespace SmartLibraryManagementSystemWebApp.Pages
             public string ClassificationId { get; set; }
             public int Copies { get; set; }
             public string Genre { get; set; }
+            public IFormFile BookImg { get; set; }
         }
 
-        public UpdateBookModel(IHttpClientFactory httpClientFactory)
+        public UpdateBookModel(IHttpClientFactory httpClientFactory, IWebHostEnvironment environment)
         {
             _httpClientFactory = httpClientFactory;
+            _environment = environment;
         }
 
         public IActionResult OnGet() => NotFound();
@@ -39,16 +40,23 @@ namespace SmartLibraryManagementSystemWebApp.Pages
             var bookId = 0;
             using (var httpClient = _httpClientFactory.CreateClient("LibraryApi"))
             {
-                var getCatalog = await httpClient.GetAsync($"http://localhost:5138/api/Catalog/{Input.ClassificationId}");
-                if (!getCatalog.IsSuccessStatusCode) throw new InvalidOperationException("couldn't get catalog");
+                var getCatalog =
+                    await httpClient.GetAsync($"http://localhost:5138/api/Catalog/{Input.ClassificationId}");
+                if (!getCatalog.IsSuccessStatusCode) throw  new InvalidOperationException("couldn't get catalog");
                 string getCatalogContents = await getCatalog.Content.ReadAsStringAsync();
                 var options = new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true,
                 };
-                Console.WriteLine(getCatalogContents);
                 CatalogGet1Dto catalog = JsonSerializer.Deserialize<CatalogGet1Dto>(getCatalogContents, options);
                 bookId = catalog.Book.BookId;
+                var uploadPath = Path.Join(_environment.WebRootPath, catalog.Book.BookImgPath);
+                Console.WriteLine(Input.BookImg);
+                using (var fileStream = new FileStream(uploadPath, FileMode.Create, FileAccess.Write))
+                {
+                    await Input.BookImg.CopyToAsync(fileStream);
+                }
+
                 BookUpdateDto bookToUpdate = new BookUpdateDto(
                     catalog.Book.BookId,
                     Input.BookName,
@@ -58,7 +66,8 @@ namespace SmartLibraryManagementSystemWebApp.Pages
                     catalog.Book.BookImgPath);
                 string bookToUpdateSerialized = JsonSerializer.Serialize(bookToUpdate);
                 var bookToUpdateHttpCont = new StringContent(bookToUpdateSerialized, Encoding.UTF8, "application/json");
-                var updateBook = await httpClient.PutAsync($"http://localhost:5138/api/Book/{catalog.Book.BookId}", bookToUpdateHttpCont);
+                var updateBook = await httpClient.PutAsync($"http://localhost:5138/api/Book/{catalog.Book.BookId}",
+                    bookToUpdateHttpCont);
                 if (!updateBook.IsSuccessStatusCode) throw new InvalidOperationException("couldn't update book");
                 CatalogUpdateDto catalogToUpdate = new CatalogUpdateDto(
                     catalog.CatalogId,
@@ -68,10 +77,13 @@ namespace SmartLibraryManagementSystemWebApp.Pages
                     Input.ClassificationId,
                     catalog.CopiesBorrowed);
                 string catalogToUpdateSerialized = JsonSerializer.Serialize(catalogToUpdate);
-                var catalogToUpdateHttpCont = new StringContent(catalogToUpdateSerialized, Encoding.UTF8, "application/json");
-                var updateCatalog = await httpClient.PutAsync($"http://localhost:5138/api/Catalog/{catalogToUpdate.CatalogId}", catalogToUpdateHttpCont);
+                var catalogToUpdateHttpCont =
+                    new StringContent(catalogToUpdateSerialized, Encoding.UTF8, "application/json");
+                var updateCatalog = await httpClient.PutAsync(
+                    $"http://localhost:5138/api/Catalog/{catalogToUpdate.CatalogId}", catalogToUpdateHttpCont);
                 if (!updateCatalog.IsSuccessStatusCode) throw new InvalidOperationException("couldn't update catalog");
             }
+
             return Redirect($"/Book/{bookId}");
         }
     }
