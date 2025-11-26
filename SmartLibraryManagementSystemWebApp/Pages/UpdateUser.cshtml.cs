@@ -22,7 +22,7 @@ namespace SmartLibraryManagementSystemWebApp.Pages
             public string? UserPassword { get; set; }
             public string? UserSubject { get; set; }
             public int? UserGrade { get; set; }
-            public IFormFile ProfileImg { get; set; }
+            public IFormFile? ProfileImg { get; set; }
         }
 
         public UpdateUserModel(IHttpClientFactory httpClientFactory, IWebHostEnvironment environment)
@@ -54,10 +54,13 @@ namespace SmartLibraryManagementSystemWebApp.Pages
                 {
                     if (Input.UserPassword == null) password = user.Faculty.Password;
                     else password = Argon2.Hash(Input.UserPassword);
-                    var uploadPath = Path.Join(_environment.WebRootPath, user.Faculty.ProfileImgPath);
-                    using (var fileStream = new FileStream(uploadPath, FileMode.Create, FileAccess.Write))
+                    if (Input.ProfileImg != null)
                     {
-                        await Input.ProfileImg.CopyToAsync(fileStream);
+                        var uploadPath = Path.Join(_environment.WebRootPath, user.Faculty.ProfileImgPath);
+                        using (var fileStream = new FileStream(uploadPath, FileMode.Create, FileAccess.Write))
+                        {
+                            await Input.ProfileImg.CopyToAsync(fileStream);
+                        }
                     }
 
                     FacultyUpdateDto facultyToUpdate = new FacultyUpdateDto(
@@ -84,10 +87,13 @@ namespace SmartLibraryManagementSystemWebApp.Pages
                 {
                     if (Input.UserPassword == null) password = user.Student.Password;
                     else password = Argon2.Hash(Input.UserPassword);
-                    var uploadPath = Path.Join(_environment.WebRootPath, user.Student.ProfileImgPath);
-                    using (var fileStream = new FileStream(uploadPath, FileMode.Create, FileAccess.Write))
+                    if (Input.ProfileImg != null)
                     {
-                        await Input.ProfileImg.CopyToAsync(fileStream);
+                        var uploadPath = Path.Join(_environment.WebRootPath, user.Student.ProfileImgPath);
+                        using (var fileStream = new FileStream(uploadPath, FileMode.Create, FileAccess.Write))
+                        {
+                            await Input.ProfileImg.CopyToAsync(fileStream);
+                        }
                     }
 
                     StudentUpdateDto studentToUpdate = new StudentUpdateDto(

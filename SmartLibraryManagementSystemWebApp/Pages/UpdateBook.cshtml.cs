@@ -21,7 +21,7 @@ namespace SmartLibraryManagementSystemWebApp.Pages
             public string ClassificationId { get; set; }
             public int Copies { get; set; }
             public string Genre { get; set; }
-            public IFormFile BookImg { get; set; }
+            public IFormFile? BookImg { get; set; }
         }
 
         public UpdateBookModel(IHttpClientFactory httpClientFactory, IWebHostEnvironment environment)
@@ -50,11 +50,13 @@ namespace SmartLibraryManagementSystemWebApp.Pages
                 };
                 CatalogGet1Dto catalog = JsonSerializer.Deserialize<CatalogGet1Dto>(getCatalogContents, options);
                 bookId = catalog.Book.BookId;
-                var uploadPath = Path.Join(_environment.WebRootPath, catalog.Book.BookImgPath);
-                Console.WriteLine(Input.BookImg);
-                using (var fileStream = new FileStream(uploadPath, FileMode.Create, FileAccess.Write))
+                if (Input.BookImg != null)
                 {
-                    await Input.BookImg.CopyToAsync(fileStream);
+                    var uploadPath = Path.Join(_environment.WebRootPath, catalog.Book.BookImgPath);
+                    using (var fileStream = new FileStream(uploadPath, FileMode.Create, FileAccess.Write))
+                    {
+                        await Input.BookImg.CopyToAsync(fileStream);
+                    }
                 }
 
                 BookUpdateDto bookToUpdate = new BookUpdateDto(
