@@ -1,8 +1,9 @@
 $(document).ready(() => {
     $("#grade").show();
     $("#subject").hide();
-    $("#IsEducator").change(() => {
-        if ($("#IsEducator").prop("checked")) {
+    $("#isEducatorInput").change(() => {
+        if ($("#isEducatorInput").prop("checked")) {
+            console.log("hello");
             $("#subject").show();
             $("#grade").hide();
         } else {

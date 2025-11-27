@@ -2,6 +2,11 @@
 @model NewBookModel
 @{
 }
+
+@section Stylesheets {
+    <link rel="stylesheet" href="~/css/Login.css"/>
+}
+
 <form method="post" enctype="multipart/form-data">
     <div>
         <label asp-for="Input.Name">Book Name: </label>

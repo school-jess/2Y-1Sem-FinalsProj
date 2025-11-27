@@ -5,10 +5,15 @@
     flex-direction: column;
     position: sticky;
     margin-right: auto;
+    font-size: 25px;
+    font-family: Roboto;
+    align-items: flex-end;
+    gap: 45px;
 }
 
 #navbar * {
     color: white;
+    margin-right: 50px;
 }
 
 #navbar a {
@@ -58,4 +63,12 @@ body {
     position: relative;
     z-index: 3;
     left: 100px;
+}
+
+#fixedBlock {
+    height: 150px;
+}
+
+#navbar a.active {
+    color: rgba(95, 167, 222, 1);
 }

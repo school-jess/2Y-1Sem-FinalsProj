@@ -3,70 +3,85 @@
 @{
 }
 
-<div id="grid">
-    <div>
+@section Stylesheets {
+    <link rel="stylesheet" href="~/css/Admin.css"/>
+}
+
+<div id="usersContainer">
+    <div id="usernameId">
         Username
     </div>
     <div>
-        Has fine
+        @foreach (var user in Model.Users.Select((value, index) => new {Value = value, Index = index}))
+        {
+            <div class="userRow">
+                <div id="userName-@user.Value.UserId">
+                    @user.Value.UserName
+                </div>
+                <div class="userMiscellaneousInfo">
+                    <div>
+                        @if (user.Index == 0) {
+                            <div>
+                                Has fine
+                            </div>
+                        }
+                        @if (user.Value.HasFine)
+                        {
+                            <input class="userInputs" form="editUserForm-@user.Value.UserId" id="hasFine-@user.Value.UserId" asp-for="Input.HasFine" type="checkbox" disabled checked/>
+                        }
+                        else
+                        {
+                            <input class="userInputs" form="editUserForm-@user.Value.UserId" id="hasFine-@user.Value.UserId" asp-for="Input.HasFine" type="checkbox" disabled/>
+                        }
+                    </div>
+                    <div>
+                        @if (user.Index == 0) {
+                            <div>
+                                Has loan
+                            </div>
+                        }
+                        @if (user.Value.HasLoan)
+                        {
+                            <input class="userInputs" form="editUserForm-@user.Value.UserId" id="hasLoan-@user.Value.UserId" asp-for="Input.HasLoan" type="checkbox" disabled checked/>
+                        }
+                        else
+                        {
+                            <input class="userInputs" form="editUserForm-@user.Value.UserId" id="hasLoan-@user.Value.UserId" asp-for="Input.HasLoan" type="checkbox" disabled/>
+                        }
+                    </div>
+                    <div>
+                        @if (user.Index == 0) {
+                            <div>
+                                Is admin
+                            </div>
+                        }
+                        @if (user.Value.IsAdmin)
+                        {
+                            <input class="userInputs" form="editUserForm-@user.Value.UserId" id="isAdmin-@user.Value.UserId" asp-for="Input.IsAdmin" type="checkbox" disabled checked/>
+                        }
+                        else
+                        {
+                            <input class="userInputs" form="editUserForm-@user.Value.UserId" id="isAdmin-@user.Value.UserId" asp-for="Input.IsAdmin" type="checkbox" disabled/>
+                        }
+                    </div>
+                    <div>
+                        <form id="editUserForm-@user.Value.UserId" method="post">
+                            <input type="hidden" asp-for="Input.UserId" value="@user.Value.UserId"/>
+                            <input type="hidden" id="isDelete-@user.Value.UserId" asp-for="Input.IsDelete" value="1"/>
+                            <button id="editUser-@user.Value.UserId" class="edit-user" data-user-id="@user.Value.UserId">
+                                <img class="userActionBtns" src="~/pen.png"/>
+                            </button>
+                            <button id="cancelEdit-@user.Value.UserId" class="cancelEditUser" data-user-id="@user.Value.UserId" hidden>cancel</button>
+                            <button hidden id="submitEdit-@user.Value.UserId">submit</button>
+                            <button>
+                                <img class="userActionBtns" src="~/recycle-bin.png"/>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
-    <div>
-        Has loan
-    </div>
-    <div>
-        Is admin
-    </div>
-    <div></div>
-    @foreach (var user in Model.Users)
-    {
-        <div id="userName-@user.UserId">
-            @user.UserName
-        </div>
-        <div>
-            @if (user.HasFine)
-            {
-                <input form="editUserForm-@user.UserId" id="hasFine-@user.UserId" asp-for="Input.HasFine" type="checkbox" disabled checked/>
-            }
-            else
-            {
-                <input form="editUserForm-@user.UserId" id="hasFine-@user.UserId" asp-for="Input.HasFine" type="checkbox" disabled/>
-            }
-        </div>
-        <div>
-            @if (user.HasLoan)
-            {
-                <input form="editUserForm-@user.UserId" id="hasLoan-@user.UserId" asp-for="Input.HasLoan" type="checkbox" disabled checked/>
-            }
-            else
-            {
-                <input form="editUserForm-@user.UserId" id="hasLoan-@user.UserId" asp-for="Input.HasLoan" type="checkbox" disabled/>
-            }
-        </div>
-        <div>
-            @if (user.IsAdmin)
-            {
-                <input form="editUserForm-@user.UserId" id="isAdmin-@user.UserId" asp-for="Input.IsAdmin" type="checkbox" disabled checked/>
-            }
-            else
-            {
-                <input form="editUserForm-@user.UserId" id="isAdmin-@user.UserId" asp-for="Input.IsAdmin" type="checkbox" disabled/>
-            }
-        </div>
-        <div>
-            <form id="editUserForm-@user.UserId" method="post">
-                <input type="hidden" asp-for="Input.UserId" value="@user.UserId"/>
-                <input type="hidden" id="isDelete-@user.UserId" asp-for="Input.IsDelete" value="1"/>
-                <button id="editUser-@user.UserId" class="edit-user" data-user-id="@user.UserId">
-                    <img src="~/pen.png"/>
-                </button>
-            <button id="cancelEdit-@user.UserId" class="cancelEditUser" data-user-id="@user.UserId" hidden>cancel</button>
-                <button hidden id="submitEdit-@user.UserId">submit</button>
-                <button>
-                    <img src="~/recycle-bin.png"/>
-                </button>
-            </form>
-        </div>
-    }
 </div>
 
 @section Scripts {

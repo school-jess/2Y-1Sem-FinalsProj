@@ -40,25 +40,44 @@ html {
     width: 100%;
     box-sizing: border-box;
     padding-left: 20px;
-}
-
-#isEducatorInput {
-    transform: scale(1.5);
-    border-radius: 0;
-    border: 0;
-    margin-right: 20px;
-    box-decoration: none;
-}
-
-#isEducatorInput:focus {
-    outline: none;
     border: none;
+}
+
+#Input_IsEducator {
+    position: absolute;
+    opacity: 0;
+    height: 0;
+    width: 0;
 }
 
 .inputContainer {
     margin: 20px;
 }
 
+#Input_ProfileImg::file-selector-button {
+    background-color: rgba(255, 255, 255, 1);
+    color: rgba(96, 96, 96, 1);
+    outline: none;
+    border: none;
+    width: 75px;
+    height: 25px;
+}
+
 #profileImg {
     font-family: Roboto;
+}
+
+#isEducatorLabel::before {
+    content: "";
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 1);
+    margin-right: 8px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+#Input_IsEducator:checked + #isEducatorLabel::before {
+    background-color: black;
 }

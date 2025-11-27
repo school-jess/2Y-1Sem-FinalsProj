@@ -4,21 +4,23 @@
     ViewData["Title"] = "Log In Page";
 }
 
-<form method="post">
-    <div>
-        <label asp-for="Input.Email">Email: </label>
-        <input asp-for="Input.Email" />
+@section Stylesheets {
+    <link rel="stylesheet" href="~/css/Login.css"/>
+}
+
+<form method="post" id="loginContainer">
+    <div class="inputContainer">
+        <input asp-for="Input.Email" class="loginInput" placeholder="Email:"/>
         <span asp-validation-for="Input.Email"></span>
     </div>
-    <div>
-        <label asp-for="Input.Password">Password: </label>
-        <input asp-for="Input.Password" />
+    <div class="inputContainer">
+        <input asp-for="Input.Password" class="loginInput" placeholder="Password:"/>
         <span asp-validation-for="Input.Password"></span>
     </div>
-    <div>
-        <input type="checkbox" asp-for="Input.IsEducator" />
-        <label asp-for="Input.IsEducator">Is educator</label>
-         <span asp-validation-for="Input.IsEducator"></span>
+    <div class="inputContainer">
+        <input type="checkbox" asp-for="Input.IsEducator"/>
+        <label asp-for="Input.IsEducator" id="isEducatorLabel">Is educator</label>
+        <span asp-validation-for="Input.IsEducator"></span>
     </div>
-    <button type="submit">Submit</button>
+    <button type="submit" id="submitBtn">Submit</button>
 </form>

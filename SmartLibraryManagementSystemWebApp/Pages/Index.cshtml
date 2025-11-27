@@ -2,12 +2,15 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
+    string currentPage = ViewContext.RouteData.Values["page"]?.ToString();
 }
 
-<input id="searchBar" placeholder="Search a book..."/>
-@if (Model.IsAdmin)
-{
-    <a asp-page="/NewBook">New Book</a>
+@section ExtraNavElems {
+    <input id="searchBar" placeholder="Search a book..."/>
+    @if (Model.IsAdmin)
+    {
+        <a class="@(currentPage == "/LogIn" ? "active" : "")" asp-page="/NewBook">New Book</a>
+    }
 }
 <ol>
     @foreach (var book in Model.Books)
