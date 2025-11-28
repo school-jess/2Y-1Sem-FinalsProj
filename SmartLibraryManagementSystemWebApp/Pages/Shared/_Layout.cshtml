@@ -27,11 +27,12 @@
     <a class="@(currentPage == "/Index" ? "active" : "")" asp-page="/Index">Home</a>
     @if (isLoggedIn == "true")
     {
-        <a asp-page="/User" asp-route-id="@userId">@logInName</a>
+        <a class="@(currentPage?.StartsWith("/User") == true ? "active" : "")" asp-page="/User" asp-route-id="@userId">@logInName</a>
         <a asp-page="/LogOut">Log Out</a>
         if (isAdmin == "true")
         {
             <a class="@(currentPage == "/Admin" ? "active" : "")" asp-page="/Admin">Admin</a>
+            <a class="@(currentPage == "/NewBook" ? "active" : "")" asp-page="/NewBook">New Book</a>
         }
     }
     else
@@ -44,10 +45,13 @@
 <div id="mainContent">
     @RenderBody()
 </div>
-<div id="greyBg"></div>
-<div class="sameBgSpecs" id="blueBg"></div>
-<div class="sameBgSpecs" id="orangeBg"></div>
-<img id="dbImg" src="~/DonBosco.png"/>
+@await RenderSectionAsync("BackgroundStyles", required: false)
+<div id="backgroundInfo">
+    <div id="greyBg"></div>
+    <div class="sameBgSpecs" id="blueBg"></div>
+    <div class="sameBgSpecs" id="orangeBg"></div>
+    <img id="dbImg" src="~/DonBosco.png"/>
+</div>
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 

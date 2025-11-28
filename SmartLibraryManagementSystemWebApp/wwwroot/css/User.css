@@ -1,0 +1,42 @@
+#backgroundInfo {
+    display: none;
+}
+
+#userInfo {
+    position: absolute;
+    right: 50%;
+    top: 50%;
+    transform: translate(-200%, -110%);
+    width: 500px;
+    height: 500px;
+    font-family: Roboto;
+}
+
+#editProfileImg {
+    border-radius: 25px;
+    height: 750px;
+    width: 750px;
+}
+
+#edit,
+#cancelEdit,
+#submitEdit {
+    border: none;
+    border-radius: 25px;
+    background-color: rgba(210, 210, 210, 1);
+    padding: 10px;
+    width: 200px;
+    color: rgba(60, 131, 225, 1);
+}
+
+#editPassword {
+    margin-left: 20px;
+}
+
+#editPassword:disabled {
+    border: black solid thin;
+}
+
+.inputContainer {
+    margin: 20px
+}

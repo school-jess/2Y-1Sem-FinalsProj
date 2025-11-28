@@ -5,23 +5,27 @@
     string currentPage = ViewContext.RouteData.Values["page"]?.ToString();
 }
 
+@section Stylesheets {
+    <link rel="stylesheet" href="~/css/Index.css"/>
+}
 @section ExtraNavElems {
     <input id="searchBar" placeholder="Search a book..."/>
-    @if (Model.IsAdmin)
-    {
-        <a class="@(currentPage == "/LogIn" ? "active" : "")" asp-page="/NewBook">New Book</a>
-    }
 }
-<ol>
+<ol id="booksContainer">
     @foreach (var book in Model.Books)
     {
         <li>
-            <img src="@book.BookImgPath"/>
-            <a asp-page="/Book" asp-route-id="@book.BookId">@book.BookName - @book.Author</a>
-            <form method="post">
-                <input type="hidden" asp-for="Input.BookId" value="@book.BookId"/>
-                <button>Delete</button>
-            </form>
+            <a  class="bookContainer" asp-page="/Book" asp-route-id="@book.BookId">
+                <img src="@book.BookImgPath" class="bookImg"/>
+                <div class="bookInfoContainer">
+                    <h1>@book.BookName</h1>
+                    <div>@book.Author</div>
+                    <form method="post" class="deleteBtnContainer">
+                        <input type="hidden" asp-for="Input.BookId" value="@book.BookId"/>
+                        <button>Delete</button>
+                    </form>
+                </div>
+            </a>
         </li>
     }
 </ol>

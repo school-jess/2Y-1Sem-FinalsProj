@@ -1,0 +1,45 @@
+#booksContainer {
+    list-style-type: none;
+    position: absolute;
+    right: 50%;
+    top: 50%;
+    transform: translate(15%, -55%);
+    background-color: rgba(203, 203, 203, 0.62);
+    padding: 100px;
+    border-radius: 50px;
+    width: 750px;
+    height: 750px;
+}
+
+.bookImg {
+    height: 250px;
+    width: 250px;
+    margin: 20px;
+    border-radius: 25px;
+}
+
+.bookContainer {
+    display: flex;
+    flex-direction: row;
+    text-decoration: none;
+}
+
+.bookInfoContainer {
+    padding-top: 30px;
+    font-family: Roboto;
+    color: black;
+}
+
+.deleteBtnContainer {
+    margin-top: 20px;
+
+}
+
+.deleteBtnContainer button{
+    border: none;
+    background-color: rgba(255, 255, 255, 1);
+    padding: 10px;
+    width: 200px;
+    color: rgba(60, 131, 225, 1);
+    border-radius: 25px;
+}

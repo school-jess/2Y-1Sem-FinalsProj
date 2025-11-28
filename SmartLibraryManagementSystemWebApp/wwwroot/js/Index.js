@@ -8,12 +8,13 @@ $(document).ready(function() {
             return;
         }
         $("ol li").each(function(elem) {
-            let bookLink = $($(this).children()[1]);
-            let bookLinkText = bookLink.text();
-            let bookLinkTextSeperator = bookLinkText.indexOf("-");
-            let bookName = bookLinkText.slice(0, bookLinkTextSeperator-1);
-            if (!bookName.includes(searchVal)) $(this).hide();
+            let aElem = $($(this).children()[0]);
+            let divElem = $(aElem.children()[1]);
+            let bookNameContainer = $(divElem.children()[0]);
+            let bookLinkText = bookNameContainer.text();
+            if (!bookLinkText.includes(searchVal)) $(this).hide();
             else $(this).show();
+            console.log(bookLinkText.includes(searchVal));
         });
     });
 });

@@ -12,12 +12,12 @@
 }
 
 #navbar * {
-    color: white;
     margin-right: 50px;
 }
 
 #navbar a {
     text-decoration: none;
+    color: white;
 }
 
 body {
@@ -26,6 +26,7 @@ body {
     flex-direction: row;
     height: 100vh;
     justify-content: flex-end;
+    overflow:hidden;
 }
 
 .sameBgSpecs {
@@ -71,4 +72,10 @@ body {
 
 #navbar a.active {
     color: rgba(95, 167, 222, 1);
+}
+
+#dbImg {
+    position: relative;
+    z-index:1;
+    height: 100vh;
 }
