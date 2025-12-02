@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using SmartLibraryManagementSystemClassLibrary.Model;
 using SmartLibraryManagementSystemClassLibrary.Dtos;
 using Microsoft.AspNetCore.Mvc;
@@ -34,55 +35,75 @@ namespace StudentLibraryManagementSystem.Controllers
         {
             var user = _dbCtx.User
                 .Include(u => u.Reservations)
+                .ThenInclude(r => r.Book)
+                .Include(u => u.Reservations)
+                .ThenInclude(r => r.Catalog)
+                .Include(u => u.Reservations)
+                .ThenInclude(r => r.Fine)
+                .Include(u => u.Reservations)
+                .ThenInclude(r => r.Loan)
+                .Include(u => u.PrevLoan)
                 .Include(u => u.Student)
                 .Include(u => u.Faculty)
                 .Include(u => u.PrevFine)
-                .Include(u => u.PrevLoan)
                 .FirstOrDefault(u => u.UserId == id);
-            if (user == null) return NotFound();
             if (withReservation)
             {
+                List<ReservationUserDto> reservations = [];
+                foreach (var reservation in user.Reservations)
+                {
+                    ReservationUserDto userReservation = new ReservationUserDto(
+                            reservation.ReservationId,
+                            reservation.UserId,
+                            new BookUpdateDto(
+                                reservation.Book.BookId,
+                                reservation.Book.BookName,
+                                reservation.Book.Author,
+                                reservation.Book.ReleaseDate,
+                                reservation.Book.Synopsis,
+                                reservation.Book.BookImgPath),
+                            reservation.ReservationDateTime,
+                            new CatalogUpdateDto(
+                                reservation.Catalog.CatalogId,
+                                reservation.Catalog.BookId,
+                                reservation.Catalog.Copies,
+                                reservation.Catalog.Genre,
+                                reservation.Catalog.ClassificationId,
+                                reservation.Catalog.CopiesBorrowed),
+                            null,
+                            null,
+                            reservation.ReservationReturnDateTime,
+                            reservation.HasFine,
+                            reservation.HasReturned,
+                            reservation.HasLoan);
+                    if (reservation.Fine != null)
+                    {
+                        userReservation.Fine = new FineUpdateDto(
+                            reservation.Fine.FineId,
+                            reservation.Fine.FineAmount,
+                            reservation.Fine.UserId,
+                            reservation.Fine.ReservatonId,
+                            reservation.Fine.HasPayed);
+                    }
+                    if (reservation.Loan != null)
+                    {
+                        userReservation.Loan = new LoanUpdateDto(
+                            reservation.Loan.LoanId,
+                            reservation.Loan.LoanAmount,
+                            reservation.Loan.UserId,
+                            reservation.Loan.ReservatonId,
+                            reservation.Loan.HasPayed);
+                    }
+                    reservations.Add(userReservation);
+                }
                 UserWithReservationsDto userWithReservationsToRet = new UserWithReservationsDto(
                     user.UserId,
                     user.UserName,
-                    null, null,
+                    null,
+                    null,
                     user.HasFine,
                     user.HasLoan,
-                    user.Reservations
-                        .Select(r => new ReservationUserDto(
-                            r.ReservationId,
-                            r.UserId,
-                            new BookUpdateDto(
-                                r.Book.BookId,
-                                r.Book.BookName,
-                                r.Book.Author,
-                                r.Book.ReleaseDate,
-                                r.Book.Synopsis,
-                                r.Book.BookImgPath),
-                            r.ReservationDateTime,
-                            new CatalogUpdateDto(
-                                r.Catalog.CatalogId,
-                                r.Catalog.BookId,
-                                r.Catalog.Copies,
-                                r.Catalog.Genre,
-                                r.Catalog.ClassificationId,
-                                r.Catalog.CopiesBorrowed),
-                            new FineUpdateDto(
-                                r.Fine.FineId,
-                                r.Fine.FineAmount,
-                                r.Fine.UserId,
-                                r.Fine.ReservatonId,
-                                r.Fine.HasPayed),
-                            new LoanUpdateDto(
-                                r.Loan.LoanId,
-                                r.Loan.LoanAmount,
-                                r.Loan.UserId,
-                                r.Loan.ReservatonId,
-                                r.Loan.HasPayed),
-                            r.ReservationReturnDateTime,
-                            r.HasFine,
-                            r.HasReturned,
-                            r.HasLoan)).ToList(),
+                    reservations,
                     user.PrevFine
                         .Select(f => new FineUpdateDto(
                             f.FineId,

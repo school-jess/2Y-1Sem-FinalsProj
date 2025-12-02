@@ -1,5 +1,5 @@
 #usersContainer {
-    background-color: rgba(203, 203, 203, 0.62);
+    background-color: rgba(22, 22, 22, 0.68);
     position: absolute;
     right: 50%;
     top: 50%;
@@ -26,7 +26,7 @@ html {
 }
 
 .userRow {
-    background: linear-gradient(to right, rgba(0, 0, 0, 0.65), rgba(102, 102, 102, 0.04));
+    background: linear-gradient(to right, rgba(35, 35, 35, 0.79), rgba(50, 50, 50, 0.12));
     margin: 20px;
     color: rgba(255, 255, 255, 1);
     padding: 5px 10px;

@@ -4,11 +4,12 @@
     right: 50%;
     top: 50%;
     transform: translate(15%, -55%);
-    background-color: rgba(203, 203, 203, 0.62);
+    background-color: rgba(39, 39, 39, 0.79);
     padding: 100px;
     border-radius: 50px;
     width: 750px;
     height: 750px;
+    overflow: auto;
 }
 
 .bookImg {
@@ -27,7 +28,16 @@
 .bookInfoContainer {
     padding-top: 30px;
     font-family: Roboto;
-    color: black;
+    color: rgba(255, 255, 255, 1);
+    background: linear-gradient(to right, rgba(7, 7, 7, 0.92), rgba(102, 102, 102, 0.1));
+    height: 180px;
+    margin-top: 40px;
+    margin-left: -20px;
+    padding-left: 20px;
+    width: 1000px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
 }
 
 .deleteBtnContainer {
@@ -42,4 +52,13 @@
     width: 200px;
     color: rgba(60, 131, 225, 1);
     border-radius: 25px;
+}
+
+.bookInfoContainer h1 {
+    margin: 0;
+}
+
+.bookInfoContainer form {
+    margin-top: auto;
+    margin-bottom: 20px;
 }

@@ -12,7 +12,7 @@ $(document).ready(function() {
             let divElem = $(aElem.children()[1]);
             let bookNameContainer = $(divElem.children()[0]);
             let bookLinkText = bookNameContainer.text();
-            if (!bookLinkText.includes(searchVal)) $(this).hide();
+            if (!bookLinkText.includes(searchVal.toLowerCase())) $(this).hide();
             else $(this).show();
             console.log(bookLinkText.includes(searchVal));
         });

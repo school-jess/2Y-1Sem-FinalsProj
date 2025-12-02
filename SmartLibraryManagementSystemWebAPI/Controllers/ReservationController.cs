@@ -45,7 +45,7 @@ namespace StudentLibraryManagementSystem.Controllers
                 .Include(r => r.User)
                 .FirstOrDefault(r => r.ReservationId == id);
             if (reservation == null) return NotFound();
-            return Ok(new ReservationGet1Dto(
+            ReservationGet1Dto reservationDto = new ReservationGet1Dto(
                 reservation.ReservationId,
                 new UserUpdateDto(
                     reservation.User.UserId,
@@ -68,21 +68,32 @@ namespace StudentLibraryManagementSystem.Controllers
                     reservation.Catalog.ClassificationId,
                     reservation.Catalog.Genre,
                     reservation.Catalog.CopiesBorrowed),
-                new FineUpdateDto(
-                    reservation.Fine.FineId,
-                    reservation.Fine.FineAmount,
-                    reservation.Fine.UserId,
-                    reservation.Fine.HasPayed),
-                new LoanUpdateDto(
+                null,
+                null,
+                reservation.ReservationReturnDateTime,
+                reservation.HasFine,
+                reservation.HasReturned,
+                reservation.HasLoan);
+            if (reservation.Loan != null)
+            {
+                reservationDto.Loan = new LoanUpdateDto(
                     reservation.Loan.LoanId,
                     reservation.Loan.LoanAmount,
                     reservation.Loan.UserId,
                     reservation.Loan.ReservatonId,
-                    reservation.Loan.HasPayed),
-                reservation.ReservationReturnDateTime,
-                reservation.HasFine,
-                reservation.HasReturned,
-                reservation.HasLoan));
+                    reservation.Loan.HasPayed);
+            }
+
+            if (reservation.Fine != null)
+            {
+                reservationDto.Fine = new FineUpdateDto(
+                    reservation.Fine.FineId,
+                    reservation.Fine.FineAmount,
+                    reservation.Fine.UserId,
+                    reservation.Fine.HasPayed);
+            }
+
+            return Ok(reservationDto);
         }
 
         [HttpPost]

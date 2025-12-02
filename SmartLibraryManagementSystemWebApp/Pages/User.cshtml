@@ -15,76 +15,149 @@
     <link rel="stylesheet" href="~/css/User.css"/>
 }
 
-<form id="userInfo" asp-page="UpdateUser" method="post" data-is-faculty="@Model.IsFaculty" enctype="multipart/form-data">
-    @if (Model.IsFaculty)
-    {
-        <div>
-            <img id="editProfileImg" src="@Model.User.Faculty.ProfileImgPath" />
+<div id="userInfo">
+    <form id="userProfileInfo" asp-page="UpdateUser" method="post" data-is-faculty="@Model.IsFaculty" enctype="multipart/form-data">
+        @if (Model.IsFaculty)
+        {
+            <div>
+                <img id="editProfileImg" src="@Model.User.Faculty.ProfileImgPath"/>
+            </div>
+        }
+        else
+        {
+            <div>
+                <img id="editProfileImg" src="@Model.User.Student.ProfileImgPath"/>
+            </div>
+        }
+        <div id="userProfileInfoFields">
+            @if (Model.IsFaculty)
+            {
+                <div class="inputContainer">
+                    <p id="editName">@Model.User.Faculty.FacultyName</p>
+                </div>
+                <div class="inputContainer">
+                    <p id="editCourse">@Model.User.Faculty.Course</p>
+                </div>
+                <div class="inputContainer">
+                    <p id="editDepartment">@Model.User.Faculty.Department</p>
+                </div>
+                <div class="inputContainer">
+                    <p id="editEmail">@Model.User.Faculty.Email</p>
+                </div>
+                <div class="inputContainer">
+                    <label>Password:</label>
+                    <input disabled id="editPassword" type="password"/>
+                </div>
+                <div class="inputContainer">
+                    <p id="editSubject">@Model.User.Faculty.Subject</p>
+                </div>
+            }
+            else
+            {
+                <div class="inputContainer">
+                    <p id="editName">@Model.User.Student.StudentName</p>
+                </div>
+                <div class="inputContainer">
+                    <p id="editCourse">@Model.User.Student.Course</p>
+                </div>
+                <div class="inputContainer">
+                    <p id="editDepartment">@Model.User.Student.Department</p>
+                </div>
+                <div class="inputContainer">
+                    <p id="editEmail">@Model.User.Student.Email</p>
+                </div>
+                <div class="inputContainer">
+                    <label>Password:</label>
+                    <input disabled id="editPassword" type="password"/>
+                </div>
+                <div class="inputContainer">
+                    <p id="editGrade">@Model.User.Student.Grade</p>
+                </div>
+            }
+            <button id="edit">Edit</button>
+            <button id="cancelEdit">Cancel</button>
+            <button class="submitEdit" id="submitEdit" type="submit">Submit</button>
+            <button class="submitEdit" type="submit" form="deletingContainer">Delete</button>
         </div>
-        <div class="inputContainer">
-            <p id="editName">@Model.User.Faculty.FacultyName</p>
-        </div>
-        <div class="inputContainer">
-            <p id="editCourse">@Model.User.Faculty.Course</p>
-        </div>
-        <div class="inputContainer">
-            <p id="editDepartment">@Model.User.Faculty.Department</p>
-        </div>
-        <div class="inputContainer">
-            <p id="editEmail">@Model.User.Faculty.Email</p>
-        </div>
-        <div class="inputContainer">
-            <label>Password:</label>
-            <input disabled id="editPassword" type="password"/>
-        </div>
-        <div class="inputContainer">
-            <p id="editSubject">@Model.User.Faculty.Subject</p>
-        </div>
-    }
-    else
-    {
-        <div>
-            <img id="editProfileImg" src="@Model.User.Student.ProfileImgPath" />
-        </div>
-        <div class="inputContainer">
-            <p id="editName">@Model.User.Student.StudentName</p>
-        </div>
-        <div class="inputContainer">
-            <p id="editCourse">@Model.User.Student.Course</p>
-        </div>
-        <div class="inputContainer">
-            <p id="editDepartment">@Model.User.Student.Department</p>
-        </div>
-        <div class="inputContainer">
-            <p id="editEmail">@Model.User.Student.Email</p>
-        </div>
-        <div class="inputContainer">
-            <label>Password:</label>
-            <input disabled id="editPassword" type="password"/>
-        </div>
-        <div class="inputContainer">
-            <p id="editGrade">@Model.User.Student.Grade</p>
-        </div>
-    }
-    <button id="edit">Edit</button>
-    <button id="cancelEdit">Cancel</button>
-    <button id="submitEdit" type="submit">Submit</button>
-</form>
+    </form>
+    <ul id="userProfileFines">
+        @foreach (var fine in Model.User.Fines)
+        {
+            <li>
+                <p style="font-weight: bold;">@fine.FineAmount</p>
+                <form method="post">
+                    <input type="hidden" asp-for="Input.IsDeleting" value="0"/>
+                    <input type="hidden" asp-for="Input.IsFine" value="1"/>
+                    <input type="hidden" asp-for="Input.FineId" value="@fine.FineId"/>
+                    <input type="hidden" asp-for="Input.FineId" value="0"/>
+                    <button>pay</button>
+                </form>
+            </li>
+        }
+    </ul>
+    <ul id="userProfileLoans">
+        @foreach (var loan in Model.User.Loans)
+        {
+            <li>
+                <p style="font-weight: bold;">@loan.LoanAmount</p>
+                <form method="post">
+                    <input type="hidden" asp-for="Input.IsDeleting" value="0"/>
+                    <input type="hidden" asp-for="Input.IsFine" value="0"/>
+                    <input type="hidden" asp-for="Input.FineId" value="0"/>
+                    <input type="hidden" asp-for="Input.LoanId" value="@loan.LoanId"/>
+                    <button>pay</button>
+                </form>
+            </li>
+        }
+    </ul>
+    <ul id="userProfileReservations">
+        @foreach (var reservation in Model.User.Reservations)
+        {
+            <li>
+                @reservation.Book.BookName @reservation.Catalog.ClassificationId @reservation.Catalog.Genre
+                @if (reservation.Fine != null)
+                {
+                    @reservation.Fine.FineAmount
+                }
+                @if (reservation.Loan != null)
+                {
+                    @reservation.Loan.LoanAmount
+                }
+                @reservation.ReservationDateTime
+                @reservation.ReservationReturnDateTime
+                <form>
+                    <button>Return</button>
+                </form>
+            </li>
+        }
+    </ul>
+</div>
 
-<form method="post" asp-page="UpdateUser">
+<form id="deletingContainer" method="post" asp-page="UpdateUser">
     <input type="hidden" asp-for="Input.IsDeleting" value="1"/>
     <input type="hidden" asp-for="Input.IsFine" value="0"/>
     <input type="hidden" asp-for="Input.FineId" value="0"/>
     <input type="hidden" asp-for="Input.LoanId" value="0"/>
-    <button type="submit">Delete</button>
 </form>
 
 @section BackgroundStyles {
-    <div id="">
-        <div id="greyBg"></div>
-        <div class="sameBgSpecs" id="blueBg"></div>
-        <div class="sameBgSpecs" id="orangeBg"></div>
-        <img id="dbImg" src="~/DonBosco.png"/>
+    <div id="userBackgroundInfo">
+        <div id="userGreyBg"></div>
+        <div id="userOrangeBg">
+            <button>
+                <h1>User Information</h1>
+            </button>
+            <button>
+                <h1>Fines</h1>
+            </button>
+            <button>
+                <h1>Loans</h1>
+            </button>
+            <button>
+                <h1>Reservations</h1>
+            </button>
+        </div>
+        <div id="userBlueBg"></div>
     </div>
 }
 

@@ -1,6 +1,9 @@
 $(document).ready(() => {
     $("#cancelEdit").hide();
     $("#submitEdit").hide();
+    $("#userProfileFines").hide();
+    $("#userProfileLoans").hide();
+    $("#userProfileReservations").hide();
     let editName = "";
     let editCourse = "";
     let editDepartment = "";
@@ -12,7 +15,7 @@ $(document).ready(() => {
         $("#cancelEdit").show();
         $("#submitEdit").show();
         $("#edit").hide();
-        let isFaculty = $("#userInfo").data("isFaculty") == "True";
+        let isFaculty = $("#userProfileInfo").data("isFaculty") == "True";
         $("#userInfo").attr("data-is-faculty", isFaculty ? "True" : "False");
         editName = $("#editName").text();
         editCourse = $("#editCourse").text();
@@ -66,5 +69,32 @@ $(document).ready(() => {
             $("#editGrade").replaceWith(cancelGrade);
         }
         $("#edit").text("edit");
+    });
+
+    $("#userOrangeBg button").click(function(e) {
+        e.preventDefault();
+        let btnTextElem = $(this).children()[0];
+        let btnText = $(btnTextElem).text();
+        if (btnText === "Fines") {
+            $("#userProfileInfo").hide();
+            $("#userProfileFines").show();
+            $("#userProfileLoans").hide();
+            $("#userProfileReservations").hide();
+        } else if (btnText === "Loans") {
+            $("#userProfileInfo").hide();
+            $("#userProfileFines").hide();
+            $("#userProfileLoans").show();
+            $("#userProfileReservations").hide();
+        } else if (btnText === "Reservations") {
+            $("#userProfileInfo").hide();
+            $("#userProfileFines").show();
+            $("#userProfileLoans").hide();
+            $("#userProfileReservations").show();
+        } else {
+            $("#userProfileInfo").show();
+            $("#userProfileFines").show();
+            $("#userProfileLoans").hide();
+            $("#userProfileReservations").hide();
+        }
     });
 });
