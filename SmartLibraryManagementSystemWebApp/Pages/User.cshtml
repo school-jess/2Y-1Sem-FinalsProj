@@ -80,7 +80,7 @@
             <button class="submitEdit" type="submit" form="deletingContainer">Delete</button>
         </div>
     </form>
-    <ul id="userProfileFines">
+    <ul class="userProfileMisscellaneousInfo" id="userProfileFines">
         @foreach (var fine in Model.User.Fines)
         {
             <li>
@@ -89,13 +89,15 @@
                     <input type="hidden" asp-for="Input.IsDeleting" value="0"/>
                     <input type="hidden" asp-for="Input.IsFine" value="1"/>
                     <input type="hidden" asp-for="Input.FineId" value="@fine.FineId"/>
-                    <input type="hidden" asp-for="Input.FineId" value="0"/>
-                    <button>pay</button>
+                    <input type="hidden" asp-for="Input.LoanId" value="0"/>
+                    <input type="hidden" asp-for="Input.IsReserve" value="0"/>
+                    <input type="hidden" asp-for="Input.ReservationId" value="0"/>
+                    <button class="submitEdit">pay</button>
                 </form>
             </li>
         }
     </ul>
-    <ul id="userProfileLoans">
+    <ul class="userProfileMisscellaneousInfo" id="userProfileLoans">
         @foreach (var loan in Model.User.Loans)
         {
             <li>
@@ -105,12 +107,14 @@
                     <input type="hidden" asp-for="Input.IsFine" value="0"/>
                     <input type="hidden" asp-for="Input.FineId" value="0"/>
                     <input type="hidden" asp-for="Input.LoanId" value="@loan.LoanId"/>
-                    <button>pay</button>
+                    <input type="hidden" asp-for="Input.IsReserve" value="0"/>
+                    <input type="hidden" asp-for="Input.ReservationId" value="0"/>
+                    <button class="submitEdit">pay</button>
                 </form>
             </li>
         }
     </ul>
-    <ul id="userProfileReservations">
+    <ul class="userProfileMisscellaneousInfo" id="userProfileReservations">
         @foreach (var reservation in Model.User.Reservations)
         {
             <li>
@@ -125,19 +129,27 @@
                 }
                 @reservation.ReservationDateTime
                 @reservation.ReservationReturnDateTime
-                <form>
-                    <button>Return</button>
+                <form method="post">
+                    <input type="hidden" asp-for="Input.IsDeleting" value="0"/>
+                    <input type="hidden" asp-for="Input.IsFine" value="0"/>
+                    <input type="hidden" asp-for="Input.FineId" value="0"/>
+                    <input type="hidden" asp-for="Input.LoanId" value="0"/>
+                    <input type="hidden" asp-for="Input.IsReserve" value="1"/>
+                    <input type="hidden" asp-for="Input.ReservationId" value="@reservation.ReservationId"/>
+                    <button class="submitEdit">Return</button>
                 </form>
             </li>
         }
     </ul>
 </div>
 
-<form id="deletingContainer" method="post" asp-page="UpdateUser">
+<form method="post">
     <input type="hidden" asp-for="Input.IsDeleting" value="1"/>
     <input type="hidden" asp-for="Input.IsFine" value="0"/>
     <input type="hidden" asp-for="Input.FineId" value="0"/>
     <input type="hidden" asp-for="Input.LoanId" value="0"/>
+    <input type="hidden" asp-for="Input.IsReserve" value="0"/>
+    <input type="hidden" asp-for="Input.ReservationId" value="0"/>
 </form>
 
 @section BackgroundStyles {

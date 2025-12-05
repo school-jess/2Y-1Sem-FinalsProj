@@ -19,6 +19,8 @@ public class UserModel : PageModel
         public int IsFine { get; set; }
         public int FineId { get; set; }
         public int LoanId { get; set; }
+        public int IsReserve { get; set; }
+        public int ReservationId { get; set; }
     }
 
     public UserModel(IHttpClientFactory httpClientFactory)
@@ -65,6 +67,34 @@ public class UserModel : PageModel
                 {
                     PropertyNameCaseInsensitive = true
                 };
+                if (Input.IsReserve == 1)
+                {
+                    var getReservation =
+                        await httpClient.GetAsync($"http://localhost:5138/api/Reservation/{Input.ReservationId}");
+                    if (!getReservation.IsSuccessStatusCode)
+                        throw new InvalidOperationException("couldn't get reservation");
+                    string getReservationContent = await getReservation.Content.ReadAsStringAsync();
+                    ReservationGet1Dto reservation =
+                        JsonSerializer.Deserialize<ReservationGet1Dto>(getReservationContent, options);
+                    ReservationUpdateDto reservationToUpdate = new ReservationUpdateDto(
+                        reservation.ReservationId,
+                        reservation.User.UserId,
+                        reservation.Book.BookId,
+                        reservation.ReservationDateTime,
+                        reservation.Catalog.CatalogId,
+                        reservation.ReservationReturnDateTime,
+                        reservation.HasFine,
+                        true,
+                        reservation.HasLoan);
+                    string reservationToUpdateSerialized = JsonSerializer.Serialize(reservationToUpdate);
+                    var reservationToUpdateHttpCont = new StringContent(reservationToUpdateSerialized, Encoding.UTF8,
+                        "application/json");
+                    var updateReservation = await httpClient.PutAsync(
+                        $"http://localhost:5138/api/Reservation/{Input.ReservationId}", reservationToUpdateHttpCont);
+                    if (!updateReservation.IsSuccessStatusCode) throw new InvalidOperationException("couldn't update reservation");
+                    return Page();
+                }
+
                 if (Input.IsFine == 1)
                 {
                     var getFine = await httpClient.GetAsync($"http://localhost:5138/api/Fine/{Input.FineId}");

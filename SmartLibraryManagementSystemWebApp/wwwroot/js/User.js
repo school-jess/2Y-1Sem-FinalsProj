@@ -87,7 +87,7 @@ $(document).ready(() => {
             $("#userProfileReservations").hide();
         } else if (btnText === "Reservations") {
             $("#userProfileInfo").hide();
-            $("#userProfileFines").show();
+            $("#userProfileFines").hide();
             $("#userProfileLoans").hide();
             $("#userProfileReservations").show();
         } else {

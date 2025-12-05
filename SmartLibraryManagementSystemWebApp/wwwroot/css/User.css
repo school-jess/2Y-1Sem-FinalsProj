@@ -63,6 +63,7 @@ html {
     background-color: rgba(255, 187, 0, 1);
     padding: 50px;
     font-family: Roboto;
+    z-index: 2;
 }
 
 #userBlueBg {
@@ -89,3 +90,14 @@ html {
     height: 340px;
     margin-top: 30px;
 }
+
+.userProfileMisscellaneousInfo {
+    background: linear-gradient(to top, rgba(102, 102, 102, 0.53), rgba(17, 17, 17, 0.78));
+    width: 741px;
+    color: rgba(255, 255, 255, 1);
+    margin: 0;
+    margin-left: -100px !important;
+    margin-top: -15px;
+    padding: 50px;
+}
+
