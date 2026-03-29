@@ -1,0 +1,51 @@
+#bookInfo {
+    position: absolute;
+    right: 50%;
+    top: 50%;
+    transform: translate(25%, -50%);
+    width: 1000px;
+    height: 1000px;
+    background-color: rgba(39, 39, 39, 0.62);
+    padding: 20px;
+    color: rgba(255, 255, 255, 1);
+    font-family: Roboto;
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#bookInfo button {
+    outline: none;
+    border: none;
+    width: 100px;
+    border-radius: 25px;
+    color: rgba(255, 255, 255, 1);
+    background-color: rgba(7, 7, 7, 0.5);
+}
+
+#bookInfoField {
+    background: linear-gradient(to right, rgba(7, 7, 7, 0.92), rgba(74, 73, 73, 0.1));
+    padding: 10px;
+    width: 1000px;
+    height: 300px;
+    align-self: flex-start;
+}
+
+#bookImg {
+    border-radius: 25px;
+    margin-top: 200px;
+    height: 400px;
+    width: 500px;
+}
+
+#bookImgContainer {
+    display: flex;
+}
+
+#bookImgActxBtns {
+    order: -1;
+    display: flex;
+    align-items: flex-end;
+    margin-left: -100px;
+}

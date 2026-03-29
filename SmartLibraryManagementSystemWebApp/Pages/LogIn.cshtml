@@ -1,0 +1,26 @@
+﻿@page
+@model LogInModel
+@{
+    ViewData["Title"] = "Log In Page";
+}
+
+@section Stylesheets {
+    <link rel="stylesheet" href="~/css/Login.css"/>
+}
+
+<form method="post" id="loginContainer">
+    <div class="inputContainer">
+        <input asp-for="Input.Email" class="loginInput" placeholder="Email:"/>
+        <span asp-validation-for="Input.Email"></span>
+    </div>
+    <div class="inputContainer">
+        <input asp-for="Input.Password" class="loginInput" placeholder="Password:"/>
+        <span asp-validation-for="Input.Password"></span>
+    </div>
+    <div class="inputContainer">
+        <input type="checkbox" asp-for="Input.IsEducator"/>
+        <label asp-for="Input.IsEducator" id="isEducatorLabel">Is educator</label>
+        <span asp-validation-for="Input.IsEducator"></span>
+    </div>
+    <button type="submit" id="submitBtn">Submit</button>
+</form>

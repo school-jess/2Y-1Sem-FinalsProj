@@ -1,0 +1,58 @@
+﻿@using Microsoft.AspNetCore.Http
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"]</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="~/css/site.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    @await RenderSectionAsync("Stylesheets", required: false)
+</head>
+
+<body>
+<div id="navbar">
+    @{
+        string isLoggedIn = Context.Session.GetString("IsLoggedIn");
+        string logInName = Context.Session.GetString("LogInName");
+        string userId = Context.Session.GetString("UserId");
+        string isAdmin = Context.Session.GetString("IsAdmin");
+        string currentPage = ViewContext.RouteData.Values["page"]?.ToString();
+    }
+    <div id="fixedBlock"></div>
+    <a class="@(currentPage == "/Index" ? "active" : "")" asp-page="/Index">Home</a>
+    @if (isLoggedIn == "true")
+    {
+        <a class="@(currentPage?.StartsWith("/User") == true ? "active" : "")" asp-page="/User" asp-route-id="@userId">@logInName</a>
+        <a asp-page="/LogOut">Log Out</a>
+        if (isAdmin == "true")
+        {
+            <a class="@(currentPage == "/Admin" ? "active" : "")" asp-page="/Admin">Admin</a>
+            <a class="@(currentPage == "/NewBook" ? "active" : "")" asp-page="/NewBook">New Book</a>
+        }
+    }
+    else
+    {
+        <a class="@(currentPage == "/LogIn" ? "active" : "")" asp-page="/LogIn">Log In</a>
+        <a class="@(currentPage == "/SignUp" ? "active" : "")" asp-page="/SignUp">Sign Up</a>
+    }
+    @await RenderSectionAsync("ExtraNavElems", required: false)
+</div>
+<div id="mainContent">
+    @RenderBody()
+</div>
+@await RenderSectionAsync("BackgroundStyles", required: false)
+<div id="backgroundInfo">
+    <div id="greyBg"></div>
+    <div class="sameBgSpecs" id="blueBg"></div>
+    <div class="sameBgSpecs" id="orangeBg"></div>
+    <img id="dbImg" src="~/DonBosco.png"/>
+</div>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

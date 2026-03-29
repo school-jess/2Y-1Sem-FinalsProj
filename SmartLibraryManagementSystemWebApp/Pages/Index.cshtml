@@ -1,0 +1,35 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+    string currentPage = ViewContext.RouteData.Values["page"]?.ToString();
+}
+
+@section Stylesheets {
+    <link rel="stylesheet" href="~/css/Index.css"/>
+}
+@section ExtraNavElems {
+    <input id="searchBar" placeholder="Search a book..."/>
+}
+<ol id="booksContainer">
+    @foreach (var book in Model.Books)
+    {
+        <li>
+            <a  class="bookContainer" asp-page="/Book" asp-route-id="@book.BookId">
+                <img src="@book.BookImgPath" class="bookImg"/>
+                <div class="bookInfoContainer">
+                    <h1>@book.BookName</h1>
+                    <div>@book.Author</div>
+                    <form method="post" class="deleteBtnContainer">
+                        <input type="hidden" asp-for="Input.BookId" value="@book.BookId"/>
+                        <button>Delete</button>
+                    </form>
+                </div>
+            </a>
+        </li>
+    }
+</ol>
+
+@section Scripts {
+    <script src="~/js/Index.js"></script>
+}

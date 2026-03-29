@@ -1,0 +1,16 @@
+1. give dtos constraints that match models done
+2. figure out how to check days borrowed done
+3. save password hash and salt done not yet tested also dont know if includes salt
+4. make uml
+5. come up with explanation for solid principles for code
+6. WebApp/Program.cs:59:47 figure out previous unpaid fines dont
+7. update put methods done
+8. figure out how to input payments into system done
+9. figure out why sessions dont last long
+10. what to do with the search bar done
+11. create methods to set when doing put method done
+12. return a reason for failure when password and confirm password dont match in sign up page
+13. profile pics and book pics done
+14. complete basic info
+15. implement returns
+16. bug: when clicking is educator input button subject input doesn't show because we can't know if said input is clicked

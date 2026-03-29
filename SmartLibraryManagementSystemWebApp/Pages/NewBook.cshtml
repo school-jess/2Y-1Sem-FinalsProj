@@ -1,0 +1,51 @@
+﻿@page
+@model NewBookModel
+@{
+}
+
+@section Stylesheets {
+    <link rel="stylesheet" href="~/css/Login.css"/>
+}
+
+<form method="post" enctype="multipart/form-data"  id="loginContainer">
+    <div class="inputContainer">
+        <input asp-for="Input.Name" placeholder="Book Name:" class="loginInput" />
+        <span asp-validation-for="Input.Name"></span>
+    </div>
+    <div class="inputContainer">
+        <input asp-for="Input.Author" placeholder="Author:" class="loginInput" />
+        <span asp-validation-for="Input.Author"></span>
+    </div>
+    <div class="inputContainer">
+        <input type="date" asp-for="Input.ReleaseDate" placeholder="Release Date:" class="loginInput" />
+        <span asp-validation-for="Input.ReleaseDate"></span>
+    </div>
+    <div class="inputContainer">
+        <input asp-for="Input.Synopsis" placeholder="Synopsis:" class="loginInput" />
+        <span asp-validation-for="Input.Synopsis"></span>
+    </div>
+    <div class="inputContainer">
+        <input asp-for="Input.ClassificationId" placeholder="Classification ID:" class="loginInput" />
+        <span asp-validation-for="Input.ClassificationId"></span>
+    </div>
+    <div class="inputContainer">
+        <input asp-for="Input.Copies" placeholder="Copies:" class="loginInput" />
+        <span asp-validation-for="Input.Copies"></span>
+    </div>
+    <div class="inputContainer">
+        <input asp-for="Input.Genre" placeholder="Genre:" class="loginInput" />
+        <span asp-validation-for="Input.Genre"></span>
+    </div>
+    <div class="inputContainer">
+        <label asp-for="Input.BookImg" id="profileImg"></label>
+        <input asp-for="Input.BookImg" accept=".png,.jpg,.jpeg"/>
+        <span asp-validation-for="Input.BookImg"></span>
+    </div>
+    <button type="submit" id="submitBtn">Submit</button>
+</form>
+
+<style>
+    #loginContainer {
+        height: 600px;
+    }
+</style>

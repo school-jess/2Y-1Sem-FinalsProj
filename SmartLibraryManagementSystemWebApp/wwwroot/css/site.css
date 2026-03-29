@@ -1,0 +1,81 @@
+#navbar {
+    background-color: #2D2D2D;
+    width: 22vw;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    margin-right: auto;
+    font-size: 25px;
+    font-family: Roboto;
+    align-items: flex-end;
+    gap: 45px;
+}
+
+#navbar * {
+    margin-right: 50px;
+}
+
+#navbar a {
+    text-decoration: none;
+    color: white;
+}
+
+body {
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    justify-content: flex-end;
+    overflow:hidden;
+}
+
+.sameBgSpecs {
+    transform: rotate(-5deg);
+    position: fixed;
+    height: 150vh;
+    top: -25vh;
+    z-index: 2;
+}
+
+#orangeBg {
+    width: 25px;
+    background-color: rgba(255, 187, 0, 1);
+    left: 65%;
+}
+
+#blueBg {
+    width: 175px;
+    background-color: rgba(0, 22, 133, 1);
+    left: 55.89%;
+}
+
+#greyBg {
+    width: 175px;
+    background-color: rgba(71, 71, 71, 0.54);
+    transform: rotate(-20deg);
+    position: fixed;
+    height:100vh;
+    top: -25vh;
+    left: 50%;
+    z-index: 1;
+}
+
+#mainContent {
+    position: relative;
+    z-index: 3;
+    left: 100px;
+}
+
+#fixedBlock {
+    height: 150px;
+}
+
+#navbar a.active {
+    color: rgba(95, 167, 222, 1);
+}
+
+#dbImg {
+    position: relative;
+    z-index:1;
+    height: 100vh;
+}

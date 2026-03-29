@@ -1,0 +1,105 @@
+#submitBtn {
+    border: none;
+    border-radius: 25px;
+    background-color: rgba(255, 255, 255, 1);
+    padding: 10px;
+    width: 200px;
+    color: rgba(60, 131, 225, 1);
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+#loginContainer {
+    background-color: rgba(47, 47, 47, 0.82);
+    position: absolute;
+    padding: 100px;
+    right: 50%;
+    top: 50%;
+    transform: translate(-10%, -50%);
+    width: 500px;
+    height: 200px;
+    border-radius: 50px;
+}
+
+#isEducatorLabel {
+    font-family: Roboto;
+    font-weight: 400;
+}
+
+html {
+    position: relative;
+}
+
+.loginInput::placeholder {
+    color: rgba(0, 0, 0, 1);
+    opacity: 1;
+    font-weight: 400;
+    font-family: Roboto;
+    font-size: 15px;
+}
+
+.loginInput {
+    height: 50px;
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: 20px;
+    border: none;
+}
+
+#Input_IsEducator {
+    position: absolute;
+    opacity: 0;
+    height: 0;
+    width: 0;
+}
+
+.inputContainer {
+    margin: 20px;
+}
+
+#Input_ProfileImg::file-selector-button {
+    background-color: rgba(255, 255, 255, 1);
+    color: rgba(96, 96, 96, 1);
+    outline: none;
+    border: none;
+    width: 75px;
+    height: 25px;
+}
+
+#profileImg {
+    font-family: Roboto;
+}
+
+#isEducatorLabel::before {
+    content: "";
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 1);
+    margin-right: 8px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+#Input_IsEducator:checked + #isEducatorLabel::before {
+    background-color: black;
+}
+
+#Input_BookImg::file-selector-button {
+    background-color: rgba(255, 255, 255, 1);
+    color: rgba(96, 96, 96, 1);
+    outline: none;
+    border: none;
+    width: 75px;
+    height: 25px;
+}
+
+.loginInput[type="number"]::-webkit-outer-spin-button,
+.loginInput[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.loginInput[type="number"] {
+    -moz-appearance: textfield;
+}

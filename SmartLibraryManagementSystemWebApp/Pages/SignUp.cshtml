@@ -1,0 +1,65 @@
+﻿@page
+@model SignUpModel
+
+@{
+    ViewData["Title"] = "Sign Up Page";
+}
+
+@section Stylesheets {
+    <link rel="stylesheet" href="~/css/Login.css"/>
+}
+
+<form method="post" enctype="multipart/form-data" id="loginContainer">
+    <div class="inputContainer">
+        <input asp-for="Input.Name" placeholder="Name:" class="loginInput" />
+        <span asp-validation-for="Input.Name"></span>
+    </div>
+    <div class="inputContainer">
+        <input asp-for="Input.Department" placeholder="Department:" class="loginInput"/>
+        <span asp-validation-for="Input.Department"></span>
+    </div>
+    <div class="inputContainer">
+        <input asp-for="Input.Course" placeholder="Course:" class="loginInput"/>
+        <span asp-validation-for="Input.Course"></span>
+    </div>
+    <div class="inputContainer">
+        <input asp-for="Input.Email" placeholder="Email:" class="loginInput"/>
+        <span asp-validation-for="Input.Email"></span>
+    </div>
+    <div class="inputContainer">
+        <input asp-for="Input.Password" placeholder="Password:" class="loginInput"/>
+        <span asp-validation-for="Input.Password"></span>
+    </div>
+    <div class="inputContainer">
+        <input type="password" asp-for="Input.ConfirmPassword" placeholder="Confirm Password:" class="loginInput" />
+        <span asp-validation-for="Input.ConfirmPassword"></span>
+    </div>
+    <div class="inputContainer" id="subject">
+        <input asp-for="Input.Subject" placeholder="Subject:" class="loginInput"/>
+        <span asp-validation-for="Input.Subject"></span>
+    </div>
+    <div class="inputContainer" id="grade">
+        <input asp-for="Input.Grade" placeholder="Grade:" class="loginInput"/>
+        <span asp-validation-for="Input.Grade"></span>
+    </div>
+    <div class="inputContainer">
+        <label asp-for="Input.ProfileImg" id="profileImg">Profile Image</label>
+        <input asp-for="Input.ProfileImg" accept=".png,.jpg,.jpeg"/>
+        <span asp-validation-for="Input.ProfileImg"></span>
+    </div>
+    <div class="inputContainer">
+        <input type="checkbox" asp-for="Input.IsEducator" />
+        <label asp-for="Input.IsEducator" id="isEducatorLabel">Is educator</label>
+        <span asp-validation-for="Input.IsEducator"></span>
+    </div>
+    <button type="submit" id="submitBtn">Submit</button>
+</form>
+<style>
+    #loginContainer {
+        height: 600px;
+    }
+</style>
+
+@section Scripts {
+    <script src="~/js/SignUp.js"></script>
+}

@@ -1,0 +1,43 @@
+#usersContainer {
+    background-color: rgba(22, 22, 22, 0.68);
+    position: absolute;
+    right: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: 750px;
+    padding: 20px;
+    border-radius: 50px;
+    font-family: Roboto;
+    overflow: auto;
+}
+
+html {
+    position: relative;
+}
+
+.userActionBtns {
+    width: 20px;
+}
+
+#usernameId {
+    color: rgba(55, 141, 207, 1);
+    font-size: 27px;
+}
+
+.userRow {
+    background: linear-gradient(to right, rgba(35, 35, 35, 0.79), rgba(50, 50, 50, 0.12));
+    margin: 20px;
+    color: rgba(255, 255, 255, 1);
+    padding: 5px 10px;
+}
+
+.userMiscellaneousInfo {
+    display: grid;
+    grid-template-columns: 100px 100px 100px 100px;
+    margin: 10px;
+}
+
+.userInputs {
+    transform: scale(1.5);
+}
